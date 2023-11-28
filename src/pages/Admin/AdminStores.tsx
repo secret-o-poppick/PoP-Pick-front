@@ -5,17 +5,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 import Input from '@/components/Input';
 import Button from '@/components/Button';
-
-export type Store = {
-  image: string
-  author: string
-  title: string
-  startAt: number | Date
-  endAt: number | Date
-  createdAt: number
-  active: boolean
-  subRows?: Store[]
-}
+import AdminStoreTable from '@/components/AdminStoreTable';
+import { Store } from '@/types/index';
 
 export default function AdminStores() {
   const navigate = useNavigate();
@@ -85,48 +76,12 @@ export default function AdminStores() {
       </AddBtn>
 
       {/* 테이블 */}
-      <StyledTable>
-        <thead>
-          <tr>
-            <th>사진</th>
-            <th>작성자(계정)</th>
-            <th>제목</th>
-            <th>시작일시</th>
-            <th>종료일시</th>
-            <th>작성일시</th>
-            <th>게시물 수정</th>
-            <th>게시물 삭제</th>
-            <th>게시물 숨기기</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData.length === 0 ? (
-            <tr>
-              <td id='alertText' colSpan={9}>일치하는 정보가 없습니다.</td>
-            </tr>
-          ) : (
-            filteredData.map((store, index) => (
-              <tr key={index}>
-                <td><img src={store.image} width='120px' alt={store.title} /></td>
-                <td>{store.author}</td>
-                <td>{store.title}</td>
-                <td>{new Date(store.startAt).toLocaleTimeString()}</td>
-                <td>{new Date(store.endAt).toLocaleTimeString()}</td>
-                <td>{new Date(store.createdAt).toLocaleTimeString()}</td>
-                <td><button id='editBtn' onClick={handleEdit}>수정하기</button></td>
-                <td><button id='deleteBtn' onClick={handleDelete}>삭제하기</button></td>
-                <td>
-                  <button id='activeBtn' onClick={() => activeBtn(index)}>
-                    {store.active
-                      ? '게시물 숨기기'
-                      : '게시물 숨기기 해제'}
-                  </button>
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </StyledTable>
+      <AdminStoreTable
+        data={filteredData}
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
+        activeBtn={activeBtn}
+      />
 
       {/* 검색창 */}
       <StyledSearch>
@@ -176,59 +131,3 @@ Button {
 }
 `
 
-const StyledTable = styled.table`
-width:100%;
-text-align: center;
-font-size: 0.75em;
-
-& thead {
-  border-bottom:1px solid #888;
-}
-
-& th {
-  padding: 1rem;
-  vertical-align: middle;
-}
-
-& th:first-child{
-  width:120px;
-}
-& th:nth-child(2){
-  width:180px;
-}
-& th:nth-child(4){
-  width:70px;
-}
-& th:nth-child(5){
-  width:70px;
-}
-& th:nth-child(6){
-  width:70px;
-}
-& th:nth-child(7){
-  width:80px;
-}
-& th:nth-child(8){
-  width:80px;
-}
-& th:last-child{
-  width:140px;
-}
-& td{
-  padding: 0.5rem 1rem;
-  vertical-align: middle;
-  border-bottom:1px solid #eee;
-  word-break: keep-all;
-}
-
-#alertText{
-  height:140px;
-}
-
-#editBtn, #deleteBtn, #activeBtn{
-  background-color: transparent;
-  border:none;
-  text-decoration: underline;
-  cursor: pointer;
-}
-`
