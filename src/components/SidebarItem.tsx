@@ -23,6 +23,8 @@ const NavItem = styled(NavLink)`
   height: 48px;
   column-gap: 1.2em;
   border-radius: 14px;
+  line-height: 120%;
+  word-break: keep-all;
 
   &:hover {
     background-color: #fffffe;
