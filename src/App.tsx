@@ -1,31 +1,34 @@
-import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 
-import Layout from "./components/Layout";
+import GlobalStyle from './components/GlobalStyle';
 
-import Main from "./pages/User/Main";
-import Stores from "./pages/User/Stores";
-import StoreDetail from "./pages/User/StoreDetail";
-import Map from "./pages/User/Map";
-import Login from "./pages/User/Login";
-import User from "./pages/User/User";
-import Application from "./pages/User/Application";
+import Layout from './components/Layout';
 
-import Admin from "./components/Admin";
+import Main from './pages/User/Main';
+import Stores from './pages/User/Stores';
+import StoreDetail from './pages/User/StoreDetail';
+import Map from './pages/User/Map';
+import Login from './pages/User/Login';
+import User from './pages/User/User';
+import Application from './pages/User/Application';
 
-import AdminLogin from "./pages/Admin/AdminLogin";
-import AdminStores from "./pages/Admin/AdminStores";
-import AdminStoreDetail from "./pages/Admin/AdminStoreDetail";
-import AdminStoreEdit from "./pages/Admin/AdminStoreEdit";
-import AdminCategories from "./pages/Admin/AdminCategories";
-import AdminUsers from "./pages/Admin/AdminUsers";
-import AdminUserDetail from "./pages/Admin/AdminUserDetail";
-import AdminUserUpdate from "./pages/Admin/AdminUserUpdate";
-import AdminUserCreate from "./pages/Admin/AdminUserCreate";
-import AdminUserAuth from "./pages/Admin/AdminUserAuth";
+import Admin from './components/Admin';
+
+import AdminLogin from './pages/Admin/AdminLogin';
+import AdminStores from './pages/Admin/AdminStores';
+import AdminStoreDetail from './pages/Admin/AdminStoreDetail';
+import AdminStoreEdit from './pages/Admin/AdminStoreEdit';
+import AdminCategories from './pages/Admin/AdminCategories';
+import AdminUsers from './pages/Admin/AdminUsers';
+import AdminUserDetail from './pages/Admin/AdminUserDetail';
+import AdminUserUpdate from './pages/Admin/AdminUserUpdate';
+import AdminUserCreate from './pages/Admin/AdminUserCreate';
+import AdminUserAuth from './pages/Admin/AdminUserAuth';
 
 function App() {
   return (
     <>
+      <GlobalStyle />
       <BrowserRouter>
         <Routes>
           {/* User */}
