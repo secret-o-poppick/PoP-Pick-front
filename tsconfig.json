@@ -1,5 +1,4 @@
 {
-  "extends": "./tsconfig.paths.json",
   "compilerOptions": {
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -21,5 +20,5 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src", "src/custom.d.ts", "craco.config.js"]
+  "include": ["src"]
 }
