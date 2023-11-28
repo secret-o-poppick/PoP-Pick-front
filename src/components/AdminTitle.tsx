@@ -15,6 +15,9 @@ const AdminTitle: React.FC<AdminTitleProps> = ({ title }) => {
 
 const StyledTitle = styled.h2`
     letter-spacing: 1.2px;
+    font-weight: bold;
+    font-size: 1.7em;
+    margin-bottom: 56px;
 `;
 
 export default AdminTitle;
