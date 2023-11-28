@@ -45,18 +45,19 @@ function App() {
           {/* Admin */}
           <Route path='/admin/login' element={<AdminLogin />} />
           <Route path='/admin' element={<Admin />}>
-            <Route path='stores' element={<AdminStores />} />
-            <Route path='stores/:storeId' element={<AdminStoreDetail />} />
-            <Route path='stores/:storeId/update' element={<AdminStoreEdit />} />
-            <Route path='stores/create' element={<AdminStoreEdit />} />
-
-            <Route path='categories' element={<AdminCategories />} />
-
+            {/* 유저 관리 */}
             <Route path='users' element={<AdminUsers />} />
             <Route path='users/:userId' element={<AdminUserDetail />} />
             <Route path='users/:userId/update' element={<AdminUserUpdate />} />
             <Route path='users/create' element={<AdminUserCreate />} />
             <Route path='users/auth' element={<AdminUserAuth />} />
+            {/* 카테고리 관리 */}
+            <Route path='categories' element={<AdminCategories />} />
+            {/* 팝업스토어 관리 */}
+            <Route path='stores' element={<AdminStores />} />
+            <Route path='stores/:storeId' element={<AdminStoreDetail />} />
+            <Route path='stores/:storeId/update' element={<AdminStoreEdit />} />
+            <Route path='stores/create' element={<AdminStoreEdit />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -1,7 +1,9 @@
+import AdminTitle from '@/components/AdminTitle';
+
 export default function AdminStores() {
   return (
     <>
-      <h1>AdminStores</h1>
+      <AdminTitle title="팝업스토어 관리" />
     </>
   );
 }
