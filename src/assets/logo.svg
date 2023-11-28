@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 401.77 313.23">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f6c554;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        stroke: #231815;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 3px;
+      }
+
+      .cls-2 {
+        fill: #eb5b42;
+      }
+
+      .cls-3 {
+        fill: #2e6eb6;
+      }
+    </style>
+  </defs>
+  <g id="_레이어_1-2" data-name="레이어 1">
+    <g>
+      <polygon class="cls-3" points="1.5 116.2 199.21 1.5 400.27 117.19 241.5 208.12 121.52 138.08 80.58 161.62 1.5 116.2"/>
+      <polygon class="cls-1" points="400.27 220.81 400.27 117.19 241.5 208.12 241.5 311.73 400.27 220.81"/>
+      <polygon class="cls-1" points="121.52 241.7 121.52 138.08 80.58 161.62 80.58 265.23 121.52 241.7"/>
+      <polygon class="cls-2" points="121.52 138.08 121.52 241.7 241.5 311.73 241.5 208.12 121.52 138.08"/>
+      <polygon class="cls-2" points="1.5 116.2 1.5 219.82 80.58 265.23 80.58 161.62 1.5 116.2"/>
+      <g>
+        <polygon class="cls-2" points="241.5 116.2 241.5 68.58 160.39 115.56 202.53 139.61 282.73 92.58 241.5 116.2"/>
+        <polygon class="cls-1" points="282.73 92.58 241.5 68.58 241.5 116.76 282.73 92.58"/>
+      </g>
+    </g>
+  </g>
+</svg>
