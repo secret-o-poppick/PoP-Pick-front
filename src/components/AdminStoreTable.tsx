@@ -3,57 +3,57 @@ import styled from 'styled-components';
 import { Store } from '@/types/index';
 
 interface AdminStoreTableProps {
-    data: Store[];
-    handleEdit: () => void;
-    handleDelete: () => void;
-    activeBtn: (index: number) => void;
+  data: Store[];
+  handleEdit: () => void;
+  handleDelete: () => void;
+  activeBtn: (index: number) => void;
 }
 
 const AdminStoreTable: React.FC<AdminStoreTableProps> = ({ data, handleEdit, handleDelete, activeBtn }) => {
-    return (
-        <StyledTable>
-            <thead>
-                <tr>
-                    <th>사진</th>
-                    <th>작성자(계정)</th>
-                    <th>제목</th>
-                    <th>시작일시</th>
-                    <th>종료일시</th>
-                    <th>작성일시</th>
-                    <th>게시물 수정</th>
-                    <th>게시물 삭제</th>
-                    <th>게시물 숨기기</th>
-                </tr>
-            </thead>
-            <tbody>
-                {data.length === 0 ? (
-                    <tr>
-                        <td id='alertText' colSpan={9}>일치하는 정보가 없습니다.</td>
-                    </tr>
-                ) : (
-                    data.map((store, index) => (
-                        <tr key={index}>
-                            <td><img src={store.image} width='120px' alt={store.title} /></td>
-                            <td>{store.author}</td>
-                            <td>{store.title}</td>
-                            <td>{new Date(store.startAt).toLocaleTimeString()}</td>
-                            <td>{new Date(store.endAt).toLocaleTimeString()}</td>
-                            <td>{new Date(store.createdAt).toLocaleTimeString()}</td>
-                            <td><button id='editBtn' onClick={handleEdit}>수정하기</button></td>
-                            <td><button id='deleteBtn' onClick={handleDelete}>삭제하기</button></td>
-                            <td>
-                                <button id='activeBtn' onClick={() => activeBtn(index)}>
-                                    {store.active
-                                        ? '게시물 숨기기'
-                                        : '게시물 숨기기 해제'}
-                                </button>
-                            </td>
-                        </tr>
-                    ))
-                )}
-            </tbody>
-        </StyledTable>
-    );
+  return (
+    <StyledTable>
+      <thead>
+        <tr>
+          <th>사진</th>
+          <th>작성자(계정)</th>
+          <th>제목</th>
+          <th>시작일시</th>
+          <th>종료일시</th>
+          <th>작성일시</th>
+          <th>게시물 수정</th>
+          <th>게시물 삭제</th>
+          <th>게시물 숨기기</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.length === 0 ? (
+          <tr>
+            <td id='alertText' colSpan={9}>일치하는 정보가 없습니다.</td>
+          </tr>
+        ) : (
+          data.map((store, index) => (
+            <tr key={index}>
+              <td><img src={store.image} width='120px' alt={store.title} /></td>
+              <td>{store.author}</td>
+              <td>{store.title}</td>
+              <td>{new Date(store.startAt).toLocaleTimeString()}</td>
+              <td>{new Date(store.endAt).toLocaleTimeString()}</td>
+              <td>{new Date(store.createdAt).toLocaleTimeString()}</td>
+              <td><button id='editBtn' onClick={handleEdit}>수정하기</button></td>
+              <td><button id='deleteBtn' onClick={handleDelete}>삭제하기</button></td>
+              <td>
+                <button id='activeBtn' onClick={() => activeBtn(index)}>
+                  {store.active
+                    ? '게시물 숨기기 해제'
+                    : '게시물 숨기기'}
+                </button>
+              </td>
+            </tr>
+          ))
+        )}
+      </tbody>
+    </StyledTable>
+  );
 }
 const StyledTable = styled.table`
 width:100%;

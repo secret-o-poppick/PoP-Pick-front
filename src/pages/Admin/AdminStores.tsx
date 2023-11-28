@@ -30,6 +30,10 @@ export default function AdminStores() {
     setFilteredData(filtered);
   };
 
+  const handleRegister = () => {
+    navigate('/admin/stores/create')
+  }
+
   function generateFakeData(count: number): Store[] {
     return Array.from({ length: count }, () => ({
       image: faker.image.url(),
@@ -49,7 +53,7 @@ export default function AdminStores() {
 
       {/* 등록버튼 */}
       <AddBtn>
-        <Button color='primary' onClick={() => handleSearch('')}>
+        <Button color='primary' onClick={handleRegister}>
           등록
         </Button>
       </AddBtn>

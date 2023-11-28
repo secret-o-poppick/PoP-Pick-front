@@ -1,21 +1,27 @@
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 interface SidebarItemProps {
   menu: { name: string; icon: JSX.Element; path: string };
 }
 
 const SidebarItem: React.FC<SidebarItemProps> = ({ menu }) => {
+  const location = useLocation();
+  const isActive = location.pathname.startsWith(menu.path);
+
   return (
-    <NavItem to={menu.path}>
+    <NavItem to={menu.path} isActive={isActive}>
       {menu.icon}
       {menu.name}
     </NavItem>
   );
 };
 
-const NavItem = styled(NavLink)`
+
+const NavItem = styled(NavLink) <{ isActive: boolean }>`
   color: #000;
+  background-color: ${(props) => (props.isActive ? '#FFF6E4' : 'transparent')};
+  font-weight: ${(props) => (props.isActive ? 'bold' : '')};
   padding: 0 12px;
   text-decoration: none;
   display: flex;
@@ -28,7 +34,6 @@ const NavItem = styled(NavLink)`
 
   &:hover {
     background-color: #fffffe;
-    font-weight: bold;
       }
   &:focus {
     background-color: #FFF6E4;
