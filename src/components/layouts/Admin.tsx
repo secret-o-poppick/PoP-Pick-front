@@ -29,7 +29,9 @@ export default function Admin() {
         </div>
         <Logout />
       </Side>
-      <Outlet />
+      <Content>
+        <Outlet />
+      </Content>
     </AdminLayout>
   );
 
@@ -72,4 +74,8 @@ const Menu = styled.div`
   margin-top: 42px;
   display: flex;
   flex-direction: column;
+`
+
+const Content = styled.div`
+  padding: 90px
 `
