@@ -1,8 +1,7 @@
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 
 import GlobalStyle from './components/GlobalStyle';
-
-import Layout from './components/Layout';
+import Layout from './components/layouts/Layout';
 
 import Main from './pages/User/Main';
 import Stores from './pages/User/Stores';
@@ -12,7 +11,7 @@ import Login from './pages/User/Login';
 import User from './pages/User/User';
 import Application from './pages/User/Application';
 
-import Admin from './components/Admin';
+import Admin from './components/layouts/Admin';
 
 import AdminLogin from './pages/Admin/AdminLogin';
 import AdminStores from './pages/Admin/AdminStores';
