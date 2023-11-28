@@ -7,19 +7,21 @@ interface InputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   label?: string;
+  placeholder?: string;
 }
 
 export default function Input({
   type = 'text',
   value,
   onChange,
-  label,
   onKeyDown,
+  label,
+  placeholder
 }: InputProps) {
   return (
     <Wrapper>
       {label && <Label>{label}</Label>}
-      <StyledInput type={type} value={value} onChange={onChange} onKeyDown={onKeyDown} />
+      <StyledInput type={type} value={value} onChange={onChange} onKeyDown={onKeyDown} placeholder={placeholder} />
     </Wrapper>
   );
 }
