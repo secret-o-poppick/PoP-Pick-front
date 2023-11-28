@@ -1,11 +1,11 @@
-import { Outlet } from "react-router-dom";
-import styled from "styled-components";
-import logoImg from "@/assets/logo.svg";
-import SidebarItem from "@/components/SidebarItem";
-import Logout from "@/components/Logout";
-import { LuUsers } from "react-icons/lu";
-import { BiCategory } from "react-icons/bi";
-import { IoStorefrontOutline } from "react-icons/io5";
+import { Outlet } from 'react-router-dom';
+import styled from 'styled-components';
+import logoImg from '@/assets/logo.svg';
+import SidebarItem from '@/components/SidebarItem';
+import Logout from '@/components/Logout';
+import { LuUsers } from 'react-icons/lu';
+import { BiCategory } from 'react-icons/bi';
+import { IoStorefrontOutline } from 'react-icons/io5';
 
 export default function Admin() {
   const menus = [

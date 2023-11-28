@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom'
-import { TbLogout2 } from "react-icons/tb";
+import { TbLogout2 } from 'react-icons/tb';
 
 export default function Logout() {
     const navigate = useNavigate();

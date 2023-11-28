@@ -1,5 +1,5 @@
 import AdminTitle from '@/components/AdminTitle';
-import styled from "styled-components";
+import styled from 'styled-components';
 import { faker } from '@faker-js/faker';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
@@ -107,7 +107,7 @@ export default function AdminStores() {
           ) : (
             filteredData.map((store, index) => (
               <tr key={index}>
-                <td><img src={store.image} width="120px" alt={store.title} /></td>
+                <td><img src={store.image} width='120px' alt={store.title} /></td>
                 <td>{store.author}</td>
                 <td>{store.title}</td>
                 <td>{new Date(store.startAt).toLocaleTimeString()}</td>
@@ -116,7 +116,7 @@ export default function AdminStores() {
                 <td><button id='editBtn' onClick={handleEdit}>수정하기</button></td>
                 <td><button id='deleteBtn' onClick={handleDelete}>삭제하기</button></td>
                 <td>
-                  <button id="activeBtn" onClick={() => activeBtn(index)}>
+                  <button id='activeBtn' onClick={() => activeBtn(index)}>
                     {store.active
                       ? '게시물 숨기기'
                       : '게시물 숨기기 해제'}
@@ -132,13 +132,13 @@ export default function AdminStores() {
       <StyledSearch>
         <div>
           <Input
-            type="text"
+            type='text'
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             onKeyDown={handleKeyPress}
           />
         </div>
-        <Button color="primary" onClick={handleSearch}>
+        <Button color='primary' onClick={handleSearch}>
           검색
         </Button>
       </StyledSearch>

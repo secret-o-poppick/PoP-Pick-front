@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import logoImg from "@/assets/logo.svg";
-import { MEDIA_LIMIT } from "@/assets/styleVariable";
+import styled from 'styled-components';
+import logoImg from '@/assets/logo.svg';
+import { MEDIA_LIMIT } from '@/assets/styleVariable';
 
 export default function Header() {
   return (
