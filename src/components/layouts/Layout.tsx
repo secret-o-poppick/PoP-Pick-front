@@ -8,7 +8,7 @@ export default function Layout() {
     <StyledLayout>
       <Header />
       <Outlet />
-      <div
+      {/* <div
         style={{
           height: "300vh",
           backgroundColor: "lightgray",
@@ -19,7 +19,7 @@ export default function Layout() {
         }}
       >
         test scroll
-      </div>
+      </div> */}
       <Footer />
     </StyledLayout>
   );
