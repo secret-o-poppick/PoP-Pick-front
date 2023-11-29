@@ -11,7 +11,7 @@ import AdminTitle from "@/components/AdminTitle";
 import Button from "@/components/Button"; // Import your Button component
 
 const AdminStoreEdit = () => {
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
   const navigate = useNavigate()
 
   const nextStep = () => {
@@ -39,10 +39,10 @@ const AdminStoreEdit = () => {
   const pageSubTitles = ["1", "2", "3", "4", "5"];
 
   const PageDisplay = () => {
-    if (page === 0) return <StoreCreateStep1 nextStep={nextStep} handleChange={handleInputChange} />;
-    else if (page === 1) return <StoreCreateStep2 nextStep={nextStep} handleChange={handleInputChange} />;
-    else if (page === 2) return <StoreCreateStep3 nextStep={nextStep} handleChange={handleInputChange} />;
-    else if (page === 3) return <StoreCreateStep4 nextStep={nextStep} handleChange={handleInputChange} />;
+    if (page === 1) return <StoreCreateStep1 nextStep={nextStep} handleChange={handleInputChange} />;
+    else if (page === 2) return <StoreCreateStep2 nextStep={nextStep} handleChange={handleInputChange} />;
+    else if (page === 3) return <StoreCreateStep3 nextStep={nextStep} handleChange={handleInputChange} />;
+    else if (page === 4) return <StoreCreateStep4 nextStep={nextStep} handleChange={handleInputChange} />;
     else return <StoreCreateStep5 nextStep={nextStep} handleChange={handleInputChange} />;
   };
 

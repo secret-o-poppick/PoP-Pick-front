@@ -1,5 +1,6 @@
-import React from "react";
-import styled from 'styled-components';
+import React, {
+} from 'react';
+import DragAndDrop from '@/components/DragAndDrop'
 
 interface StoreCreateStepProps {
     handleChange: (input: string) => (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -7,15 +8,12 @@ interface StoreCreateStepProps {
 }
 
 const StoreCreateStep2: React.FC<StoreCreateStepProps> = (props) => {
-    return (
-        <Step>
-            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        </Step>
-    );
-};
 
-const Step = styled.div`
-display:flex
-`
+    return (
+        < >
+            <DragAndDrop />
+        </>
+    );
+}
 
 export default StoreCreateStep2;
