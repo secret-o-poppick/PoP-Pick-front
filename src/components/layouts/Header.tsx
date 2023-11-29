@@ -70,7 +70,7 @@ export default function Header() {
 
 // Header Styles
 const StyledHeader = styled.header`
-  z-index: 9999999999;
+  z-index: 10;
   width: 100%;
   height: 90px;
   padding: 20px;
@@ -205,6 +205,9 @@ const StyledUser = styled.div`
       width: 50%;
       height: 50%;
     }
+  }
+  .login > svg {
+    width: 60%;
   }
   @media (max-width: ${MEDIA_LIMIT}) {
     & {
