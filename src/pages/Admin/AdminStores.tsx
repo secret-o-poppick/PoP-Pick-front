@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { faker } from '@faker-js/faker';
 import { useNavigate } from 'react-router-dom';
