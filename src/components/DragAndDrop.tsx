@@ -45,9 +45,9 @@ const DragDrop = (): JSX.Element => {
         <StyledLabel>
           <span>이미지 가져오기</span>
         </StyledLabel>
-        <StyledImageIcon>
+        <StyledIcon>
           <ImImages />
-        </StyledImageIcon>
+        </StyledIcon>
       </StyledLayout>
 
       <StyledImgs>
@@ -80,14 +80,14 @@ const StyledLabel = styled.div`
   
   & span {
     position: relative;
-    z-index: 99;
+    z-index: 3;
     font-size: large;
     font-weight: bold;
     color: #888;
   }
   `;
 
-const StyledImageIcon = styled.div`
+const StyledIcon = styled.div`
   position: absolute;
   font-size: 12em;
   color: #eee;
