@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { MdOutlineModeEdit, MdOutlineDeleteOutline } from 'react-icons/md';
 import styled from 'styled-components';
 import AdminTitle from '@/components/AdminTitle';
@@ -62,7 +62,9 @@ export default function AdminUsers() {
             .map((item, index) => (
               <TableRow key={index}>
                 <TableCell>{item._id}</TableCell>
-                <TableCell>{item.email}</TableCell>
+                <TableCell>
+                  <StyledLink to='/admin/users/1'>{item.email}</StyledLink>
+                </TableCell>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.sns}</TableCell>
                 <TableCell>{item.auth}</TableCell>
@@ -88,6 +90,11 @@ export default function AdminUsers() {
     </>
   );
 }
+
+const StyledLink = styled(Link)`
+  color: #000;
+  text-decoration: none;
+`;
 
 const ButtonWrapper = styled.div`
   margin: 1rem 0;
