@@ -1,3 +1,10 @@
+export type AuthOption = '일반' | '등록자' | '관리자';
+
+export type SelectBoxOption = {
+  value: string;
+  label: string;
+};
+
 export type Store = {
   image: string;
   author: string;

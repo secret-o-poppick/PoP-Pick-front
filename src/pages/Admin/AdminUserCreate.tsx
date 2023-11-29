@@ -5,12 +5,17 @@ import AdminTitle from '@/components/AdminTitle';
 import Button from '@/components/Button';
 import ButtonGroup from '@/components/ButtonGroup';
 import Input from '@/components/Input';
+import SelectBox from '@/components/SelectBox';
+import { AUTH_OPTIONS } from '@/assets/config';
 
 export default function AdminUserCreate() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [, setAuth] = useState('');
+
+  const handleAuthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log('onChange', e.target.value);
+  };
 
   return (
     <>
@@ -28,11 +33,12 @@ export default function AdminUserCreate() {
           onChange={(e) => setName(e.target.value)}
           label='이름'
         />
-        <Input
-          type='text'
-          value='셀렉트 박스로 바꾸기'
-          onChange={(e) => setAuth(e.target.value)}
+        <SelectBox
+          options={AUTH_OPTIONS}
+          onChange={handleAuthChange}
+          defaultValue='관리자'
           label='권한'
+          full
         />
         <ButtonGroup>
           <Button color='primary' onClick={() => navigate(-1)}>

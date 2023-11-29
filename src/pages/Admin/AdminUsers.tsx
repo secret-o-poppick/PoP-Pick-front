@@ -6,6 +6,8 @@ import AdminTitle from '@/components/AdminTitle';
 import Pagination from '@/components/Pagination';
 import Button from '@/components/Button';
 import { data } from '@/data/user';
+import SelectBox from '@/components/SelectBox';
+import { AUTH_OPTIONS, AUTH_FILTER_OPTIONS } from '@/assets/config';
 
 export default function AdminUsers() {
   const location = useLocation();
@@ -33,14 +35,20 @@ export default function AdminUsers() {
     setCurrentPage(index);
   };
 
+  const handleAuthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log('onChange', e.target.value);
+  };
+
   return (
     <>
       <AdminTitle title='유저 관리' />
-      <ButtonWrapper>
+      <Wrapper>
         <Button onClick={() => navigate('/admin/users/create')} color='primary'>
           유저등록
         </Button>
-      </ButtonWrapper>
+        <SelectBox options={AUTH_FILTER_OPTIONS} defaultValue='일반' />
+      </Wrapper>
+
       <Table>
         <THead>
           <TableRow>
@@ -67,7 +75,14 @@ export default function AdminUsers() {
                 </TableCell>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.sns}</TableCell>
-                <TableCell>{item.auth}</TableCell>
+                <TableCell>
+                  <SelectBox
+                    options={AUTH_OPTIONS}
+                    onChange={handleAuthChange}
+                    defaultValue={item.auth}
+                    full
+                  />
+                </TableCell>
                 <TableCell>{item.popCount}</TableCell>
                 <TableCell>{item.createdAt}</TableCell>
                 <TableCell>{item.businessNumberFlg ? '신청' : '-'}</TableCell>
@@ -96,9 +111,11 @@ const StyledLink = styled(Link)`
   text-decoration: none;
 `;
 
-const ButtonWrapper = styled.div`
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
   margin: 1rem 0;
-  width: 140px;
 `;
 
 const Table = styled.table`
