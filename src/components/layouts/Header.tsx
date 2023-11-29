@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import SearchPage from "./SearchPage";
+import { Link } from "react-router-dom";
 
 // icons
 import logoImg from "@/assets/logo.svg";
@@ -32,10 +33,10 @@ export default function Header() {
         searchType={searchType}
       />
       <StyledHeader>
-        <StyledLogo>
+        <StyledLink to='/'>
           <img src={logoImg} alt='logo' />
           <h1>Pop Pick</h1>
-        </StyledLogo>
+        </StyledLink>
 
         <StyledSearch>
           <div className='stringWrapper'>
@@ -95,7 +96,7 @@ const StyledHeader = styled.header`
   }
 `;
 
-const StyledLogo = styled.div`
+const StyledLink = styled(Link)`
   width: 20%;
   font-size: 1rem;
   font-weight: bold;
