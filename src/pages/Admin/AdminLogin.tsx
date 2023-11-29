@@ -40,7 +40,7 @@ export default function AdminLogin() {
           />
         </Body>
         <Footer>
-          <Button color='primary' onClick={handleClick}>
+          <Button color='primary' onClick={handleClick} full>
             로그인
           </Button>
         </Footer>
