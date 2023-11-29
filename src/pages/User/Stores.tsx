@@ -91,7 +91,9 @@ export default function Stores() {
           <div className='storeInfoDiv'>
             <div className='storeInfoTagDiv'>
               <StoreTag color='popup' title='팝업' />
-              <StoreTag color='adult' title='성인' />
+              <div style={{ marginRight: '140px' }}>
+                <StoreTag color='adult' title='성인' />
+              </div>
             </div>
             <img src={logoImg} />
             <p>UFF : Feel House</p>
