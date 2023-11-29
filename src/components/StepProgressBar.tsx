@@ -1,80 +1,63 @@
-import React from 'react';
 import styled from 'styled-components';
-import { ProgressBar, Step } from 'react-step-progress-bar';
 
-interface StepProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
-    step: number;
+interface ProgressBarProps {
+  currentPage: number;
+  totalPage: number;
 }
 
-const StepProgressBar: React.FC<StepProgressBarProps> = (props) => {
-    return (
-        <>
-            <StyledProgressBar
-                value={50}
-                percent={(props.step + 1) * 20}
-                filledBackground='#EB5B42'
-                height='2px'
-            >
-                {[1, 2, 3, 4, 5].map((index) => (
-                    <StyledStep key={index} transition='scale' >
-                        {({ accomplished }: { accomplished: boolean }) => (
-                            <StyledEachBar accomplished={accomplished}>
-                                {index}
-                            </StyledEachBar>
-                        )}
-                    </StyledStep>
-                ))}
-            </StyledProgressBar>
-        </>
+export default function StepProgressBar({
+  currentPage,
+  totalPage,
+}: ProgressBarProps) {
+  const percent = Math.ceil(((currentPage - 1) / (totalPage - 1)) * 100);
+
+  return (
+    <Container $percent={percent}>
+      {Array.from({ length: totalPage }, (_, index) => index + 1).map(
+        (page) => (
+          <Item key={page} $completed={page <= currentPage}>
+            {page}
+          </Item>
+        )
+      )}
+    </Container>
+  );
+}
+
+const Container = styled.div<{ $percent: number }>`
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 1rem 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      #3498db ${({ $percent }) => $percent}%,
+      #aaa ${({ $percent }) => $percent}%,
+      #aaa ${({ $percent }) => 100 - $percent}%
     );
-};
-
-const StyledProgressBar = styled(ProgressBar)`
-display: flex;
-background-color: orange;
-width: 200px;
-height:1px;
-`
-
-const StyledStep = styled(Step)`
-    display: flex;
-    width:200px;
-    flex-direction: row;
-    display: inline-block;
-
-   
-`
-const StyledEachBar = styled.div<{ accomplished: boolean }>`
-    height: 20px;
-    width: 20px;
-    font-size: 12px;
-    background-color: ${(props) => (props.accomplished ? '#664de5' : null)};
-    border: 1px solid lightgray;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-
-    /* &:hover {
-        cursor: pointer;
-    }
-
-    &:not(:last-child) {
-        margin-right: 10px;
-    }
-
-    &:last-child {
-        margin-right: 0;
-    }
-
-    &:not(.completed) {
-        opacity: 0.6;
-    }
-
-    &:not(.completed):hover {
-        opacity: 0.8;
-    } */
+    transform: translateY(-50%);
+    z-index: -1;
+  }
 `;
 
-export default StepProgressBar;
+const Item = styled.div<{ $completed: boolean }>`
+  border: 1px solid ${({ $completed }) => ($completed ? '#3498db' : '#aaa')};
+  background-color: ${({ $completed }) => ($completed ? '#3498db' : '#fff')};
+  color: ${({ $completed }) => ($completed ? '#fff' : '#aaa')};
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+`;
