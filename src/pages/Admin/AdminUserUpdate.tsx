@@ -6,12 +6,17 @@ import Input from '@/components/Input';
 import LabelText from '@/components/LabelText';
 import ButtonGroup from '@/components/ButtonGroup';
 import Button from '@/components/Button';
+import SelectBox from '@/components/SelectBox';
+import { AUTH_OPTIONS } from '@/assets/config';
 
 export default function AdminUserUpdate() {
   const navigate = useNavigate();
 
   const [businessNumber, setBusinessNumber] = useState('');
-  const [, setAuth] = useState('');
+
+  const handleAuthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log('onChange', e.target.value);
+  };
 
   return (
     <>
@@ -20,11 +25,12 @@ export default function AdminUserUpdate() {
         <LabelText label='이메일'>admin@admin.com</LabelText>
         <LabelText label='이름'>홍길동</LabelText>
         <LabelText label='SNS'>카카오</LabelText>
-        <Input
-          type='text'
-          value='셀렉트 박스로 바꾸기'
-          onChange={(e) => setAuth(e.target.value)}
+        <SelectBox
+          options={AUTH_OPTIONS}
+          onChange={handleAuthChange}
+          defaultValue='관리자'
           label='권한'
+          full
         />
         <Input
           type='text'
