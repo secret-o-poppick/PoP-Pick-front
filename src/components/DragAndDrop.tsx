@@ -82,11 +82,11 @@ const DragDrop = (): JSX.Element => {
         </StyledIcon>
       </StyledLayout>
 
-      <StyledImgs>
+      <StyledImages>
         {uploadedImages.map((image, index) => (
           <ImagePreview key={index} src={URL.createObjectURL(image.object)} onDelete={() => onDelete(image.id)} />
         ))}
-      </StyledImgs>
+      </StyledImages>
     </>
   );
 };
@@ -102,7 +102,7 @@ const StyledLayout = styled.label`
 
 const StyledLabel = styled.div`
   border: 4px dotted #eee;
-  height: 420px;
+  height: 360px;
   background-color: #fff9f8;
   border-radius: 16px;
   display: flex;
@@ -129,10 +129,11 @@ const StyledIcon = styled.div`
   z-index: 2;
 `;
 
-const StyledImgs = styled.div`
+const StyledImages = styled.div`
   display: flex;
   box-sizing: border-box;
   width: 100%;
   column-gap: 6px;
+  height: 100px;
 `;
 export default DragDrop;

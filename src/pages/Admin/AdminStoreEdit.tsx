@@ -106,6 +106,7 @@ const StyledButton = styled.div`
   display: flex;
   justify-content: flex-end;
   column-gap: 12px;
+  margin-top:1em;
 
   & Button {
     width: 80px;
