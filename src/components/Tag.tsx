@@ -48,4 +48,12 @@ const StyledStoreTagDiv = styled.div<{ color: TagStyleType }>`
 
   position: absolute;
   margin: 10px;
+
+  @media (max-width: ${MEDIA_LIMIT}) {
+    & {
+      width: 3em;
+      height: 1.5em;
+      font-weight: 400;
+    }
+  }
 `;
