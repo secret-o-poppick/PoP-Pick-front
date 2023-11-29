@@ -29,7 +29,6 @@ export default function Button({
 }
 
 const StyledButton = styled.button<{ color: ButtonStyleType }>`
-  width: 100%;
   padding: 0.8rem 1.2rem;
   font-size: 1rem;
   cursor: pointer;
