@@ -74,7 +74,7 @@ const AdminStoreEdit = () => {
   };
 
   return (
-    <div>
+    <>
       <div style={{ margin: 'auto', width: '50%' }}>
         <StepProgressBar currentPage={page} totalPage={5} />
       </div>
@@ -97,7 +97,7 @@ const AdminStoreEdit = () => {
           </div>
         </StyledButton>
       </div>
-    </div>
+    </>
   );
 };
 

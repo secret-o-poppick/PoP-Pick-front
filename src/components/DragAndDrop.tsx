@@ -10,6 +10,7 @@ interface IFileTypes {
 
 const DragDrop = (): JSX.Element => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [activeMain, setActiveMain] = useState<number | null>(null);
 
   const fileId = useRef<number>(0);
 
@@ -55,6 +56,23 @@ const DragDrop = (): JSX.Element => {
     setUploadedImages((prevImages) => prevImages.filter((image) => image.id !== id));
   };
 
+  const onSetMain = (id: number) => {
+    if (activeMain === id) {
+      return;
+    }
+    setActiveMain(id);
+
+    const previouslyActiveButton = document.querySelector('.active');
+    if (previouslyActiveButton) {
+      previouslyActiveButton.classList.remove('active');
+    }
+
+    const newActiveButton = document.getElementById(`mainButton_${id}`);
+    if (newActiveButton) {
+      newActiveButton.classList.add('active');
+    }
+  };
+  
   return (
     <>
       <StyledInput
@@ -84,7 +102,13 @@ const DragDrop = (): JSX.Element => {
 
       <StyledImages>
         {uploadedImages.map((image, index) => (
-          <ImagePreview key={index} src={URL.createObjectURL(image.object)} onDelete={() => onDelete(image.id)} />
+          <ImagePreview
+            key={index}
+            src={URL.createObjectURL(image.object)}
+            onDelete={() => onDelete(image.id)}
+            onSetMain={() => onSetMain(image.id)}
+            isMain={activeMain === image.id}
+          />
         ))}
       </StyledImages>
     </>
