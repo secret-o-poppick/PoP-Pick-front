@@ -8,11 +8,11 @@ import StoreCreateStep4 from "@/components/StoreCreateStep4";
 import StoreCreateStep5 from "@/components/StoreCreateStep5";
 import StepProgressBar from "@/components/StepProgressBar";
 import AdminTitle from "@/components/AdminTitle";
-import Button from "@/components/Button"; // Import your Button component
+import Button from "@/components/Button"; // Make sure the path is correct
 
 const AdminStoreEdit = () => {
   const [page, setPage] = useState<number>(1);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const nextStep = () => {
     console.log('Next step clicked');
@@ -54,14 +54,13 @@ const AdminStoreEdit = () => {
 
   const handleNext = () => {
     if (page < 4) {
-      setPage((currPage) => currPage + 1)
+      setPage((currPage) => currPage + 1);
     }
-  }
+  };
 
   const handlePrev = () => {
-    setPage((currPage) => currPage - 1)
-  }
-
+    setPage((currPage) => currPage - 1);
+  };
 
   return (
     <div>
@@ -74,10 +73,15 @@ const AdminStoreEdit = () => {
           <AdminTitle title="팝업스토어 등록" />
         </div>
         <div>{PageDisplay()}</div>
-        {pageSubTitles[page]}
-        <StyledButton>{page > 0 && <div><Button onClick={handlePrev}>이전</Button></div>}
-          <div >
-            <Button color='primary'
+        <StyledButton>
+          {page > 0 && (
+            <div>
+              <Button onClick={handlePrev}>이전</Button>
+            </div>
+          )}
+          <div>
+            <Button
+              color='primary'
               onClick={handleNext}
             >
               {page === pageSubTitles.length - 1 ? "등록" : "다음"}
@@ -89,15 +93,15 @@ const AdminStoreEdit = () => {
   );
 };
 
-
 const StyledButton = styled.div`
-width:100%;
-display: flex;
-justify-content: flex-end;
-column-gap: 12px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  column-gap: 12px;
 
-& Button{
-  width:80px;
-}
-`
+  & Button {
+    width: 80px;
+  }
+`;
+
 export default AdminStoreEdit;
