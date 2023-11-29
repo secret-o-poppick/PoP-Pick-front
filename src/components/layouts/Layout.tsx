@@ -8,18 +8,18 @@ export default function Layout() {
     <StyledLayout>
       <Header />
       <Outlet />
-      <div
+      {/* <div
         style={{
           height: '300vh',
           backgroundColor: 'lightgray',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          // alignItems: 'center',
+          // justifyContent: 'center',
           fontSize: '100px',
         }}
       >
         test scroll
-      </div>
+      </div> */}
       <Footer />
     </StyledLayout>
   );
