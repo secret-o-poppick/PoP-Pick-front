@@ -116,7 +116,7 @@ export default function SearchPage({
 const StyledMore = styled.div<{
   $isSearchOpened: boolean;
 }>`
-  z-index: 9999999999;
+  z-index: 10;
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.3);
