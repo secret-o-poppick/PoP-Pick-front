@@ -12,6 +12,8 @@ import FilterButton from '@/components/FilterButton';
 import logoImg from '@/assets/logo.svg';
 
 export default function Stores() {
+  const stores = [{ title: '도구리 막내 클럽' }];
+
   const handleFilterButton = () => {
     console.log('Filter Button click');
   };
@@ -51,14 +53,14 @@ export default function Stores() {
             </div>
             <img src={logoImg} />
 
-            <div>
-              <p>도구리 막내 클럽 : 실수 세탁소</p>
+            <div className='storeInfoContents'>
+              <h3>도구리 막내 클럽 ...</h3>
               <p>2023.10.20 ~ 2023.10.30</p>
-              <p>서울시 마포구</p>
-            </div>
-            <div>
-              <FaRegHeart />
-              <FaRegBookmark />
+              <p>서울시 성동구</p>
+              <div className='storeIconsDiv'>
+                <FaRegHeart style={{ marginRight: 10 }} />
+                <FaRegBookmark />
+              </div>
             </div>
           </div>
 
@@ -67,41 +69,52 @@ export default function Stores() {
               <StoreTag color='exhibit' title='전시' />
             </div>
             <img src={logoImg} />
-            <p>UFF : Feel House</p>
-            <p>2023.10.20 ~ 2023.10.30</p>
-            <p>서울시 성동구</p>
-            <div>
-              <FaRegHeart />
-              <FaRegBookmark />
+
+            <div className='storeInfoContents'>
+              <h3>UFF : Feel House</h3>
+              <p>2023.10.20 ~ 2023.10.30</p>
+              <p>서울시 성동구</p>
+              <div className='storeIconsDiv'>
+                <FaRegHeart style={{ marginRight: 10 }} />
+                <FaRegBookmark />
+              </div>
             </div>
           </div>
+
           <div className='storeInfoDiv'>
             <div className='storeInfoTagDiv'>
               <StoreTag color='popup' title='팝업' />
             </div>
             <img src={logoImg} />
-            <p>무진장 블랙 프라이데이</p>
-            <p>2023.10.20 ~ 2023.10.30</p>
-            <p>서울시 성동구</p>
-            <div>
-              <FaRegHeart />
-              <FaRegBookmark />
+
+            <div className='storeInfoContents'>
+              <h3>UFF : Feel House</h3>
+              <p>2023.10.20 ~ 2023.10.30</p>
+              <p>서울시 성동구</p>
+              <div className='storeIconsDiv'>
+                <FaRegHeart style={{ marginRight: 10 }} />
+                <FaRegBookmark />
+              </div>
             </div>
           </div>
+
           <div className='storeInfoDiv'>
             <div className='storeInfoTagDiv'>
               <StoreTag color='popup' title='팝업' />
-              <div style={{ marginRight: '140px' }}>
+              <div className='tagMargin'>
                 <StoreTag color='adult' title='성인' />
               </div>
             </div>
             <img src={logoImg} />
-            <p>UFF : Feel House</p>
-            <p>2023.10.20 ~ 2023.10.30</p>
-            <p>서울시 성동구</p>
-            <div>
-              <FaRegHeart />
-              <FaRegBookmark />
+
+            <div className='storeInfoContents'>
+              <h3>UFF : Feel House</h3>
+              <p>2023.10.20 ~ 2023.10.30</p>
+              <p>서울시 성동구</p>
+              <div className='storeIconsDiv'>
+                <FaRegHeart style={{ marginRight: 10 }} />
+                <FaRegBookmark />
+              </div>
             </div>
           </div>
         </StyledStoreRoWDiv>
@@ -109,6 +122,12 @@ export default function Stores() {
     </>
   );
 }
+
+const StyledStoreRoWDiv_grid = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 25%);
+`;
 
 const StyledStoreRoWDiv = styled.div`
   display: flex;
@@ -126,15 +145,72 @@ const StyledStoreRoWDiv = styled.div`
     position: relative;
   }
 
+  & .storeInfoDiv .tagMargin {
+    margin-right: 140px;
+  }
+
   & > .storeInfoDiv img {
     border: 1px solid black;
     width: 250px;
     height: 250px;
   }
+
+  & .storeIconsDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  @media (max-width: ${MEDIA_LIMIT}) {
+    & {
+      flex-direction: column;
+      position: relative;
+    }
+
+    & .storeInfoDiv {
+      margin-bottom: 20px;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+    }
+
+    & .storeInfoDiv .tagMargin {
+      margin-right: 120px;
+    }
+
+    & .storeInfoTagDiv {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      position: absolute;
+    }
+
+    & > .storeInfoDiv img {
+      border: 1px solid black;
+      margin-right: 10px;
+      width: 150px;
+      height: 150px;
+    }
+
+    & > .storeInfoDiv > .storeInfoContents {
+      height: 130px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+  }
 `;
 
 const StyledMainStoreList = styled.div`
   padding: 0 50px;
+
+  @media (max-width: ${MEDIA_LIMIT}) {
+    & {
+      padding: 0 25px;
+    }
+  }
 `;
 
 const StyledMainButtonDiv = styled.div`
