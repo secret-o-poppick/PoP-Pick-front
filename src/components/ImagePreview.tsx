@@ -24,7 +24,8 @@ const ImagePreview: React.FC<ImgPreviewProps> = ({ src, onDelete, onSetMain, isM
     setIsModalOpen(false);
   };
 
-  const handleClickDelete = () => {
+  const handleClickDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     onDelete();
   };
 

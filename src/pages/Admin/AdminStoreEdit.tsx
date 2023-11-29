@@ -8,10 +8,12 @@ import StoreCreateStep4 from '@/components/StoreCreateStep4';
 import StoreCreateStep5 from '@/components/StoreCreateStep5';
 import StepProgressBar from '@/components/StepProgressBar';
 import AdminTitle from '@/components/AdminTitle';
-import Button from '@/components/Button'; // Import your Button component
+import Button from '@/components/Button';
+import { IFileTypes } from '@/types/index';
 
 const AdminStoreEdit = () => {
   const [page, setPage] = useState<number>(1);
+  const [uploadedImages, setUploadedImages] = useState<IFileTypes[]>([]);
   const navigate = useNavigate();
 
   const nextStep = () => {
@@ -36,6 +38,8 @@ const AdminStoreEdit = () => {
         <StoreCreateStep2
           nextStep={nextStep}
           handleChange={handleInputChange}
+          uploadedImages={uploadedImages}
+          setUploadedImages={setUploadedImages}
         />
       );
     else if (page === 3)
@@ -62,7 +66,10 @@ const AdminStoreEdit = () => {
   };
 
   const handleNext = () => {
-    if (page < 5) {
+    const selectedImages = uploadedImages;
+    if (page === 2 && selectedImages.length === 0) {
+      alert('이미지 파일을 첨부하세요.');
+    } else if (page < 5) {
       setPage((currPage) => currPage + 1);
     } else {
       navigate('/admin/stores');

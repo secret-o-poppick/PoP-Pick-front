@@ -1,21 +1,25 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { ImImages } from 'react-icons/im';
 import ImagePreview from '@/components/ImagePreview';
+import { ImImages } from 'react-icons/im';
 
 interface IFileTypes {
   id: number;
   object: File;
 }
 
-const DragDrop = (): JSX.Element => {
+interface DragDropProps {
+  uploadedImages: IFileTypes[];
+  setUploadedImages: React.Dispatch<React.SetStateAction<IFileTypes[]>>;
+}
+
+const DragDrop: React.FC<DragDropProps> = (props) => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [activeMain, setActiveMain] = useState<number | null>(null);
 
   const fileId = useRef<number>(0);
 
   const dragRef = useRef<HTMLLabelElement | null>(null);
-  const [uploadedImages, setUploadedImages] = useState<IFileTypes[]>([]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -24,7 +28,7 @@ const DragDrop = (): JSX.Element => {
         id: fileId.current++,
         object: file,
       }));
-      setUploadedImages((prevImages) => [...prevImages, ...newImages]);
+      props.setUploadedImages((prevImages) => [...prevImages, ...newImages]);
     }
   };
 
@@ -48,12 +52,12 @@ const DragDrop = (): JSX.Element => {
         id: fileId.current++,
         object: file,
       }));
-      setUploadedImages((prevImages) => [...prevImages, ...newImages]);
+      props.setUploadedImages((prevImages) => [...prevImages, ...newImages]);
     }
   };
 
   const onDelete = (id: number) => {
-    setUploadedImages((prevImages) => prevImages.filter((image) => image.id !== id));
+    props.setUploadedImages((prevImages) => prevImages.filter((image) => image.id !== id));
   };
 
   const onSetMain = (id: number) => {
@@ -72,7 +76,7 @@ const DragDrop = (): JSX.Element => {
       newActiveButton.classList.add('active');
     }
   };
-  
+
   return (
     <>
       <StyledInput
@@ -101,7 +105,7 @@ const DragDrop = (): JSX.Element => {
       </StyledLayout>
 
       <StyledImages>
-        {uploadedImages.map((image, index) => (
+        {props.uploadedImages.map((image, index) => (
           <ImagePreview
             key={index}
             src={URL.createObjectURL(image.object)}
@@ -160,4 +164,5 @@ const StyledImages = styled.div`
   column-gap: 6px;
   height: 100px;
 `;
+
 export default DragDrop;

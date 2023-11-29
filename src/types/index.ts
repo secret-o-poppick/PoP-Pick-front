@@ -15,3 +15,7 @@ export type Store = {
   active: boolean;
   subRows?: Store[];
 };
+export type IFileTypes = {
+  id: number;
+  object: File;
+};
