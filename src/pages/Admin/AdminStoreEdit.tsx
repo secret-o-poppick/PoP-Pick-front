@@ -23,20 +23,6 @@ const AdminStoreEdit = () => {
       console.log(`${input} changed: ${e.target.value}`);
     };
 
-  const [userInput, setUserInput] = useState<{
-    fullName: string;
-    displayname: string;
-    workspaceName: string;
-    workspaceUrl: string;
-    checkboxValue: string;
-  }>({
-    fullName: '',
-    displayname: '',
-    workspaceName: '',
-    workspaceUrl: '',
-    checkboxValue: '',
-  });
-
   const PageDisplay = () => {
     if (page === 1)
       return (
