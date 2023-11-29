@@ -7,6 +7,7 @@ interface ButtonProps {
   color?: ButtonStyleType;
   children: string;
   onClick?: () => void;
+  full?: boolean;
 }
 
 export default function Button({
@@ -14,6 +15,7 @@ export default function Button({
   color = 'default',
   children,
   onClick,
+  full = false,
 }: ButtonProps) {
   const handleClick = () => {
     if (!onClick) return;
@@ -22,14 +24,14 @@ export default function Button({
   };
 
   return (
-    <StyledButton type={type} color={color} onClick={handleClick}>
+    <StyledButton type={type} color={color} onClick={handleClick} $full={full}>
       {children}
     </StyledButton>
   );
 }
 
-const StyledButton = styled.button<{ color: ButtonStyleType }>`
-  width: 100%;
+const StyledButton = styled.button<{ color: ButtonStyleType; $full: boolean }>`
+  width: ${({ $full }) => $full && '100%'};
   padding: 0.8rem 1.2rem;
   font-size: 1rem;
   cursor: pointer;

@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from "react-router-dom";
-import StoreCreateStep1 from "@/components/StoreCreateStep1";
-import StoreCreateStep2 from "@/components/StoreCreateStep2";
-import StoreCreateStep3 from "@/components/StoreCreateStep3";
-import StoreCreateStep4 from "@/components/StoreCreateStep4";
-import StoreCreateStep5 from "@/components/StoreCreateStep5";
-import StepProgressBar from "@/components/StepProgressBar";
-import AdminTitle from "@/components/AdminTitle";
-import Button from "@/components/Button"; // Make sure the path is correct
+import { useNavigate } from 'react-router-dom';
+import StoreCreateStep1 from '@/components/StoreCreateStep1';
+import StoreCreateStep2 from '@/components/StoreCreateStep2';
+import StoreCreateStep3 from '@/components/StoreCreateStep3';
+import StoreCreateStep4 from '@/components/StoreCreateStep4';
+import StoreCreateStep5 from '@/components/StoreCreateStep5';
+import StepProgressBar from '@/components/StepProgressBar';
+import AdminTitle from '@/components/AdminTitle';
+import Button from '@/components/Button'; // Import your Button component
 
 const AdminStoreEdit = () => {
   const [page, setPage] = useState<number>(1);
@@ -18,9 +18,10 @@ const AdminStoreEdit = () => {
     console.log('Next step clicked');
   };
 
-  const handleInputChange = (input: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(`${input} changed: ${e.target.value}`);
-  };
+  const handleInputChange =
+    (input: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      console.log(`${input} changed: ${e.target.value}`);
+    };
 
   const [userInput, setUserInput] = useState<{
     fullName: string;
@@ -29,32 +30,56 @@ const AdminStoreEdit = () => {
     workspaceUrl: string;
     checkboxValue: string;
   }>({
-    fullName: "",
-    displayname: "",
-    workspaceName: "",
-    workspaceUrl: "",
-    checkboxValue: "",
+    fullName: '',
+    displayname: '',
+    workspaceName: '',
+    workspaceUrl: '',
+    checkboxValue: '',
   });
 
-  const pageSubTitles = ["1", "2", "3", "4", "5"];
-
   const PageDisplay = () => {
-    if (page === 1) return <StoreCreateStep1 nextStep={nextStep} handleChange={handleInputChange} />;
-    else if (page === 2) return <StoreCreateStep2 nextStep={nextStep} handleChange={handleInputChange} />;
-    else if (page === 3) return <StoreCreateStep3 nextStep={nextStep} handleChange={handleInputChange} />;
-    else if (page === 4) return <StoreCreateStep4 nextStep={nextStep} handleChange={handleInputChange} />;
-    else return <StoreCreateStep5 nextStep={nextStep} handleChange={handleInputChange} />;
+    if (page === 1)
+      return (
+        <StoreCreateStep1
+          nextStep={nextStep}
+          handleChange={handleInputChange}
+        />
+      );
+    else if (page === 2)
+      return (
+        <StoreCreateStep2
+          nextStep={nextStep}
+          handleChange={handleInputChange}
+        />
+      );
+    else if (page === 3)
+      return (
+        <StoreCreateStep3
+          nextStep={nextStep}
+          handleChange={handleInputChange}
+        />
+      );
+    else if (page === 4)
+      return (
+        <StoreCreateStep4
+          nextStep={nextStep}
+          handleChange={handleInputChange}
+        />
+      );
+    else
+      return (
+        <StoreCreateStep5
+          nextStep={nextStep}
+          handleChange={handleInputChange}
+        />
+      );
   };
 
-  useEffect(() => {
-    if (page === pageSubTitles.length - 1) {
-      navigate('/admin/stores');
-    }
-  }, [page, navigate]);
-
   const handleNext = () => {
-    if (page < 4) {
+    if (page < 5) {
       setPage((currPage) => currPage + 1);
+    } else {
+      navigate('/admin/stores');
     }
   };
 
@@ -64,27 +89,24 @@ const AdminStoreEdit = () => {
 
   return (
     <div>
-      <div style={{ margin: "auto", width: "50%" }}>
-        {/* <StepProgressBar step={page} /> */}
+      <div style={{ margin: 'auto', width: '50%' }}>
+        <StepProgressBar currentPage={page} totalPage={5} />
       </div>
 
       <div>
         <div>
-          <AdminTitle title="팝업스토어 등록" />
+          <AdminTitle title='팝업스토어 등록' />
         </div>
         <div>{PageDisplay()}</div>
         <StyledButton>
-          {page > 0 && (
+          {page > 1 && (
             <div>
               <Button onClick={handlePrev}>이전</Button>
             </div>
           )}
           <div>
-            <Button
-              color='primary'
-              onClick={handleNext}
-            >
-              {page === pageSubTitles.length - 1 ? "등록" : "다음"}
+            <Button color='primary' onClick={handleNext}>
+              {page === 5 ? '등록' : '다음'}
             </Button>
           </div>
         </StyledButton>
