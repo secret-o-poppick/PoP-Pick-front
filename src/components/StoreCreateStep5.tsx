@@ -1,12 +1,21 @@
 import React from "react";
+import styled from 'styled-components';
 
 interface StoreCreateStepProps {
     handleChange: (input: string) => (e: React.ChangeEvent<HTMLInputElement>) => void;
     nextStep: () => void;
 }
 
-const StoreCreateStep5: React.FC<StoreCreateStepProps> = (props) => {
-    return <></>;
+const StoreCreateStep2: React.FC<StoreCreateStepProps> = (props) => {
+    return (
+        <Step>
+            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        </Step>
+    );
 };
 
-export default StoreCreateStep5;
+const Step = styled.div`
+display:flex
+`
+
+export default StoreCreateStep2;

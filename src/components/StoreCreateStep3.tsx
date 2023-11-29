@@ -1,4 +1,5 @@
 import React from "react";
+import styled from 'styled-components';
 
 interface StoreCreateStepProps {
     handleChange: (input: string) => (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -7,34 +8,14 @@ interface StoreCreateStepProps {
 
 const StoreCreateStep3: React.FC<StoreCreateStepProps> = (props) => {
     return (
-        <div className="card-container">
-            <label>
-                <input
-                    type="radio"
-                    className="card-input-element"
-                    onChange={props.handleChange("checkboxValue")}
-                    value="Individual"
-                />
-                <div className="card-input">
-                    <h3 className="panel-heading">For myself</h3>
-                    <p className="panel-body">Write better thing more clearly. Stay organised</p>
-                </div>
-            </label>
-
-            <label>
-                <input
-                    type="radio"
-                    className="card-input-element"
-                    onChange={props.handleChange("checkboxValue")}
-                    value="Company"
-                />
-                <div className="card-input">
-                    <h3 className="panel-heading"> With my team</h3>
-                    <p className="panel-body">Wikis, docs, tasks and projects, all in one place.</p>
-                </div>
-            </label>
-        </div>
+        <Step>
+            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        </Step>
     );
 };
+
+const Step = styled.div`
+display:flex
+`
 
 export default StoreCreateStep3;
