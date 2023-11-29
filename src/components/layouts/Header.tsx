@@ -1,38 +1,38 @@
-import styled, { css } from "styled-components";
-import { useState } from "react";
+import styled, { css } from 'styled-components';
+import { useState } from 'react';
 
 // icons
-import logoImg from "@/assets/logo.svg";
-import { TbLogin2 } from "react-icons/tb";
-import { FaRegCircleUser } from "react-icons/fa6";
-import { FaSearch } from "react-icons/fa";
-import { MdLocationPin } from "react-icons/md";
-import { FaRegCalendarCheck } from "react-icons/fa6";
-import { MEDIA_LIMIT } from "@/assets/styleVariable";
-import { TbLocation } from "react-icons/tb";
-import { PiMapTrifold } from "react-icons/pi";
-import { cities, districts } from "@/data";
+import logoImg from '@/assets/logo.svg';
+import { TbLogin2 } from 'react-icons/tb';
+import { FaRegCircleUser } from 'react-icons/fa6';
+import { FaSearch } from 'react-icons/fa';
+import { MdLocationPin } from 'react-icons/md';
+import { FaRegCalendarCheck } from 'react-icons/fa6';
+import { MEDIA_LIMIT } from '@/assets/styleVariable';
+import { TbLocation } from 'react-icons/tb';
+import { PiMapTrifold } from 'react-icons/pi';
+import { cities, districts } from '@/data';
 
 export default function Header() {
   const [isSearchOpened, setSearchOpened] = useState<boolean>(false);
-  const [searchType, setSearchType] = useState<string>("");
+  const [searchType, setSearchType] = useState<string>('');
   const [selectedCity, setSelectedCity] = useState<number>(0);
-  const [selectedDistrict, setSelectedDistrict] = useState<string>("");
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('');
 
   const closeSearchtab = () => {
     setSearchOpened(false);
   };
   const stringBtnHandler = () => {
     setSearchOpened(true);
-    setSearchType("string");
+    setSearchType('string');
   };
   const locationBtnHandler = () => {
     setSearchOpened(true);
-    setSearchType("location");
+    setSearchType('location');
   };
   const dateBtnHandler = () => {
     setSearchOpened(true);
-    setSearchType("date");
+    setSearchType('date');
   };
 
   const selectCityHandler = (index: number) => {
@@ -42,9 +42,9 @@ export default function Header() {
   return (
     <>
       <StyledMore $isSearchOpened={isSearchOpened}>
-        {searchType === "string" ? (
+        {searchType === 'string' ? (
           <StyledString className='searchTap'>추천 검색어</StyledString>
-        ) : searchType === "location" ? (
+        ) : searchType === 'location' ? (
           <StyledLocation className='searchTap'>
             <div id='btnWrapper'>
               <button>
@@ -74,7 +74,7 @@ export default function Header() {
                   <div key={index}>
                     <button
                       onClick={() => {
-                        alert(cities[selectedCity] + " " + district);
+                        alert(cities[selectedCity] + ' ' + district);
                         setSelectedDistrict(district);
                       }}
                     >

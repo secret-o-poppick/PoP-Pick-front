@@ -1,25 +1,25 @@
-import Header from "./Header";
-import Footer from "./Footer";
-import { Outlet } from "react-router-dom";
-import styled from "styled-components";
+import Header from './Header';
+import Footer from './Footer';
+import { Outlet } from 'react-router-dom';
+import styled from 'styled-components';
 
 export default function Layout() {
   return (
     <StyledLayout>
       <Header />
       <Outlet />
-      <div
+      {/* <div
         style={{
-          height: "300vh",
-          backgroundColor: "lightgray",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "100px",
+          height: '300vh',
+          backgroundColor: 'lightgray',
+          display: 'flex',
+          // alignItems: 'center',
+          // justifyContent: 'center',
+          fontSize: '100px',
         }}
       >
         test scroll
-      </div>
+      </div> */}
       <Footer />
     </StyledLayout>
   );
