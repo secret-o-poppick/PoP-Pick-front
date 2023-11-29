@@ -1,11 +1,11 @@
-import { Outlet } from "react-router-dom";
-import styled from "styled-components";
-import logoImg from "@/assets/logo.svg";
-import SidebarItem from "@/components/SidebarItem";
-import Logout from "@/components/Logout";
-import { LuUsers } from "react-icons/lu";
-import { BiCategory } from "react-icons/bi";
-import { IoStorefrontOutline } from "react-icons/io5";
+import { Outlet } from 'react-router-dom';
+import styled from 'styled-components';
+import logoImg from '@/assets/logo.svg';
+import SidebarItem from '@/components/SidebarItem';
+import Logout from '@/components/Logout';
+import { LuUsers } from 'react-icons/lu';
+import { BiCategory } from 'react-icons/bi';
+import { IoStorefrontOutline } from 'react-icons/io5';
 
 export default function Admin() {
   const menus = [
@@ -39,7 +39,7 @@ export default function Admin() {
 
 const AdminLayout = styled.div`
 display: flex;
-flex-direction: row
+flex-direction: row;
 `
 
 const Side = styled.div`
@@ -47,7 +47,7 @@ width:220px;
 height:100vh;
 background-color: #e4edff;
 padding: 20px;
-box-sizing: border-box;
+box-sizing:border-box;
 position: sticky;
 left: 0;
 display: flex;
@@ -77,5 +77,7 @@ const Menu = styled.div`
 `
 
 const Content = styled.div`
-  padding: 90px
+  padding: 90px;
+  flex-direction: column;
+  flex: 1;
 `

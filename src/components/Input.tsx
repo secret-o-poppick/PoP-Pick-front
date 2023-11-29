@@ -5,19 +5,23 @@ interface InputProps {
   type: 'text' | 'email' | 'tel' | 'url' | 'password';
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   label?: string;
+  placeholder?: string;
 }
 
 export default function Input({
   type = 'text',
   value,
   onChange,
+  onKeyDown,
   label,
+  placeholder
 }: InputProps) {
   return (
     <Wrapper>
       {label && <Label>{label}</Label>}
-      <StyledInput type={type} value={value} onChange={onChange} />
+      <StyledInput type={type} value={value} onChange={onChange} onKeyDown={onKeyDown} placeholder={placeholder} />
     </Wrapper>
   );
 }
@@ -41,11 +45,11 @@ const Wrapper = styled.div`
 const StyledInput = styled.input`
   width: 100%;
   box-sizing: border-box;
-  border: none;
+  border:1px solid #888;
   border-radius: 5px;
   padding: 0.8rem 1.2rem;
   font-size: 1rem;
-  cursor: pointer;
+  cursor: text;
 `;
 
 const Label = styled.label`

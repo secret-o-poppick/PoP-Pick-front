@@ -18,11 +18,11 @@ export default function Header() {
 
   const locationBtnHandler = () => {
     setSearchOpened(true);
-    setSearchType("location");
+    setSearchType('location');
   };
   const dateBtnHandler = () => {
     setSearchOpened(true);
-    setSearchType("date");
+    setSearchType('date');
   };
 
   return (
@@ -32,6 +32,7 @@ export default function Header() {
         isSearchOpened={isSearchOpened}
         searchType={searchType}
       />
+
       <StyledHeader>
         <StyledLink to='/'>
           <img src={logoImg} alt='logo' />
