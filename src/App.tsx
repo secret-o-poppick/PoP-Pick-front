@@ -27,7 +27,6 @@ import AdminUserAuth from './pages/Admin/AdminUserAuth';
 function App() {
   return (
     <>
-      <GlobalStyle />
       <BrowserRouter>
         <Routes>
           {/* User */}
