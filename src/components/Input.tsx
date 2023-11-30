@@ -4,10 +4,12 @@ import { MEDIA_LIMIT } from '@/assets/styleVariable';
 interface InputProps {
   type: 'text' | 'email' | 'tel' | 'url' | 'password';
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   label?: string;
   placeholder?: string;
+  readonly?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
 }
 
 export default function Input({
@@ -16,12 +18,14 @@ export default function Input({
   onChange,
   onKeyDown,
   label,
-  placeholder
+  placeholder,
+  readonly = false,
+  onClick
 }: InputProps) {
   return (
     <Wrapper>
       {label && <Label>{label}</Label>}
-      <StyledInput type={type} value={value} onChange={onChange} onKeyDown={onKeyDown} placeholder={placeholder} />
+      <StyledInput type={type} value={value} onChange={onChange} onKeyDown={onKeyDown} placeholder={placeholder} readOnly={readonly} onClick={onClick} />
     </Wrapper>
   );
 }
