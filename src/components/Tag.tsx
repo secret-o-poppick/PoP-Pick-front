@@ -30,7 +30,13 @@ const StyledHeaderTagDiv = styled.div<{ color: TagStyleType }>`
   background-color: ${({ color }) => TAG_STYLE[color].backgroundColor};
 
   position: absolute;
-  margin: 10px;
+  margin: 10px 20px;
+
+  @media (max-width: ${MEDIA_LIMIT}) {
+    & {
+      margin: 10px;
+    }
+  }
 `;
 
 const StyledStoreTagDiv = styled.div<{ color: TagStyleType }>`
