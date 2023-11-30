@@ -1,25 +1,53 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { faker } from '@faker-js/faker';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '@/components/Button';
 import AdminTitle from '@/components/AdminTitle';
 import AdminStoreTable from '@/components/AdminStoreTable';
 import AdminStoreSearch from '@/components/AdminStoreSearch';
 import { Store } from '@/types/index';
+import Pagination from '@/components/Pagination';
+
 
 export default function AdminStores() {
+  const location = useLocation();
   const navigate = useNavigate();
-  const [fakeData, setFakeData] = useState<Store[]>(generateFakeData(2));
+  const [fakeData, setFakeData] = useState<Store[]>(generateFakeData(35));
+
+  // 목업데이터
   const [filteredData, setFilteredData] = useState<Store[]>(fakeData);
 
   const handleEdit = () => navigate('#');
   const handleDelete = () => navigate('#');
+
+  // 활성화/비활성화 버튼
   const activeBtn = (index: number) => {
     const updatedData = [...fakeData];
     updatedData[index].active = !updatedData[index].active;
     setFakeData(updatedData);
   };
+
+  const searchParams = new URLSearchParams(location.search);
+  const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
+
+  // 현재 페이지
+  const [currentPage, setCurrentPage] = useState(page);
+
+  // 한 페이지에 보여줄 아이템 개수
+  const perPage = 10;
+
+  // 전체 페이지 수
+  const totalPages = Math.ceil(filteredData.length / perPage);
+
+  // 현재 페이지에 표시할 데이터 범위 계산
+  const startIndex = (currentPage - 1) * perPage;
+  const endIndex = Math.min(startIndex + perPage - 1, filteredData.length - 1);
+
+  const handlePageChange = (index: number) => {
+    setCurrentPage(index);
+  };
+
 
   const handleSearch = (text: string) => {
     const filtered = fakeData.filter(
@@ -60,7 +88,7 @@ export default function AdminStores() {
 
       {/* 테이블 */}
       <AdminStoreTable
-        data={filteredData}
+        data={filteredData.slice(startIndex, endIndex + 1)}
         handleEdit={handleEdit}
         handleDelete={handleDelete}
         activeBtn={activeBtn}
@@ -70,6 +98,12 @@ export default function AdminStores() {
       <AdminStoreSearch handleSearch={handleSearch} />
 
       {/* 페이지네이션 */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        perPage={perPage}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 }
