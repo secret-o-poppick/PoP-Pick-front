@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 // icons
 import logoImg from "@/assets/logo.svg";
+import logoTitleImg from "@/assets/logotitle.png";
 import { TbLogin2 } from "react-icons/tb";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
@@ -18,11 +19,11 @@ export default function Header() {
 
   const locationBtnHandler = () => {
     setSearchOpened(true);
-    setSearchType('location');
+    setSearchType("location");
   };
   const dateBtnHandler = () => {
     setSearchOpened(true);
-    setSearchType('date');
+    setSearchType("date");
   };
 
   return (
@@ -35,8 +36,8 @@ export default function Header() {
 
       <StyledHeader>
         <StyledLink to='/'>
-          <img src={logoImg} alt='logo' />
-          <h1>Pop Pick</h1>
+          <img className='logo' src={logoImg} alt='logo' />
+          <img className='logoTitle' src={logoTitleImg} alt='logo' />
         </StyledLink>
 
         <StyledSearch>
@@ -104,15 +105,19 @@ const StyledLink = styled(Link)`
   display: flex;
   justify-content: flex-start;
   white-space: nowrap;
-  img {
+  .logo {
     width: 2rem;
-    margin-right: 10px;
+    /* margin-right: 10px; */
+  }
+  .logoTitle {
+    width: 8em;
+    height: 100%;
   }
   @media (max-width: ${MEDIA_LIMIT}) {
     & {
       width: 15%;
     }
-    & > h1 {
+    .logoTitle {
       visibility: hidden;
       color: transparent;
     }
