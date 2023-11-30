@@ -49,6 +49,7 @@ const AdminStoreTable: React.FC<AdminStoreTableProps> = ({ data, handleEdit, han
                     : '게시물 숨기기'}
                 </button>
               </td>
+
             </tr>
           ))
         )}
@@ -60,9 +61,10 @@ const StyledTable = styled.table`
 width:100%;
 text-align: center;
 font-size: 0.9em;
+border-collapse: collapse;
 
 & thead {
-  border-bottom:1px solid #888;
+  background-color:#e4edff
 }
 
 & th {
@@ -94,10 +96,14 @@ font-size: 0.9em;
 & th:last-child{
   width:140px;
 }
+& tr{
+  &:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+}
 & td{
   padding: 0.5rem 1rem;
   vertical-align: middle;
-  border-bottom:1px solid #eee;
   word-break: keep-all;
 }
 

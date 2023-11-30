@@ -36,3 +36,8 @@ export const AUTH_LOCATION_CATEGORY_OPTIONS3: SelectBoxOption[] = [
   { value: '도농동', label: '도농동' },
   { value: '호평동', label: '호평동' },
 ];
+
+export const AUTH_ACTIVE_VALID_OPTIONS: SelectBoxOption[] = [
+  { value: '숨기기', label: '숨긴 게시물' },
+  { value: '숨기기 해제', label: '안숨긴 게시물' },
+];
