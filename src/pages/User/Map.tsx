@@ -78,7 +78,7 @@ const StyledMap = styled.div<{
     .list {
       width: 100%;
       height: 100%;
-                transition-duration: 0.5s;
+      transition-duration: 0.5s;
     }
   }
   @media (max-width: ${MEDIA_LIMIT}) {
@@ -107,21 +107,21 @@ const StyledMap = styled.div<{
         .list {
           visibility: ${$isListOpened ? "visible" : "hidden"};
         }
-      `}}
-      
-      .listBtn {
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: white;
-        border-radius: 20px 20px 0 0;
-        & > div {
-          width: 80px;
-          height: 5px;
-          background-color: gray;
-          border-radius: 1000px;
-        }
+      `}
+    }
+
+    .listBtn {
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      border-radius: 20px 20px 0 0;
+      & > div {
+        width: 80px;
+        height: 5px;
+        background-color: gray;
+        border-radius: 1000px;
       }
     }
   }
