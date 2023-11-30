@@ -79,8 +79,4 @@ const AddBtn = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-bottom: 1.2em;
-
-  Button {
-    width: 80px;
-  }
 `;
