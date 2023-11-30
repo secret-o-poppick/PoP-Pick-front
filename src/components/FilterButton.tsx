@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { FILTER_BUTTON_STYLE } from '@/assets/styleVariable';
 import { PopPickStyleType } from '@/utils/index';
+import { MEDIA_LIMIT } from '@/assets/styleVariable';
 
 interface ButtonProps {
   type?: 'button' | 'submit' | 'reset' | undefined;
@@ -51,5 +52,12 @@ const StyledFilterButton = styled.button<{ color: PopPickStyleType }>`
     background-color: ${({ color }) =>
       FILTER_BUTTON_STYLE[color].hoverBackgroundColor};
     color: ${({ color }) => FILTER_BUTTON_STYLE[color].hoverColor};
+  }
+
+  @media (max-width: ${MEDIA_LIMIT}) {
+    & {
+      padding: 0.5rem 1.5rem;
+      font-size: 1.2rem;
+    }
   }
 `;

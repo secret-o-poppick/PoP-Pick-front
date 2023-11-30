@@ -54,6 +54,7 @@ const StyledStoreTagDiv = styled.div<{ color: TagStyleType }>`
       width: 3em;
       height: 1.5em;
       font-weight: 400;
+      margin: 0;
     }
   }
 `;
