@@ -131,23 +131,14 @@ const StyledMore = styled.div<{
   .closeBtn {
     height: 100%;
   }
-  ${({ $isSearchOpened }) => {
-    return (
-      ($isSearchOpened &&
-        css`
-          visibility: visible;
-          .searchTap {
-          }
-        `) ||
-      (!$isSearchOpened &&
-        css`
-          visibility: hidden;
-          .searchTap {
-            height: 0;
-          }
-        `)
-    );
-  }}
+
+  ${({ $isSearchOpened }) => css`
+    visibility: ${$isSearchOpened ? "visible" : "hidden"};
+
+    .searchTap {
+      height: ${$isSearchOpened ? "60%" : "0"};
+    }
+  `}
 `;
 
 const StyledLocation = styled.div`

@@ -102,22 +102,17 @@ const StyledMap = styled.div<{
       box-shadow: 0 -5px 10px -10px black;
       transition-duration: 0.5s;
 
-      ${({ $isListOpened }) => {
-        return (
-          ($isListOpened &&
-            css`
-              height: 90%;
-            `) ||
-          (!$isListOpened &&
-            css`
-              height: 10%;
-              .list {
-                visibility: hidden;
-                transition-duration: 0.5s;
-              }
-            `)
-        );
-      }}
+      ${({ $isListOpened }) => css`
+        height: ${$isListOpened ? "90%" : "5%"};
+        .list {
+          visibility: ${$isListOpened ? "visible" : "hidden"};
+        }
+      `}
+
+      .list {
+        transition-duration: 0.5s;
+      }
+
       .listBtn {
         height: 30px;
         display: flex;
