@@ -6,6 +6,8 @@ import { DayPicker, DateRange } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { FaLongArrowAltRight } from 'react-icons/fa';
 import Button from '@/components/Button';
+import SelectBox from '@/components/SelectBox';
+import { AUTH_LOCATION_CATEGORY_OPTIONS1, AUTH_LOCATION_CATEGORY_OPTIONS2, AUTH_LOCATION_CATEGORY_OPTIONS3 } from '@/assets/config';
 
 interface StoreCreateStepProps {
     handleChange: (input: string) => (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -29,7 +31,7 @@ const StoreCreateStep3: React.FC<StoreCreateStepProps> = () => {
         <>
             <StyledContent>
                 <StyledInput>
-                    <label id='dateLabel'>일시</label>
+                    <label id='labels'>일시</label>
                     <div id='dateInput'>
                         <div id='buttons'>
                             <button className='dateInputBtn' onClick={handleClick}>
@@ -54,6 +56,20 @@ const StoreCreateStep3: React.FC<StoreCreateStepProps> = () => {
                         )}
                     </div>
                 </StyledInput>
+                <StyledInput>
+                    <label id='labels'>지역 카테고리</label>
+                    <div id='selectBox'>
+                        <SelectBox
+                            options={AUTH_LOCATION_CATEGORY_OPTIONS1}
+                        />
+                        <SelectBox
+                            options={AUTH_LOCATION_CATEGORY_OPTIONS2}
+                        />
+                        <SelectBox
+                            options={AUTH_LOCATION_CATEGORY_OPTIONS3}
+                        />
+                    </div>
+                </StyledInput>
             </StyledContent>
         </>
     );
@@ -63,13 +79,13 @@ const StyledContent = styled.div`
   display: flex;
   flex-direction: column;
   height:500px;
+  row-gap: 50px;
 `;
 
 const StyledInput = styled.div`
-  height: 5em;
   display: flex;
 
-  #dateLabel {
+  #labels {
     width: 150px;
     font-size: 1rem;
     font-weight: 700;
@@ -79,6 +95,7 @@ const StyledInput = styled.div`
 
   #dateInput{
     display: flex;
+    align-self: flex-start;
     flex-direction: column;
   }
 
@@ -93,6 +110,11 @@ const StyledInput = styled.div`
     display: flex;
     column-gap: 1em;
     align-items: center;
+  }
+
+  #selectBox{
+    display: flex;
+    column-gap: 1em;
   }
 `;
 
