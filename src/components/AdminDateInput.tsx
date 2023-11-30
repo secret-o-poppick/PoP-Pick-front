@@ -68,6 +68,7 @@ const StyledInput = styled.div`
         padding: 0.6em 1em;
         border-radius: 5px;
         cursor: pointer;
+        border:1px solid #888;
     }
 
     #buttons {

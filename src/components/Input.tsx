@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { MEDIA_LIMIT } from '@/assets/styleVariable';
 
 interface InputProps {
-  type: 'text' | 'email' | 'tel' | 'url' | 'password';
+  type: 'text' | 'email' | 'tel' | 'url' | 'password' | 'number';
   value: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
