@@ -82,14 +82,14 @@ const AdminStoreEdit = () => {
 
   return (
     <>
-      <div style={{ margin: 'auto', width: '50%' }}>
-        <StepProgressBar currentPage={page} totalPage={5} />
-      </div>
-
       <div>
-        <div>
-          <AdminTitle title='팝업스토어 등록' />
+        <AdminTitle title='팝업스토어 등록' />
+      </div>
+      <div>
+        <div style={{ margin: 'auto', width: '50%' }}>
+          <StepProgressBar currentPage={page} totalPage={5} />
         </div>
+
         <div>{PageDisplay()}</div>
         <StyledButton>
           {page > 1 && (

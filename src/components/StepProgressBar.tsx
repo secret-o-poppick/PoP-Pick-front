@@ -29,7 +29,7 @@ const Container = styled.div<{ $percent: number }>`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: 1rem 0;
+  margin: -2rem 0 2rem 0;
 
   &::after {
     content: '';
@@ -57,7 +57,7 @@ const Item = styled.div<{ $completed: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 2.4rem;
-  height: 2.4rem;
+  width: 1.8em;
+  height: 1.8em;
   border-radius: 50%;
 `;

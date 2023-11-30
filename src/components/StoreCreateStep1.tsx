@@ -8,7 +8,7 @@ interface StoreCreateStepProps {
     nextStep: () => void;
 }
 
-const StoreCreateStep1: React.FC<StoreCreateStepProps> = (props) => {
+const StoreCreateStep1: React.FC<StoreCreateStepProps> = () => {
     const [category, setCategory] = useState<string>('');
     const [eventName, setEventName] = useState('');
     const [brand, setBrand] = useState('');
@@ -18,14 +18,14 @@ const StoreCreateStep1: React.FC<StoreCreateStepProps> = (props) => {
             <StyledContent>
                 <StyledInput>
                     <RadioInput
-                        name="category"
+                        name='category'
                         options={[
                             { label: '전시', value: 'exhibition' },
                             { label: '팝업', value: 'popup' },
                         ]}
                         selectedValue={category}
                         onChange={(value) => setCategory(value)}
-                        label="분류 카테고리"
+                        label='분류 카테고리'
                     />
                 </StyledInput>
                 <StyledInput>
@@ -42,12 +42,13 @@ const StoreCreateStep1: React.FC<StoreCreateStepProps> = (props) => {
 const StyledContent = styled.div`
   display: flex;
   flex-direction: column;
+  height:500px;
 `;
 
 const StyledInput = styled.div`
   height: 5em;
   display: flex;
-    align-content: center;
+  align-content: center;
 `;
 
 export default StoreCreateStep1;
