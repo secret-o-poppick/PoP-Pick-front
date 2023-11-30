@@ -9,6 +9,7 @@ interface InputProps {
   label?: string;
   placeholder?: string;
   readonly?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
 }
 
 export default function Input({
@@ -18,12 +19,13 @@ export default function Input({
   onKeyDown,
   label,
   placeholder,
-  readonly = false
+  readonly = false,
+  onClick
 }: InputProps) {
   return (
     <Wrapper>
       {label && <Label>{label}</Label>}
-      <StyledInput type={type} value={value} onChange={onChange} onKeyDown={onKeyDown} placeholder={placeholder} readOnly={readonly} />
+      <StyledInput type={type} value={value} onChange={onChange} onKeyDown={onKeyDown} placeholder={placeholder} readOnly={readonly} onClick={onClick} />
     </Wrapper>
   );
 }
