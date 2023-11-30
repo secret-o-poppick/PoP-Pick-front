@@ -8,6 +8,10 @@ import { StoreTag } from '@/components/Tag';
 import FilterButton from '@/components/FilterButton';
 
 import { data } from '@/data/stores';
+/**
+ * TODO :추후 팝업 스토어 이미지로 바뀔 예정
+ */
+import logoImg from '@/assets/logo.svg';
 import { useState } from 'react';
 
 interface optionsProp {
@@ -81,7 +85,7 @@ export default function Stores() {
                   </div>
                 )}
               </div>
-              <img src={store.images[0]} />
+              <img src={logoImg} />
 
               <div className='storeInfoContents'>
                 <h3>{store.name}</h3>
