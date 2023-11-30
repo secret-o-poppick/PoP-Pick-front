@@ -78,6 +78,7 @@ const StyledMap = styled.div<{
     .list {
       width: 100%;
       height: 100%;
+                transition-duration: 0.5s;
     }
   }
   @media (max-width: ${MEDIA_LIMIT}) {
@@ -101,23 +102,13 @@ const StyledMap = styled.div<{
       border-radius: 20px 20px 0 0;
       box-shadow: 0 -5px 10px -10px black;
       transition-duration: 0.5s;
-
-      ${({ $isListOpened }) => {
-        return (
-          ($isListOpened &&
-            css`
-              height: 90%;
-            `) ||
-          (!$isListOpened &&
-            css`
-              height: 10%;
-              .list {
-                visibility: hidden;
-                transition-duration: 0.5s;
-              }
-            `)
-        );
-      }}
+      ${({ $isListOpened }) => css`
+        height: ${$isListOpened ? "90%" : "10%"};
+        .list {
+          visibility: ${$isListOpened ? "visible" : "hidden"};
+        }
+      `}}
+      
       .listBtn {
         height: 30px;
         display: flex;
