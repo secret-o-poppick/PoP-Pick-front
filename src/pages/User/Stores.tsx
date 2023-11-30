@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { BsFilterLeft } from 'react-icons/bs';
+import Select from 'react-select';
+
 import { FaRegHeart, FaRegBookmark } from 'react-icons/fa';
 
 import { MEDIA_LIMIT } from '@/assets/styleVariable';
@@ -13,26 +14,36 @@ import { data } from '@/data/stores';
 import logoImg from '@/assets/logo.svg';
 import { useState } from 'react';
 
-interface StoresDataProps {
-  data: {
-    name: string;
-    date: string;
-    address: string;
-    type: string;
-    adultVerification: boolean;
-  }[];
+interface optionsProp {
+  value: string;
+  label: string;
 }
 
 export default function Stores() {
+  const selectOptions = [
+    {
+      value: 'latetes',
+      label: '최신 오픈 순',
+    },
+    {
+      value: 'likes',
+      label: '좋아요 순',
+    },
+    {
+      value: 'views',
+      label: '조회수 순',
+    },
+  ];
+
   const [stores, setStores] = useState(data);
+
   const handleFilterButton = () => {
     console.log('Filter Button click');
   };
 
-  const handleLastestFilter = () => {
-    console.log('최신순으로 정렬');
+  const handleFilter = (e: optionsProp | null) => {
+    console.log(`${e?.label}으로 필터링 : value = ${e?.value}`);
   };
-  console.log(stores);
 
   return (
     <>
@@ -49,12 +60,15 @@ export default function Stores() {
           </FilterButton>
         </div>
 
-        <StyledLastestFilterDiv onClick={handleLastestFilter}>
+        <StyledFilterDiv>
           <div>
-            <BsFilterLeft size='25' />
-            <span>최신 오픈 순</span>
+            <Select
+              options={selectOptions}
+              onChange={handleFilter}
+              defaultValue={selectOptions[0]}
+            />
           </div>
-        </StyledLastestFilterDiv>
+        </StyledFilterDiv>
       </StyledMainButtonDiv>
 
       <StyledMainStoreGrid>
@@ -62,7 +76,7 @@ export default function Stores() {
           const title = store.type === 'popup' ? '팝업' : '전시';
 
           return (
-            <div className='storeInfoDiv'>
+            <div key={index} className='storeInfoDiv'>
               <div className='storeInfoTagDiv'>
                 <StoreTag color={store.type} title={title} />
                 {store.adultVerification && (
@@ -129,6 +143,7 @@ const StyledMainStoreGrid = styled.div`
 
   & > .storeInfoDiv img {
     border: 1px solid black;
+    border-radius: 10px;
     width: 19rem;
     height: 300px;
     margin-bottom: 20px;
@@ -212,7 +227,7 @@ const StyledMainButtonDiv = styled.div`
   }
 `;
 
-const StyledLastestFilterDiv = styled.div`
+const StyledFilterDiv = styled.div`
   display: flex;
   width: 350px;
   flex-direction: column;
@@ -227,19 +242,11 @@ const StyledLastestFilterDiv = styled.div`
     align-items: center;
   }
 
-  & > div > span {
-    margin-left: 5px;
-  }
-
   @media (max-width: ${MEDIA_LIMIT}) {
     & {
       display: flex;
       flex-direction: row;
       justify-content: flex-end;
-    }
-    & > div > span {
-      size: 0.7rem;
-      font-size: 1rem;
     }
   }
 `;

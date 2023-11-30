@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import Stores from './Stores';
+import ImageSlide from '@/components/ImageSlide';
 import { HeaderTag } from '@/components/Tag';
 
 /**
@@ -10,13 +11,12 @@ import logoImg from '@/assets/logo.svg';
 import { MEDIA_LIMIT } from '@/assets/styleVariable';
 
 export default function Main() {
+  console.log(logoImg);
+
   return (
     <>
       <StyledMainHeader>
-        <HeaderTag color='header' title='오늘의 POP PICK!' />
-        <div className='mainHeaderDiv'>
-          <img src={logoImg} />
-        </div>
+        <ImageSlide />
       </StyledMainHeader>
 
       <Stores />
@@ -29,6 +29,7 @@ const StyledMainHeader = styled.div`
   width: 100%;
   height: 320px;
   background-color: gray;
+
   & .mainHeaderDiv img {
     width: 100%;
     height: 320px;
