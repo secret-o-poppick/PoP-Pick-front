@@ -8,7 +8,8 @@ import AdminStoreTable from '@/components/AdminStoreTable';
 import AdminStoreSearch from '@/components/AdminStoreSearch';
 import { Store } from '@/types/index';
 import Pagination from '@/components/Pagination';
-
+import SelectBox from '@/components/SelectBox';
+import { AUTH_ACTIVE_VALID_OPTIONS } from '@/assets/config';
 
 export default function AdminStores() {
   const location = useLocation();
@@ -81,6 +82,7 @@ export default function AdminStores() {
 
       {/* 등록버튼 */}
       <AddBtn>
+        <SelectBox options={AUTH_ACTIVE_VALID_OPTIONS} defaultValue='숨기기' />
         <Button color='primary' onClick={handleRegister}>
           등록
         </Button>
@@ -113,4 +115,5 @@ const AddBtn = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-bottom: 1.2em;
+  column-gap: 1em;
 `;
