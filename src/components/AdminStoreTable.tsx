@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Store } from '@/types/index';
 
@@ -33,16 +34,16 @@ const AdminStoreTable: React.FC<AdminStoreTableProps> = ({ data, handleEdit, han
         ) : (
           data.map((store, index) => (
             <tr key={index}>
-              <td><img src={store.image} width='120px' alt={store.title} /></td>
-              <td>{store.author}</td>
-              <td>{store.title}</td>
+              <td><StyledLink to='/admin/stores/1'><img src={store.image} width='120px' alt={store.title} /></StyledLink></td>
+              <td><StyledLink to='/admin/stores/1'>{store.author}</StyledLink></td>
+              <td><StyledLink to='/admin/stores/1'>{store.title}</StyledLink></td>
               <td>{new Date(store.startAt).toLocaleTimeString()}</td>
               <td>{new Date(store.endAt).toLocaleTimeString()}</td>
               <td>{new Date(store.createdAt).toLocaleTimeString()}</td>
-              <td><button id='editBtn' onClick={handleEdit}>수정하기</button></td>
-              <td><button id='deleteBtn' onClick={handleDelete}>삭제하기</button></td>
+              <td><button className='btns' onClick={handleEdit}>수정하기</button></td>
+              <td><button className='btns' onClick={handleDelete}>삭제하기</button></td>
               <td>
-                <button id='activeBtn' onClick={() => activeBtn(index)}>
+                <button className='btns' onClick={() => activeBtn(index)}>
                   {store.active
                     ? '게시물 숨기기 해제'
                     : '게시물 숨기기'}
@@ -58,7 +59,7 @@ const AdminStoreTable: React.FC<AdminStoreTableProps> = ({ data, handleEdit, han
 const StyledTable = styled.table`
 width:100%;
 text-align: center;
-font-size: 0.75em;
+font-size: 0.9em;
 
 & thead {
   border-bottom:1px solid #888;
@@ -104,7 +105,7 @@ font-size: 0.75em;
   height:140px;
 }
 
-#editBtn, #deleteBtn, #activeBtn{
+.btns{
   background-color: transparent;
   border:none;
   text-decoration: underline;
@@ -112,4 +113,12 @@ font-size: 0.75em;
 }
 `
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    font-weight: bold;
+  }
+`
 export default AdminStoreTable;
