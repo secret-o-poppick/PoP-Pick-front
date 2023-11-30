@@ -1,21 +1,59 @@
-import React from "react";
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import { addDays } from 'date-fns';
+import { DateRange } from 'react-day-picker';
+import AdminDateInput from '@/components/AdminDateInput'
+import AdminLocationSelect from '@/components/AdminLocationSelect'
+import AdminAddressInputs from '@/components/AdminAddressInputs'
+import { AddressData, StoreCreateStepProps } from '@/types/index'
 
-interface StoreCreateStepProps {
-    handleChange: (input: string) => (e: React.ChangeEvent<HTMLInputElement>) => void;
-    nextStep: () => void;
-}
+const StoreCreateStep3: React.FC<StoreCreateStepProps> = () => {
+    const today = new Date();
+    const defaultSelected: DateRange = {
+        from: today,
+        to: addDays(today, 0),
+    };
+    const [range, setRange] = useState<DateRange | undefined>(defaultSelected);
+    const [isDetailVisible, setIsDetailVisible] = useState(false);
 
-const StoreCreateStep3: React.FC<StoreCreateStepProps> = (props) => {
+    const handleClick = () => {
+        setIsDetailVisible(!isDetailVisible);
+    };
+
+    const [addressData, setAddressData] = useState<AddressData | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [detailAddress, setDetailAddress] = useState('');
+
+    const openPostCode = () => {
+        setIsModalOpen(true);
+    };
+
+    const closePostCode = () => {
+        setIsModalOpen(false);
+    };
+
     return (
-        <Step>
-            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        </Step>
+        <StyledContent>
+            <AdminDateInput range={range} setRange={setRange} isDetailVisible={isDetailVisible} handleClick={handleClick} today={today} />
+            <AdminLocationSelect />
+            <AdminAddressInputs
+                addressData={addressData}
+                setAddressData={setAddressData}
+                isModalOpen={isModalOpen}
+                openPostCode={openPostCode}
+                closePostCode={closePostCode}
+                detailAddress={detailAddress}
+                setDetailAddress={setDetailAddress}
+            />
+        </StyledContent>
     );
 };
 
-const Step = styled.div`
-display:flex
-`
+const StyledContent = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    row-gap: 50px;
+  `;
 
 export default StoreCreateStep3;

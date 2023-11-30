@@ -1,20 +1,25 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { ImImages } from 'react-icons/im';
 import ImagePreview from '@/components/ImagePreview';
+import { ImImages } from 'react-icons/im';
 
 interface IFileTypes {
   id: number;
   object: File;
 }
 
-const DragDrop = (): JSX.Element => {
+interface DragDropProps {
+  uploadedImages: IFileTypes[];
+  setUploadedImages: React.Dispatch<React.SetStateAction<IFileTypes[]>>;
+}
+
+const DragDrop: React.FC<DragDropProps> = (props) => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [activeMain, setActiveMain] = useState<number | null>(null);
 
   const fileId = useRef<number>(0);
 
   const dragRef = useRef<HTMLLabelElement | null>(null);
-  const [uploadedImages, setUploadedImages] = useState<IFileTypes[]>([]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -23,7 +28,7 @@ const DragDrop = (): JSX.Element => {
         id: fileId.current++,
         object: file,
       }));
-      setUploadedImages((prevImages) => [...prevImages, ...newImages]);
+      props.setUploadedImages((prevImages) => [...prevImages, ...newImages]);
     }
   };
 
@@ -47,12 +52,29 @@ const DragDrop = (): JSX.Element => {
         id: fileId.current++,
         object: file,
       }));
-      setUploadedImages((prevImages) => [...prevImages, ...newImages]);
+      props.setUploadedImages((prevImages) => [...prevImages, ...newImages]);
     }
   };
 
   const onDelete = (id: number) => {
-    setUploadedImages((prevImages) => prevImages.filter((image) => image.id !== id));
+    props.setUploadedImages((prevImages) => prevImages.filter((image) => image.id !== id));
+  };
+
+  const onSetMain = (id: number) => {
+    if (activeMain === id) {
+      return;
+    }
+    setActiveMain(id);
+
+    const previouslyActiveButton = document.querySelector('.active');
+    if (previouslyActiveButton) {
+      previouslyActiveButton.classList.remove('active');
+    }
+
+    const newActiveButton = document.getElementById(`mainButton_${id}`);
+    if (newActiveButton) {
+      newActiveButton.classList.add('active');
+    }
   };
 
   return (
@@ -82,11 +104,17 @@ const DragDrop = (): JSX.Element => {
         </StyledIcon>
       </StyledLayout>
 
-      <StyledImgs>
-        {uploadedImages.map((image, index) => (
-          <ImagePreview key={index} src={URL.createObjectURL(image.object)} onDelete={() => onDelete(image.id)} />
+      <StyledImages>
+        {props.uploadedImages.map((image, index) => (
+          <ImagePreview
+            key={index}
+            src={URL.createObjectURL(image.object)}
+            onDelete={() => onDelete(image.id)}
+            onSetMain={() => onSetMain(image.id)}
+            isMain={activeMain === image.id}
+          />
         ))}
-      </StyledImgs>
+      </StyledImages>
     </>
   );
 };
@@ -102,7 +130,7 @@ const StyledLayout = styled.label`
 
 const StyledLabel = styled.div`
   border: 4px dotted #eee;
-  height: 420px;
+  height: 360px;
   background-color: #fff9f8;
   border-radius: 16px;
   display: flex;
@@ -129,10 +157,12 @@ const StyledIcon = styled.div`
   z-index: 2;
 `;
 
-const StyledImgs = styled.div`
+const StyledImages = styled.div`
   display: flex;
   box-sizing: border-box;
   width: 100%;
   column-gap: 6px;
+  height: 100px;
 `;
+
 export default DragDrop;

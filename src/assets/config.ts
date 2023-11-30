@@ -11,3 +11,28 @@ export const AUTH_FILTER_OPTIONS: SelectBoxOption[] = [
   { value: '등록자', label: '등록자만 보기' },
   { value: '관리자', label: '관리자만 보기' },
 ];
+
+export const AUTH_LOCATION_CATEGORY_OPTIONS1: SelectBoxOption[] = [
+  { value: '서울특별시', label: '서울특별시' },
+  { value: '경기도', label: '경기도' },
+  { value: '충청도', label: '충청도' },
+  { value: '강원도', label: '강원도' },
+];
+
+export const AUTH_LOCATION_CATEGORY_OPTIONS2: SelectBoxOption[] = [
+  { value: '구로구', label: '구로구' },
+  { value: '구리시', label: '구리시' },
+  { value: '남양주시', label: '남양주시' },
+];
+
+export const AUTH_LOCATION_CATEGORY_OPTIONS3: SelectBoxOption[] = [
+  { value: '구로 1가', label: '구로 1가' },
+  { value: '구로 2가', label: '구로 2가' },
+  { value: '구로 3가', label: '구로 3가' },
+  { value: '인창동', label: '인창동' },
+  { value: '토평동', label: '토평동' },
+  { value: '수택동', label: '수택동' },
+  { value: '교문동', label: '교문동' },
+  { value: '도농동', label: '도농동' },
+  { value: '호평동', label: '호평동' },
+];

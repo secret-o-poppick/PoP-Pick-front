@@ -91,14 +91,17 @@ const StyledDetail = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 3em;
+  box-sizing: border-box;
   & > div {
-    width: 80%;
-    height: 80%;
+    width: 100%;
+    height: 100%;
     box-shadow: 0 0 10px lightgray;
     border-radius: 20px;
     display: flex;
     padding: 2em;
     gap: 2em;
+    box-sizing: border-box;
   }
   .imgWrapper {
     width: 50%;
@@ -221,6 +224,7 @@ const StyledDetail = styled.div`
 
   @media (max-width: ${MEDIA_LIMIT}) {
     height: auto;
+    padding: 0;
     & > div:first-child {
       width: 100%;
       flex-direction: column;
