@@ -26,7 +26,7 @@ export default function ImageSlide() {
   const settings: SliderSettings = {
     dots: false,
     infinite: true,
-    speed: 800,
+    speed: 900,
     slidesToShow: 1,
     slidesToScroll: 1,
     arrow: true,

@@ -1,8 +1,13 @@
-import styled, { css } from "styled-components";
-import { MEDIA_LIMIT } from "@/assets/styleVariable";
-import { useState } from "react";
+import styled, { css } from 'styled-components';
+import { useState } from 'react';
+import { FaRegHeart, FaRegBookmark } from 'react-icons/fa';
+
+import { MEDIA_LIMIT, MEDIA_MAX_LIMIT } from '@/assets/styleVariable';
+import { StoreTag } from '@/components/Tag';
+import { data } from '@/data/stores';
 
 export default function Map() {
+  const [stores, setStores] = useState(data);
   const [isListOpened, setListOpened] = useState<boolean>(false);
   const listOpenHandler = () => {
     setListOpened((cur) => !cur);
@@ -20,13 +25,158 @@ export default function Map() {
             <div className='listBtn' onClick={listOpenHandler}>
               <div></div>
             </div>
-            <div className='list'></div>
+            <div className='list'>
+              <StyledStoreGrid>
+                {stores.map((store, index) => {
+                  /**페이지 네이션으로 처리하기 */
+                  if (index >= 4) {
+                    return;
+                  }
+                  const title = store.type === 'popup' ? '팝업' : '전시';
+
+                  return (
+                    <div key={index} className='storeInfoDiv'>
+                      <div className='storeInfoTagDiv'>
+                        <StoreTag color={store.type} title={title} />
+                        {store.adultVerification && (
+                          <div className='tagMargin'>
+                            <StoreTag color='adult' title='성인' />
+                          </div>
+                        )}
+                      </div>
+                      <img src={store.images[0]} />
+
+                      <div className='storeInfoContents'>
+                        <h3>{store.name}</h3>
+                        <p>{store.date}</p>
+                        <p>{store.address}</p>
+                        <div className='storeIconsDiv'>
+                          <FaRegHeart style={{ marginRight: 10 }} />
+                          <FaRegBookmark />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </StyledStoreGrid>
+
+              <StyledPagenationDiv>
+                페이지네이션 들어갈 자리
+              </StyledPagenationDiv>
+            </div>
           </div>
         </div>
       </StyledMap>
     </>
   );
 }
+
+const StyledPagenationDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+`;
+
+const StyledStoreGrid = styled.div`
+  height: 90%;
+  display: grid;
+  grid-template-columns: repeat(2, 50%);
+  padding: 10px;
+
+  & .storeInfoTagDiv {
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    position: relative;
+  }
+
+  & .storeInfoDiv {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  & .storeInfoDiv .tagMargin {
+    margin-right: 140px;
+  }
+
+  & > .storeInfoDiv img {
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 10px;
+  }
+
+  & .storeIconsDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  & .storeInfoDiv .tagMargin {
+    margin-right: 140px;
+  }
+
+  & > .storeInfoDiv > .storeInfoContents {
+    width: 200px;
+  }
+
+  @media (max-width: ${MEDIA_LIMIT}) {
+    & {
+      padding: 0 25px;
+      grid-template-columns: repeat(1, 100%);
+      position: relative;
+      overflow: scroll;
+    }
+
+    & .storeInfoDiv {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: row;
+      position: relative;
+    }
+    & .storeInfoDiv .tagMargin {
+      margin-right: 120px;
+    }
+
+    & .storeInfoTagDiv {
+      width: 340px;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+    & > .storeInfoDiv img {
+      border: 1px solid black;
+      margin-right: 10px;
+      width: 150px;
+      height: 150px;
+    }
+
+    & > .storeInfoDiv > .storeInfoContents {
+      height: 130px;
+      width: 400px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+  }
+
+  @media (min-width: ${MEDIA_MAX_LIMIT}) {
+    & {
+      grid-template-columns: repeat(3, 33%);
+    }
+  }
+`;
 
 const StyledMap = styled.div<{
   $isListOpened: boolean;
@@ -36,7 +186,7 @@ const StyledMap = styled.div<{
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3em;
+  padding: 2.5em;
   box-sizing: border-box;
   .wrapper {
     width: 100%;
@@ -103,9 +253,9 @@ const StyledMap = styled.div<{
       transition-duration: 0.5s;
 
       ${({ $isListOpened }) => css`
-        height: ${$isListOpened ? "90%" : "5%"};
+        height: ${$isListOpened ? '90%' : '5%'};
         .list {
-          visibility: ${$isListOpened ? "visible" : "hidden"};
+          visibility: ${$isListOpened ? 'visible' : 'hidden'};
         }
       `}
 
