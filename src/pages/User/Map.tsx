@@ -78,7 +78,6 @@ const StyledMap = styled.div<{
     .list {
       width: 100%;
       height: 100%;
-      transition-duration: 0.5s;
     }
   }
   @media (max-width: ${MEDIA_LIMIT}) {
@@ -102,26 +101,31 @@ const StyledMap = styled.div<{
       border-radius: 20px 20px 0 0;
       box-shadow: 0 -5px 10px -10px black;
       transition-duration: 0.5s;
+
       ${({ $isListOpened }) => css`
-        height: ${$isListOpened ? "90%" : "10%"};
+        height: ${$isListOpened ? "90%" : "5%"};
         .list {
           visibility: ${$isListOpened ? "visible" : "hidden"};
         }
       `}
-    }
 
-    .listBtn {
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: white;
-      border-radius: 20px 20px 0 0;
-      & > div {
-        width: 80px;
-        height: 5px;
-        background-color: gray;
-        border-radius: 1000px;
+      .list {
+        transition-duration: 0.5s;
+      }
+
+      .listBtn {
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        border-radius: 20px 20px 0 0;
+        & > div {
+          width: 80px;
+          height: 5px;
+          background-color: gray;
+          border-radius: 1000px;
+        }
       }
     }
   }

@@ -134,8 +134,9 @@ const StyledMore = styled.div<{
 
   ${({ $isSearchOpened }) => css`
     visibility: ${$isSearchOpened ? "visible" : "hidden"};
+
     .searchTap {
-      height: ${$isSearchOpened ? "auto" : "0"};
+      height: ${$isSearchOpened ? "60%" : "0"};
     }
   `}
 `;
