@@ -8,25 +8,28 @@ interface StoreCreateStepProps {
 }
 
 const StoreCreateStep5: React.FC<StoreCreateStepProps> = () => {
-    const [brand, setBrand] = useState('');
+    const [social, setSocial] = useState('');
+    const [promotion, setPromotion] = useState('');
+    const [desc, setDesc] = useState('');
+    const [etc, setEtc] = useState('');
 
     return (
         <>
             <StyledContent>
                 <StyledInput>
-                    <InputStyled value={brand} type='text' onChange={(e) => setBrand(e.target.value)} label='SNS(공식페이지)' />
+                    <InputStyled value={social} type='text' onChange={(e) => setSocial(e.target.value)} label='SNS(공식페이지)' />
                 </StyledInput>
                 <StyledInput>
-                    <InputStyled value={brand} type='text' onChange={(e) => setBrand(e.target.value)} label='이벤트/프로모션' />
+                    <InputStyled value={promotion} type='text' onChange={(e) => setPromotion(e.target.value)} label='이벤트/프로모션' />
                 </StyledInput>
                 <StyledInput>
                     <StyledInputRow>
                         <label>설명글</label>
-                        <StyledTextArea />
+                        <StyledTextArea value={desc} onChange={(e) => setDesc(e.target.value)} />
                     </StyledInputRow>
                 </StyledInput>
                 <StyledInput>
-                    <InputStyled value={brand} type='text' onChange={(e) => setBrand(e.target.value)} label='기타' />
+                    <InputStyled value={etc} type='text' onChange={(e) => setEtc(e.target.value)} label='기타' />
                 </StyledInput>
             </StyledContent>
         </>
@@ -72,6 +75,7 @@ const StyledTextArea = styled.textarea`
     border-radius: 5px;
     padding: 0.8rem 1.2rem;
     font-size: 1rem;
+    font-family: Malgun Gothic;
 `;
 
 export default StoreCreateStep5;
