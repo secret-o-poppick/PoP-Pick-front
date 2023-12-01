@@ -10,7 +10,7 @@ export default function Map() {
   return (
     <>
       <StyledMap $isListOpened={isListOpened}>
-        <div className='wrapper'>
+        <div>
           <div className='mapWrapper'>
             <div className='refreshBtn'>
               <div>주변 팝업 보기</div>
@@ -38,19 +38,19 @@ const StyledMap = styled.div<{
   justify-content: center;
   padding: 3em;
   box-sizing: border-box;
-  .wrapper {
+  & > div:first-child {
     width: 100%;
     height: 100%;
     display: flex;
     gap: 2em;
-    box-shadow: 0 0 10px gray;
     border-radius: 20px;
-    overflow: hidden;
   }
   .mapWrapper {
     width: 100%;
     height: 100%;
     background-color: lightgreen;
+    border-radius: 20px;
+    box-shadow: 0 0 10px gray;
     .refreshBtn {
       margin-top: 1em;
       width: 100%;
@@ -82,7 +82,7 @@ const StyledMap = styled.div<{
   }
   @media (max-width: ${MEDIA_LIMIT}) {
     padding: 0;
-    .wrapper {
+    & > div:first-child {
       width: 100%;
       height: 100%;
       flex-direction: column;
@@ -90,10 +90,10 @@ const StyledMap = styled.div<{
       position: relative;
       box-shadow: none;
       justify-content: flex-end;
-      border-radius: 0;
     }
     .mapWrapper {
       height: 100%;
+      border-radius: 0;
     }
     .listWrapper {
       margin-top: auto;
