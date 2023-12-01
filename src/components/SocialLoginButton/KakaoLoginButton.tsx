@@ -1,13 +1,15 @@
 import styled from 'styled-components';
+import axios from 'axios';
+import { REACT_APP_BACKEND_HOST } from '@/assets/config';
 
 export default function KakaoLoginButton() {
-  const API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY;
-  const REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
+  const handleClick = async () => {
+    const res = await axios.get<{ path: string }>(
+      `${REACT_APP_BACKEND_HOST}/api/auth/kakao/login`
+    );
 
-  const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt`;
-
-  const handleClick = () => {
-    window.location.href = kakaoURL;
+    const path = res.data.path;
+    window.location.href = path;
   };
 
   return (
