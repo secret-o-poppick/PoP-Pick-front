@@ -34,6 +34,7 @@ export default function ImageSlide() {
     autoplaySpeed: 5000,
     centerPadding: '0px',
   };
+
   const slickRef = useRef<any>(null);
 
   const previousButtonAction = useCallback(

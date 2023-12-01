@@ -1,12 +1,19 @@
-import { MEDIA_LIMIT } from "@/assets/styleVariable";
-import styled from "styled-components";
-import logo from "@/assets/logo.svg";
+import styled from 'styled-components';
+import { useState } from 'react';
+
+import { MEDIA_LIMIT, MEDIA_MAX_LIMIT } from '@/assets/styleVariable';
+import { FaRegHeart, FaRegBookmark } from 'react-icons/fa';
+
+import logo from '@/assets/logo.svg';
+import { data } from '@/data/stores';
+import { StoreTag } from '@/components/Tag';
 
 export default function User() {
-  const data = {
-    nickname: "Nickname",
-    id: "POP USER",
-    email: "test@test.com",
+  const [stores, setStores] = useState(data);
+  const userData = {
+    nickname: 'Nickname',
+    id: 'POP USER',
+    email: 'test@test.com',
     register: false,
   };
   return (
@@ -16,12 +23,12 @@ export default function User() {
           <div className='userWrapper'>
             <div className='profile'>
               <img src={logo} />
-              <div>{data.nickname}</div>
-              <div>{data.id}</div>
-              <div>{data.email}</div>
+              <div>{userData.nickname}</div>
+              <div>{userData.id}</div>
+              <div>{userData.email}</div>
             </div>
             <div className='btnsWrapper'>
-              {data.register ? (
+              {userData.register ? (
                 <div>+사업자 등록</div>
               ) : (
                 <div>+이벤트 새로 등록하기</div>
@@ -30,13 +37,153 @@ export default function User() {
             </div>
           </div>
           <div className='listWrapper'>
-            <div></div>
+            <StyledStoreGrid>
+              {stores.map((store, index) => {
+                /**페이지 네이션으로 처리하기 */
+                if (index >= 4) {
+                  return;
+                }
+                const title = store.type === 'popup' ? '팝업' : '전시';
+
+                return (
+                  <div key={index} className='storeInfoDiv'>
+                    <div className='storeInfoTagDiv'>
+                      <StoreTag color={store.type} title={title} />
+                      {store.adultVerification && (
+                        <div className='tagMargin'>
+                          <StoreTag color='adult' title='성인' />
+                        </div>
+                      )}
+                    </div>
+                    <img src={store.images[0]} />
+
+                    <div className='storeInfoContents'>
+                      <h3>{store.name}</h3>
+                      <p>{store.date}</p>
+                      <p>{store.address}</p>
+                      <div className='storeIconsDiv'>
+                        <FaRegHeart style={{ marginRight: 10 }} />
+                        <FaRegBookmark />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </StyledStoreGrid>
+            <StyledPagenationDiv>페이지네이션 들어갈 자리</StyledPagenationDiv>
           </div>
         </div>
       </StyledUser>
     </>
   );
 }
+
+const StyledPagenationDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+`;
+
+const StyledStoreGrid = styled.div`
+  height: 99%;
+  display: grid;
+  grid-template-columns: repeat(3, 33%);
+  padding: 10px;
+
+  & .storeInfoTagDiv {
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    position: relative;
+  }
+
+  & .storeInfoDiv {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  & .storeInfoDiv .tagMargin {
+    margin-right: 140px;
+  }
+
+  & > .storeInfoDiv img {
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 10px;
+  }
+
+  & .storeIconsDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  & .storeInfoDiv .tagMargin {
+    margin-right: 140px;
+  }
+
+  & > .storeInfoDiv > .storeInfoContents {
+    width: 200px;
+  }
+
+  @media (max-width: ${MEDIA_LIMIT}) {
+    & {
+      padding: 0 25px;
+      grid-template-columns: repeat(1, 100%);
+      position: relative;
+      overflow: scroll;
+    }
+
+    & .storeInfoDiv {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: row;
+      position: relative;
+    }
+    & .storeInfoDiv .tagMargin {
+      margin-right: 120px;
+    }
+
+    & .storeInfoTagDiv {
+      width: 340px;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+    & > .storeInfoDiv img {
+      border: 1px solid black;
+      margin-right: 10px;
+      width: 150px;
+      height: 150px;
+    }
+
+    & > .storeInfoDiv > .storeInfoContents {
+      height: 130px;
+      width: 400px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+  }
+
+  @media (min-width: ${MEDIA_MAX_LIMIT}) {
+    & {
+      grid-template-columns: repeat(3, 33%);
+    }
+  }
+`;
 
 const StyledUser = styled.div`
   width: 100%;
@@ -98,6 +245,7 @@ const StyledUser = styled.div`
     width: 70%;
     height: 100%;
     display: flex;
+    flex-direction: column;
   }
 
   @media (max-width: ${MEDIA_LIMIT}) {

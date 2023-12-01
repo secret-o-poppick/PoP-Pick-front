@@ -1,16 +1,16 @@
-import styled, { css } from "styled-components";
-import { useState } from "react";
+import styled, { css } from 'styled-components';
+import { useState } from 'react';
 
-import { addDays, format } from "date-fns";
-import { ko } from "date-fns/locale";
-import { DayPicker, DateRange } from "react-day-picker";
-import "react-day-picker/dist/style.css";
+import { addDays, format } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { DayPicker, DateRange } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
 
 //icons
-import { TbLocation } from "react-icons/tb";
-import { PiMapTrifold } from "react-icons/pi";
-import { cities, districts } from "@/data";
-import { FaLongArrowAltRight } from "react-icons/fa";
+import { TbLocation } from 'react-icons/tb';
+import { PiMapTrifold } from 'react-icons/pi';
+import { cities, districts } from '@/data';
+import { FaLongArrowAltRight } from 'react-icons/fa';
 
 interface SearchPageProps {
   setSearchOpened: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,7 +24,7 @@ export default function SearchPage({
   searchType,
 }: SearchPageProps) {
   const [selectedCity, setSelectedCity] = useState<number>(0);
-  const [selectedDistrict, setSelectedDistrict] = useState<string>("");
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('');
 
   //Date Picker
   const today = new Date();
@@ -44,7 +44,7 @@ export default function SearchPage({
   return (
     <>
       <StyledMore className='searchPage' $isSearchOpened={isSearchOpened}>
-        {searchType === "location" ? (
+        {searchType === 'location' ? (
           <StyledLocation className='searchTap'>
             <div className='btnWrapper'>
               <button>
@@ -74,7 +74,7 @@ export default function SearchPage({
                   <div key={index}>
                     <button
                       onClick={() => {
-                        alert(cities[selectedCity] + " " + district);
+                        alert(cities[selectedCity] + ' ' + district);
                         setSelectedDistrict(district);
                       }}
                     >
@@ -96,11 +96,11 @@ export default function SearchPage({
             />
             <div className='dateRangeWrapper'>
               <div className='dateRange'>
-                {range?.from ? format(range.from, "PPP", { locale: ko }) : null}
+                {range?.from ? format(range.from, 'PPP', { locale: ko }) : null}
               </div>
               <FaLongArrowAltRight />
               <div className='dateRange'>
-                {range?.to ? format(range.to, "PPP", { locale: ko }) : null}
+                {range?.to ? format(range.to, 'PPP', { locale: ko }) : null}
               </div>
             </div>
             <button className='searchBtn'>검색</button>
@@ -133,10 +133,10 @@ const StyledMore = styled.div<{
   }
 
   ${({ $isSearchOpened }) => css`
-    visibility: ${$isSearchOpened ? "visible" : "hidden"};
+    visibility: ${$isSearchOpened ? 'visible' : 'hidden'};
 
     .searchTap {
-      height: ${$isSearchOpened ? "60%" : "0"};
+      height: ${$isSearchOpened ? '60%' : '0'};
     }
   `}
 `;
