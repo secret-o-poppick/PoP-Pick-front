@@ -6,6 +6,7 @@ import {
   useState,
   useCallback,
 } from 'react';
+import { REACT_APP_BACKEND_HOST } from '@/assets/config';
 
 interface User {
   _id: string;
@@ -39,13 +40,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     if (!isLoggedIn) return;
 
     try {
-      console.log('getUserInfo 호출');
       if (accessToken) {
-        const response = await axios.get('http://localhost:3310/api/users', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const response = await axios.get(
+          `${REACT_APP_BACKEND_HOST}/api/users`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
 
         setUser(response.data); // Assuming the response data is the user object
       }
@@ -68,26 +71,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     fetchData();
   }, [getUserInfo]);
 
-  const login = (accessToken: string) => {
+  const login = async (accessToken: string) => {
     setAccessToken(accessToken);
     setLoggedIn(true);
-    getUserInfo();
+    await getUserInfo();
 
     localStorage.setItem('access_token', accessToken);
   };
 
-  const logout = () => {
-    setAccessToken(null);
-    setLoggedIn(false);
-    setUser(null);
-
-    localStorage.removeItem('access_token');
-  };
-
-  const withdrawal = async () => {
-    if (accessToken) {
+  const logout = async () => {
+    try {
       const response = await axios.post(
-        'http://localhost:3310/api/auth/kakao/withdrawal',
+        `${REACT_APP_BACKEND_HOST}/api/auth/kakao/logout`,
         null,
         {
           headers: {
@@ -95,8 +90,41 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           },
         }
       );
-      console.log(response);
-      if (response) logout();
+
+      if (response) {
+        setAccessToken(null);
+        setLoggedIn(false);
+        setUser(null);
+
+        localStorage.removeItem('access_token');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const withdrawal = async () => {
+    if (accessToken) {
+      try {
+        const response = await axios.post(
+          `${REACT_APP_BACKEND_HOST}/api/auth/kakao/withdrawal`,
+          null,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        if (response) {
+          setAccessToken(null);
+          setLoggedIn(false);
+          setUser(null);
+
+          localStorage.removeItem('access_token');
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
