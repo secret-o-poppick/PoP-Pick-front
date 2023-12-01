@@ -1,6 +1,7 @@
 import { ButtonStyleType, PopPickStyleType, TagStyleType } from '@/utils';
 
 export const MEDIA_LIMIT = '700px';
+export const MEDIA_MAX_LIMIT = '1500px';
 
 export const BUTTON_STYLE: Record<
   ButtonStyleType,
