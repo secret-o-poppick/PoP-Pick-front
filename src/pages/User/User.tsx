@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Select from 'react-select';
 import { useState } from 'react';
 
 import { MEDIA_LIMIT, MEDIA_MAX_LIMIT } from '@/assets/styleVariable';
@@ -7,15 +8,46 @@ import { FaRegHeart, FaRegBookmark } from 'react-icons/fa';
 import logo from '@/assets/logo.svg';
 import { data } from '@/data/stores';
 import { StoreTag } from '@/components/Tag';
+import FilterButton from '@/components/FilterButton';
+import Pagination from '@/components/Pagination';
+
+interface optionsProp {
+  value: string;
+  label: string;
+}
 
 export default function User() {
   const [stores, setStores] = useState(data);
+  const selectOptions = [
+    {
+      value: 'latetes',
+      label: '최신 오픈 순',
+    },
+    {
+      value: 'likes',
+      label: '좋아요 순',
+    },
+    {
+      value: 'views',
+      label: '조회수 순',
+    },
+  ];
+
+  const handleFilterButton = () => {
+    console.log('Filter Button click');
+  };
+
+  const handleFilter = (e: optionsProp | null) => {
+    console.log(`${e?.label}으로 필터링 : value = ${e?.value}`);
+  };
+
   const userData = {
     nickname: 'Nickname',
     id: 'POP USER',
     email: 'test@test.com',
-    register: false,
+    register: true,
   };
+
   return (
     <>
       <StyledUser>
@@ -37,6 +69,32 @@ export default function User() {
             </div>
           </div>
           <div className='listWrapper'>
+            <StyledMainButtonDiv>
+              <div className='mainButtonDiv'>
+                <FilterButton onClick={handleFilterButton} color='notice'>
+                  북마크
+                </FilterButton>
+                <FilterButton onClick={handleFilterButton} color='error'>
+                  좋아요
+                </FilterButton>
+                {userData.register && (
+                  <FilterButton onClick={handleFilterButton} color='primary'>
+                    등록
+                  </FilterButton>
+                )}
+              </div>
+
+              <StyledFilterDiv>
+                <div>
+                  <Select
+                    options={selectOptions}
+                    onChange={handleFilter}
+                    defaultValue={selectOptions[0]}
+                  />
+                </div>
+              </StyledFilterDiv>
+            </StyledMainButtonDiv>
+
             <StyledStoreGrid>
               {stores.map((store, index) => {
                 /**페이지 네이션으로 처리하기 */
@@ -70,13 +128,73 @@ export default function User() {
                 );
               })}
             </StyledStoreGrid>
-            <StyledPagenationDiv>페이지네이션 들어갈 자리</StyledPagenationDiv>
+
+            <StyledPagenationDiv>
+              <Pagination
+                currentPage={2}
+                totalPages={5}
+                perPage={6}
+                count={5}
+                onPageChange={() => {}}
+              />
+            </StyledPagenationDiv>
           </div>
         </div>
       </StyledUser>
     </>
   );
 }
+
+const StyledMainButtonDiv = styled.div`
+  box-sizing: border-box;
+  background-color: white;
+  width: 100%;
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  & .mainButtonDiv {
+    width: 100%;
+  }
+
+  @media (max-width: ${MEDIA_LIMIT}) {
+    flex-direction: column;
+    justify-content: center;
+    margin: 10px 0;
+
+    & .mainButtonDiv {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      padding: 10px 0;
+    }
+  }
+`;
+
+const StyledFilterDiv = styled.div`
+  display: flex;
+  width: 350px;
+  flex-direction: column;
+  justify-content: flex-end;
+  cursor: pointer;
+
+  & > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  @media (max-width: ${MEDIA_LIMIT}) {
+    & {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+  }
+`;
 
 const StyledPagenationDiv = styled.div`
   display: flex;
@@ -90,10 +208,9 @@ const StyledStoreGrid = styled.div`
   height: 99%;
   display: grid;
   grid-template-columns: repeat(3, 33%);
-  padding: 10px;
 
   & .storeInfoTagDiv {
-    width: 200px;
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -101,11 +218,11 @@ const StyledStoreGrid = styled.div`
   }
 
   & .storeInfoDiv {
-    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 0.5rem;
   }
 
   & .storeInfoDiv .tagMargin {
@@ -115,7 +232,7 @@ const StyledStoreGrid = styled.div`
   & > .storeInfoDiv img {
     border: 1px solid black;
     border-radius: 10px;
-    width: 200px;
+    width: 100%;
     height: 200px;
     margin-bottom: 10px;
   }
@@ -131,7 +248,13 @@ const StyledStoreGrid = styled.div`
   }
 
   & > .storeInfoDiv > .storeInfoContents {
-    width: 200px;
+    width: 100%;
+    p,
+    h3 {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
   }
 
   @media (max-width: ${MEDIA_LIMIT}) {
@@ -140,6 +263,7 @@ const StyledStoreGrid = styled.div`
       grid-template-columns: repeat(1, 100%);
       position: relative;
       overflow: scroll;
+      height: 100%;
     }
 
     & .storeInfoDiv {
@@ -177,18 +301,11 @@ const StyledStoreGrid = styled.div`
       justify-content: flex-end;
     }
   }
-
-  @media (min-width: ${MEDIA_MAX_LIMIT}) {
-    & {
-      grid-template-columns: repeat(3, 33%);
-    }
-  }
 `;
 
 const StyledUser = styled.div`
   width: 100%;
   height: calc(100vh - 90px);
-  padding: 3em;
   box-sizing: border-box;
   & > div {
     width: 100%;
@@ -250,6 +367,8 @@ const StyledUser = styled.div`
 
   @media (max-width: ${MEDIA_LIMIT}) {
     padding: 0;
+    height: auto;
+
     & > div {
       flex-direction: column;
       gap: 0;

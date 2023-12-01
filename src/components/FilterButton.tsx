@@ -7,6 +7,8 @@ interface ButtonProps {
   type?: 'button' | 'submit' | 'reset' | undefined;
   color?: PopPickStyleType;
   children: string;
+  fontSize?: string;
+  buttonSize?: string[];
   onClick?: () => void;
 }
 
@@ -14,6 +16,8 @@ export default function FilterButton({
   type = 'button',
   color = 'default',
   children,
+  fontSize = '1rem',
+  buttonSize = ['0.3rem', '1.5rem'],
   onClick,
 }: ButtonProps) {
   const handleClick = () => {
@@ -23,15 +27,25 @@ export default function FilterButton({
   };
 
   return (
-    <StyledFilterButton type={type} color={color} onClick={handleClick}>
+    <StyledFilterButton
+      type={type}
+      color={color}
+      onClick={handleClick}
+      fontSize={fontSize}
+      buttonSize={buttonSize}
+    >
       {children}
     </StyledFilterButton>
   );
 }
 
-const StyledFilterButton = styled.button<{ color: PopPickStyleType }>`
-  padding: 0.3rem 1.5rem;
-  font-size: 1rem;
+const StyledFilterButton = styled.button<{
+  color: PopPickStyleType;
+  fontSize: string;
+  buttonSize: string[];
+}>`
+  padding: ${({ buttonSize }) => `${buttonSize[0]} ${buttonSize[1]}`};
+  font-size: ${({ fontSize }) => fontSize};
   font-weight: 600;
   cursor: pointer;
   border-radius: 40px;

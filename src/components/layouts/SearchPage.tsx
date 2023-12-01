@@ -11,17 +11,24 @@ import { TbLocation } from 'react-icons/tb';
 import { PiMapTrifold } from 'react-icons/pi';
 import { cities, districts } from '@/data';
 import { FaLongArrowAltRight } from 'react-icons/fa';
+import { MdLocationPin } from 'react-icons/md';
+import { FaRegCalendarCheck } from 'react-icons/fa6';
+import { Link } from 'react-router-dom';
 
 interface SearchPageProps {
   setSearchOpened: React.Dispatch<React.SetStateAction<boolean>>;
   isSearchOpened: boolean;
   searchType: string;
+  locationBtnHandler: () => void;
+  dateBtnHandler: () => void;
 }
 
 export default function SearchPage({
   setSearchOpened,
   isSearchOpened,
   searchType,
+  locationBtnHandler,
+  dateBtnHandler,
 }: SearchPageProps) {
   const [selectedCity, setSelectedCity] = useState<number>(0);
   const [selectedDistrict, setSelectedDistrict] = useState<string>('');
@@ -41,20 +48,26 @@ export default function SearchPage({
   const selectCityHandler = (index: number) => {
     setSelectedCity(index);
   };
+
   return (
     <>
+      <StyledBlack $isSearchOpened={isSearchOpened} />
       <StyledMore className='searchPage' $isSearchOpened={isSearchOpened}>
         {searchType === 'location' ? (
           <StyledLocation className='searchTap'>
             <div className='btnWrapper'>
-              <button>
-                <TbLocation />
-                <p>현위치로 검색</p>
-              </button>
-              <button>
-                <PiMapTrifold />
-                <p>지도로 위치 검색</p>
-              </button>
+              <Link to='/map'>
+                <button>
+                  <TbLocation />
+                  <p>현위치로 검색</p>
+                </button>
+              </Link>
+              <Link to='/map'>
+                <button>
+                  <PiMapTrifold />
+                  <p>지도로 위치 검색</p>
+                </button>
+              </Link>
             </div>
             <div className='locationWrapper'>
               <ul>
@@ -85,7 +98,7 @@ export default function SearchPage({
               </div>
             </div>
           </StyledLocation>
-        ) : (
+        ) : searchType === 'date' ? (
           <StyledDate className='searchTap'>
             <StyledDayPicker
               mode='range'
@@ -105,12 +118,38 @@ export default function SearchPage({
             </div>
             <button className='searchBtn'>검색</button>
           </StyledDate>
-        )}
+        ) : searchType === 'string' ? (
+          <StyledString>
+            <div>
+              <button className='optBtns' onClick={locationBtnHandler}>
+                <div>위치</div>
+                <MdLocationPin />
+              </button>
+              <button className='optBtns' onClick={dateBtnHandler}>
+                <div>기간</div>
+                <FaRegCalendarCheck />
+              </button>
+            </div>
+          </StyledString>
+        ) : null}
         <div className='closeBtn' onClick={closeSearchtab}></div>
       </StyledMore>
     </>
   );
 }
+
+const StyledBlack = styled.div<{
+  $isSearchOpened: boolean;
+}>`
+  z-index: 10;
+  ${({ $isSearchOpened }) => css`
+    visibility: ${$isSearchOpened ? 'visible' : 'hidden'};
+  `}
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  position: fixed;
+`;
 
 // Search Styles
 const StyledMore = styled.div<{
@@ -118,15 +157,15 @@ const StyledMore = styled.div<{
 }>`
   z-index: 10;
   width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.3);
+  height: 0;
   position: fixed;
   transition-duration: 0.5s;
-  .searchTap {
+  & > div:first-child {
     padding-top: 90px;
-    transition-duration: 0.5s;
+    transition-duration: 1s;
     background-color: white;
     overflow: hidden;
+    border-radius: 0 0 10px 10px;
   }
   .closeBtn {
     height: 100%;
@@ -134,10 +173,7 @@ const StyledMore = styled.div<{
 
   ${({ $isSearchOpened }) => css`
     visibility: ${$isSearchOpened ? 'visible' : 'hidden'};
-
-    .searchTap {
-      height: ${$isSearchOpened ? '60%' : '0'};
-    }
+    height: ${$isSearchOpened ? '100vh' : '0'};
   `}
 `;
 
@@ -216,7 +252,7 @@ const StyledLocation = styled.div`
   }
 `;
 const StyledDate = styled.div`
-  height: 50%;
+  height: 60%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -225,8 +261,6 @@ const StyledDate = styled.div`
     width: 35%;
     display: flex;
     justify-content: space-between;
-  }
-  .dateRange {
   }
   .searchBtn {
     width: 40%;
@@ -264,5 +298,24 @@ const StyledDayPicker = styled(DayPicker)`
     &:hover {
       background-color: #ff5c40;
     }
+  }
+`;
+
+const StyledString = styled.div`
+  height: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  & > div:first-child {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+  }
+  button {
+    width: 40%;
+    padding: 10px 0;
+    background-color: lightgray;
+    border: none;
+    border-radius: 10px;
   }
 `;

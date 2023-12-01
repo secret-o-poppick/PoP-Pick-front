@@ -15,7 +15,7 @@ export default function Map() {
   return (
     <>
       <StyledMap $isListOpened={isListOpened}>
-        <div className='wrapper'>
+        <div>
           <div className='mapWrapper'>
             <div className='refreshBtn'>
               <div>주변 팝업 보기</div>
@@ -76,17 +76,16 @@ const StyledPagenationDiv = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 5px;
+  margin: 10px;
 `;
 
 const StyledStoreGrid = styled.div`
-  height: 90%;
+  height: 100%;
   display: grid;
   grid-template-columns: repeat(2, 50%);
-  padding: 10px;
 
   & .storeInfoTagDiv {
-    width: 200px;
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -94,11 +93,12 @@ const StyledStoreGrid = styled.div`
   }
 
   & .storeInfoDiv {
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 1rem;
   }
 
   & .storeInfoDiv .tagMargin {
@@ -108,7 +108,7 @@ const StyledStoreGrid = styled.div`
   & > .storeInfoDiv img {
     border: 1px solid black;
     border-radius: 10px;
-    width: 200px;
+    width: 100%;
     height: 200px;
     margin-bottom: 10px;
   }
@@ -124,7 +124,12 @@ const StyledStoreGrid = styled.div`
   }
 
   & > .storeInfoDiv > .storeInfoContents {
-    width: 200px;
+    width: 100%;
+    h3 {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
   }
 
   @media (max-width: ${MEDIA_LIMIT}) {
@@ -188,19 +193,19 @@ const StyledMap = styled.div<{
   justify-content: center;
   padding: 2.5em;
   box-sizing: border-box;
-  .wrapper {
+  & > div:first-child {
     width: 100%;
     height: 100%;
     display: flex;
     gap: 2em;
-    box-shadow: 0 0 10px gray;
     border-radius: 20px;
-    overflow: hidden;
   }
   .mapWrapper {
     width: 100%;
     height: 100%;
     background-color: lightgreen;
+    border-radius: 20px;
+    box-shadow: 0 0 10px gray;
     .refreshBtn {
       margin-top: 1em;
       width: 100%;
@@ -232,7 +237,7 @@ const StyledMap = styled.div<{
   }
   @media (max-width: ${MEDIA_LIMIT}) {
     padding: 0;
-    .wrapper {
+    & > div:first-child {
       width: 100%;
       height: 100%;
       flex-direction: column;
@@ -240,10 +245,10 @@ const StyledMap = styled.div<{
       position: relative;
       box-shadow: none;
       justify-content: flex-end;
-      border-radius: 0;
     }
     .mapWrapper {
       height: 100%;
+      border-radius: 0;
     }
     .listWrapper {
       margin-top: auto;

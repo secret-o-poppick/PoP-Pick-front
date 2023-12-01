@@ -113,7 +113,6 @@ const StyledPagenationDiv = styled.div`
 const StyledMainStoreGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 25%);
-
   padding: 0 50px;
   margin-bottom: 20px;
 
