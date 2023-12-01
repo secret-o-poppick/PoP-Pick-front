@@ -317,7 +317,6 @@ const StyledUser = styled.div`
     width: 30%;
     height: 100%;
     box-shadow: 0 0 10px lightgray;
-    border-radius: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
