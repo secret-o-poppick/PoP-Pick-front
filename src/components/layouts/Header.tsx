@@ -1,35 +1,46 @@
-import styled from "styled-components";
-import { useState } from "react";
-import SearchPage from "./SearchPage";
-import { Link } from "react-router-dom";
-
+import styled from 'styled-components';
+import { useState } from 'react';
+import SearchPage from './SearchPage';
+import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 // icons
-import logoImg from "@/assets/logo.svg";
-import logoTitleImg from "@/assets/logotitle.png";
-import { IoLogOutOutline } from "react-icons/io5";
-import { FaRegCircleUser } from "react-icons/fa6";
-import { FaSearch } from "react-icons/fa";
-import { MdLocationPin } from "react-icons/md";
-import { FaRegCalendarCheck } from "react-icons/fa6";
-import { MEDIA_LIMIT } from "@/assets/styleVariable";
+import logoImg from '@/assets/logo.svg';
+import logoTitleImg from '@/assets/logotitle.png';
+import { IoLogOutOutline } from 'react-icons/io5';
+import { FaRegCircleUser } from 'react-icons/fa6';
+import { FaSearch } from 'react-icons/fa';
+import { MdLocationPin } from 'react-icons/md';
+import { FaRegCalendarCheck } from 'react-icons/fa6';
+import { MEDIA_LIMIT } from '@/assets/styleVariable';
+import LoginModal from '../LoginModal';
+import { useAuth } from '@/context/AuthContext';
+import Avatar from '../Avatar';
 
 export default function Header() {
+  const { isLoggedIn, logout, user } = useAuth();
   const [isSearchOpened, setSearchOpened] = useState<boolean>(false);
-  const [searchType, setSearchType] = useState<string>("");
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [searchType, setSearchType] = useState<string>('');
 
   const stringBtnHandler = () => {
     if (document.body.clientWidth > 700) return;
     setSearchOpened(true);
-    setSearchType("string");
+    setSearchType('string');
   };
   const locationBtnHandler = () => {
     setSearchOpened(true);
-    setSearchType("location");
+    setSearchType('location');
   };
   const dateBtnHandler = () => {
     setSearchOpened(true);
-    setSearchType("date");
+    setSearchType('date');
+  };
+
+  const handleLoginButtonClick = () => {
+    withReactContent(Swal).fire({
+      html: <LoginModal />,
+      showConfirmButton: false,
+    });
   };
 
   return (
@@ -66,16 +77,20 @@ export default function Header() {
         </StyledSearch>
 
         <StyledUser>
-          {isLogin ? (
-            <button className='logout'>
+          {isLoggedIn && (
+            <button className='logout' onClick={logout}>
               <IoLogOutOutline />
             </button>
-          ) : null}
-          <Link to='/user'>
-            <button className='userinfo'>
+          )}
+          {isLoggedIn ? (
+            <Link to='/user'>
+              <Avatar image={user?.image} />
+            </Link>
+          ) : (
+            <button className='userinfo' onClick={handleLoginButtonClick}>
               <FaRegCircleUser />
             </button>
-          </Link>
+          )}
         </StyledUser>
       </StyledHeader>
     </>

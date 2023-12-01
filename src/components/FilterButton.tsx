@@ -32,7 +32,7 @@ export default function FilterButton({
       color={color}
       onClick={handleClick}
       fontSize={fontSize}
-      buttonSize={buttonSize}
+      $buttonSize={buttonSize}
     >
       {children}
     </StyledFilterButton>
@@ -42,9 +42,9 @@ export default function FilterButton({
 const StyledFilterButton = styled.button<{
   color: PopPickStyleType;
   fontSize: string;
-  buttonSize: string[];
+  $buttonSize: string[];
 }>`
-  padding: ${({ buttonSize }) => `${buttonSize[0]} ${buttonSize[1]}`};
+  padding: ${({ $buttonSize }) => `${$buttonSize[0]} ${$buttonSize[1]}`};
   font-size: ${({ fontSize }) => fontSize};
   font-weight: 600;
   cursor: pointer;
