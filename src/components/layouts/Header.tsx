@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 
 // icons
 import logoImg from "@/assets/logo.svg";
-import { TbLogin2 } from "react-icons/tb";
+import logoTitleImg from "@/assets/logotitle.png";
+import { IoLogOutOutline } from "react-icons/io5";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
 import { MdLocationPin } from "react-icons/md";
@@ -15,14 +16,20 @@ import { MEDIA_LIMIT } from "@/assets/styleVariable";
 export default function Header() {
   const [isSearchOpened, setSearchOpened] = useState<boolean>(false);
   const [searchType, setSearchType] = useState<string>("");
+  const [isLogin, setIsLogin] = useState<boolean>(false);
 
+  const stringBtnHandler = () => {
+    if (document.body.clientWidth > 700) return;
+    setSearchOpened(true);
+    setSearchType("string");
+  };
   const locationBtnHandler = () => {
     setSearchOpened(true);
-    setSearchType('location');
+    setSearchType("location");
   };
   const dateBtnHandler = () => {
     setSearchOpened(true);
-    setSearchType('date');
+    setSearchType("date");
   };
 
   return (
@@ -31,16 +38,18 @@ export default function Header() {
         setSearchOpened={setSearchOpened}
         isSearchOpened={isSearchOpened}
         searchType={searchType}
+        locationBtnHandler={locationBtnHandler}
+        dateBtnHandler={dateBtnHandler}
       />
 
       <StyledHeader>
         <StyledLink to='/'>
-          <img src={logoImg} alt='logo' />
-          <h1>Pop Pick</h1>
+          <img className='logo' src={logoImg} alt='logo' />
+          <img className='logoTitle' src={logoTitleImg} alt='logo' />
         </StyledLink>
 
         <StyledSearch>
-          <div className='stringWrapper'>
+          <div className='stringWrapper' onClick={stringBtnHandler}>
             <input placeholder='✨Pick 하고 싶은 장소 찾기!✨' />
             <button>
               <FaSearch />
@@ -57,12 +66,16 @@ export default function Header() {
         </StyledSearch>
 
         <StyledUser>
-          <button className='login'>
-            <TbLogin2 />
-          </button>
-          <button className='userinfo'>
-            <FaRegCircleUser />
-          </button>
+          {isLogin ? (
+            <button className='logout'>
+              <IoLogOutOutline />
+            </button>
+          ) : null}
+          <Link to='/user'>
+            <button className='userinfo'>
+              <FaRegCircleUser />
+            </button>
+          </Link>
         </StyledUser>
       </StyledHeader>
     </>
@@ -104,15 +117,19 @@ const StyledLink = styled(Link)`
   display: flex;
   justify-content: flex-start;
   white-space: nowrap;
-  img {
+  .logo {
     width: 2rem;
-    margin-right: 10px;
+    /* margin-right: 10px; */
+  }
+  .logoTitle {
+    width: 8em;
+    height: 100%;
   }
   @media (max-width: ${MEDIA_LIMIT}) {
     & {
       width: 15%;
     }
-    & > h1 {
+    .logoTitle {
       visibility: hidden;
       color: transparent;
     }
@@ -207,7 +224,7 @@ const StyledUser = styled.div`
       height: 50%;
     }
   }
-  .login > svg {
+  .logout > svg {
     width: 60%;
   }
   @media (max-width: ${MEDIA_LIMIT}) {
