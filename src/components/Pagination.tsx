@@ -17,6 +17,8 @@ interface PaginationProps {
   count?: number;
 
   onPageChange: (page: number) => void;
+
+  size?: 'xs' | 'sm' | 'md';
 }
 
 export default function Pagination({
@@ -25,6 +27,7 @@ export default function Pagination({
   perPage,
   count = 10,
   onPageChange,
+  size = 'md',
 }: PaginationProps) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -61,6 +64,7 @@ export default function Pagination({
           key={i}
           $isActive={i === currentPage}
           onClick={() => handleClick(i)}
+          $size={size}
         >
           {i}
         </PaginationItem>
@@ -73,7 +77,10 @@ export default function Pagination({
   return (
     <PaginationContainer>
       {currentPage > 1 && (
-        <PaginationItem onClick={() => handleClick(currentPage - 1)}>
+        <PaginationItem
+          onClick={() => handleClick(currentPage - 1)}
+          $size={size}
+        >
           <HiOutlineChevronLeft />
         </PaginationItem>
       )}
@@ -81,7 +88,10 @@ export default function Pagination({
       {renderPageButtons()}
 
       {currentPage < totalPages && (
-        <PaginationItem onClick={() => handleClick(currentPage + 1)}>
+        <PaginationItem
+          onClick={() => handleClick(currentPage + 1)}
+          $size={size}
+        >
           <HiOutlineChevronRight />
         </PaginationItem>
       )}
@@ -96,12 +106,19 @@ const PaginationContainer = styled.ul`
   margin: 1.6rem 0;
 `;
 
-const PaginationItem = styled.li<{ $isActive?: boolean }>`
+const PaginationItem = styled.li<{
+  $isActive?: boolean;
+  $size: 'xs' | 'sm' | 'md';
+}>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 2.6rem;
-  height: 2.6rem;
+  font-size: ${({ $size }) =>
+    $size === 'xs' ? '0.8rem' : $size === 'sm' ? '0.9rem' : '1rem'};
+  width: ${({ $size }) =>
+    $size === 'xs' ? '1.8rem' : $size === 'sm' ? '2.2rem' : '2.6rem'};
+  height: ${({ $size }) =>
+    $size === 'xs' ? '1.8rem' : $size === 'sm' ? '2.2rem' : '2.6rem'};
   border-radius: 50%;
 
   background-color: ${({ $isActive }) => ($isActive ? '#3498db' : '#ddd')};
