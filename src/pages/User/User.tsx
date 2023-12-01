@@ -10,6 +10,7 @@ import { data } from '@/data/stores';
 import { StoreTag } from '@/components/Tag';
 import FilterButton from '@/components/FilterButton';
 import Pagination from '@/components/Pagination';
+import { useAuth } from '@/context/AuthContext';
 
 interface optionsProp {
   value: string;
@@ -17,6 +18,7 @@ interface optionsProp {
 }
 
 export default function User() {
+  const { user, withdrawal } = useAuth();
   const [stores, setStores] = useState(data);
   const selectOptions = [
     {
@@ -54,18 +56,20 @@ export default function User() {
         <div>
           <div className='userWrapper'>
             <div className='profile'>
-              <img src={logo} />
-              <div>{userData.nickname}</div>
-              <div>{userData.id}</div>
-              <div>{userData.email}</div>
+              <img src={user?.image} alt='profile' />
+              <div>{user?.nickName}</div>
+              <div>{user?.name}</div>
+              <div>{user?.role}</div>
             </div>
             <div className='btnsWrapper'>
-              {userData.register ? (
+              {user?.role === '일반' ? (
                 <div>+사업자 등록</div>
               ) : (
                 <div>+이벤트 새로 등록하기</div>
               )}
-              <div className='resign'>탈퇴하기</div>
+              <div className='resign' onClick={withdrawal}>
+                탈퇴하기
+              </div>
             </div>
           </div>
           <div className='listWrapper'>

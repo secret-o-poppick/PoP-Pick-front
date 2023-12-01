@@ -101,6 +101,7 @@ export default function AdminUsers() {
         totalPages={totalPages}
         perPage={perPage}
         onPageChange={handlePageChange}
+        size='md'
       />
     </>
   );
