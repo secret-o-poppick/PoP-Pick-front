@@ -18,7 +18,7 @@ interface optionsProp {
 export default function Stores() {
   const selectOptions = [
     {
-      value: 'latetes',
+      value: 'latest',
       label: '최신 오픈 순',
     },
     {

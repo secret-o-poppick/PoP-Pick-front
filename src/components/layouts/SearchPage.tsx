@@ -1,15 +1,15 @@
 import styled, { css } from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 import { addDays, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { DayPicker, DateRange } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 
-//icons
+// Icons
 import { TbLocation } from 'react-icons/tb';
 import { PiMapTrifold } from 'react-icons/pi';
-import { cities, districts } from '@/data';
 import { FaLongArrowAltRight } from 'react-icons/fa';
 import { MdLocationPin } from 'react-icons/md';
 import { FaRegCalendarCheck } from 'react-icons/fa6';
@@ -23,6 +23,15 @@ interface SearchPageProps {
   dateBtnHandler: () => void;
 }
 
+interface CitiesType {
+  _id: string;
+  name: string;
+  code: number;
+  createdAt: Date;
+  updateAt: Date;
+  children?: CitiesType[];
+}
+
 export default function SearchPage({
   setSearchOpened,
   isSearchOpened,
@@ -30,23 +39,43 @@ export default function SearchPage({
   locationBtnHandler,
   dateBtnHandler,
 }: SearchPageProps) {
-  const [selectedCity, setSelectedCity] = useState<number>(0);
+  const [selectedCity, setSelectedCity] = useState<string>('');
   const [selectedDistrict, setSelectedDistrict] = useState<string>('');
-
-  //Date Picker
+  const [cities, setCities] = useState<CitiesType[]>([]);
+  const [districts, setDistricts] = useState<CitiesType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const today = new Date();
   const defaultSelected: DateRange = {
     from: today,
     to: addDays(today, 0),
   };
   const [range, setRange] = useState<DateRange | undefined>(defaultSelected);
-  //Date Picker
 
-  const closeSearchtab = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get<CitiesType[]>(
+          'http://localhost:3310/api/regionCategories'
+        );
+        setCities(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const closeSearchTab = () => {
     setSearchOpened(false);
   };
-  const selectCityHandler = (index: number) => {
-    setSelectedCity(index);
+
+  const selectCityHandler = (cityId: string) => {
+    setSelectedCity(cityId);
+    const selectedCity = cities.find(city => city._id === cityId);
+    if (selectedCity) {
+      setDistricts(selectedCity.children || []);
+    }
   };
 
   return (
@@ -71,30 +100,37 @@ export default function SearchPage({
             </div>
             <div className='locationWrapper'>
               <ul>
-                {cities.map((city, index) => (
-                  <li
-                    key={index}
-                    onClick={() => {
-                      selectCityHandler(index);
-                    }}
-                  >
-                    {city}
-                  </li>
-                ))}
-              </ul>
-              <div className='districts'>
-                {districts[selectedCity].map((district, index) => (
-                  <div key={index}>
-                    <button
+                {loading ? (
+                  <li>Loading...</li>
+                ) : (
+                  cities.map((city, index) => (
+                    <li
+                      key={index}
                       onClick={() => {
-                        alert(cities[selectedCity] + ' ' + district);
-                        setSelectedDistrict(district);
+                        selectCityHandler(city._id);
+                        console.log(city._id);
                       }}
                     >
-                      {district}
+                      {city.name}
+                    </li>
+                  ))
+                )}
+              </ul>
+              <div className='districts'>
+                {loading ? (
+                  <div>Loading...</div>
+                ) : (
+                  districts.map((district, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        setSelectedDistrict(district.name);
+                      }}
+                    >
+                      {district.name}
                     </button>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </StyledLocation>
@@ -132,7 +168,7 @@ export default function SearchPage({
             </div>
           </StyledString>
         ) : null}
-        <div className='closeBtn' onClick={closeSearchtab}></div>
+        <div className='closeBtn' onClick={closeSearchTab}></div>
       </StyledMore>
     </>
   );
@@ -160,6 +196,7 @@ const StyledMore = styled.div<{
   height: 0;
   position: fixed;
   transition-duration: 0.5s;
+
   & > div:first-child {
     padding-top: 90px;
     transition-duration: 1s;
@@ -167,6 +204,7 @@ const StyledMore = styled.div<{
     overflow: hidden;
     border-radius: 0 0 10px 10px;
   }
+
   .closeBtn {
     height: 100%;
   }
@@ -183,7 +221,7 @@ const StyledLocation = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  .btnWrapper {
+.btnWrapper {
     margin-bottom: 20px;
     display: flex;
     flex-direction: row;
@@ -197,15 +235,18 @@ const StyledLocation = styled.div`
     justify-content: center;
     background-color: lightgray;
     border: none;
+
     &:hover {
       background-color: gray;
     }
+
     svg {
       width: 1.2em;
       height: 1.2em;
       margin-right: 10px;
     }
   }
+
   .locationWrapper {
     width: 80%;
     height: 60%;
@@ -215,6 +256,7 @@ const StyledLocation = styled.div`
     justify-content: center;
     box-shadow: 0 0 5px lightgray;
     overflow: hidden;
+
     ul {
       width: 10%;
       padding: 0;
@@ -223,27 +265,33 @@ const StyledLocation = styled.div`
       flex-direction: column;
       background: lightgray;
     }
+
     li {
       width: 100%;
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
+
       &:hover {
         background-color: gray;
       }
     }
+
     .districts {
       width: 90%;
       display: grid;
       grid-template-columns: repeat(5, 20%);
+
       div {
         display: flex;
         align-items: center;
         justify-content: center;
+
         &:hover {
           background-color: lightgray;
         }
+
         button {
           background-color: transparent;
         }
@@ -251,13 +299,14 @@ const StyledLocation = styled.div`
     }
   }
 `;
+
 const StyledDate = styled.div`
   height: 60%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  .dateRangeWrapper {
+.dateRangeWrapper {
     width: 35%;
     display: flex;
     justify-content: space-between;
@@ -268,6 +317,7 @@ const StyledDate = styled.div`
     margin-top: 10px;
     background-color: transparent;
     border: none;
+
     &:hover {
       box-shadow: 0 0 10px lightgray;
       background-color: lightgray;
@@ -280,21 +330,26 @@ const StyledDayPicker = styled(DayPicker)`
   box-shadow: 0 0 10px lightgray;
   padding: 10px;
   border-radius: 10px;
+
   .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
     background-color: #1778f2;
   }
+
   .rdp-day {
     color: gray;
     display: flex;
     align-items: center;
   }
+
   .rdp-day_today:not(.rdp-day_outside) {
     font-weight: 800;
     color: black;
   }
+
   .rdp-day_selected {
     background-color: #ffcb52;
     color: black;
+
     &:hover {
       background-color: #ff5c40;
     }
@@ -306,11 +361,13 @@ const StyledString = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
   & > div:first-child {
     width: 100%;
     display: flex;
     justify-content: space-evenly;
   }
+
   button {
     width: 40%;
     padding: 10px 0;
