@@ -44,6 +44,7 @@ export default function SearchPage({
   const [cities, setCities] = useState<CitiesType[]>([]);
   const [districts, setDistricts] = useState<CitiesType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
   const today = new Date();
   const defaultSelected: DateRange = {
     from: today,
