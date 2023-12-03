@@ -7,6 +7,7 @@ export const cities: string[] = [
   "경상",
   "전라",
   "충청",
+  "대구",
 ];
 
 export const districts: string[][] = [

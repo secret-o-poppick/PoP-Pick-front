@@ -371,7 +371,6 @@ const StyledUser = styled.div`
   @media (max-width: ${MEDIA_LIMIT}) {
     padding: 0;
     height: auto;
-
     & > div {
       flex-direction: column;
       gap: 0;

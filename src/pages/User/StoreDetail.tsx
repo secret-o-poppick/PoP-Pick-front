@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { MEDIA_LIMIT } from "@/assets/styleVariable";
+import { useEffect } from "react";
 // icons
 import logo from "@/assets/logo.svg";
 import { FaRegHeart } from "react-icons/fa";
@@ -7,6 +8,8 @@ import { FaRegBookmark } from "react-icons/fa";
 import { IoIosPin } from "react-icons/io";
 import { AiOutlineDollarCircle } from "react-icons/ai";
 import { IoIosGlobe } from "react-icons/io";
+import ImageSlide from "@/components/ImageSlide";
+import { images } from "@/data/sliderImage";
 
 export default function StoreDetail() {
   const data = {
@@ -26,12 +29,34 @@ export default function StoreDetail() {
   당당한 막내로 다시 태어나보세요!`,
   };
 
+  // kakao map
+  const { kakao } = window as any;
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      const x = position.coords.latitude; // 위도
+      const y = position.coords.longitude; // 경도
+
+      const container = document.getElementById("map_detail");
+      const options = {
+        center: new kakao.maps.LatLng(x, y),
+        level: 3,
+      };
+
+      const map = new kakao.maps.Map(container, options);
+
+      const markerPosition = new kakao.maps.LatLng(x, y);
+      const marker = new kakao.maps.Marker({ position: markerPosition });
+      marker.setMap(map);
+    });
+  }, []);
+  // kakao map
+
   return (
     <>
       <StyledDetail>
         <div>
           <div className='imgWrapper'>
-            <img src={logo} />
+            <ImageSlide images={images} />
           </div>
           <div className='contentWrapper'>
             <div>
@@ -77,7 +102,10 @@ export default function StoreDetail() {
                 <p>{data.subscribe}</p>
               </div>
             </div>
-            <div className='map'></div>
+            <div className='mapWrapper'>
+              <div className='loading_map'></div>
+              <div id='map_detail'></div>
+            </div>
           </div>
         </div>
       </StyledDetail>
@@ -91,44 +119,41 @@ const StyledDetail = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3em;
   box-sizing: border-box;
   & > div {
     width: 100%;
     height: 100%;
     box-shadow: 0 0 10px lightgray;
-    border-radius: 20px;
     display: flex;
-    padding: 2em;
-    gap: 2em;
     box-sizing: border-box;
   }
   .imgWrapper {
-    width: 50%;
+    width: 40%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    box-shadow: 0 0 10px lightgray;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background-color: lightgray;
+    }
   }
   .contentWrapper {
-    width: 50%;
+    width: 60%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: 3em;
+    box-sizing: border-box;
     & > div:first-child {
       height: 60%;
-      padding: 2em 0;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      margin-bottom: 2em;
     }
-  }
-  img {
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    object-fit: contain;
-    /* box-shadow: 0 0 10px black; */
-    background-color: #eee;
   }
   h1 {
     font-size: 1.5em;
@@ -205,7 +230,7 @@ const StyledDetail = styled.div`
       width: 50%;
       height: 100%;
       padding: 1em;
-      border: 2px solid black;
+      box-shadow: 0 0 5px lightgray inset;
       border-radius: 10px;
       overflow: auto;
       word-break: keep-all;
@@ -216,12 +241,30 @@ const StyledDetail = styled.div`
       }
     }
   }
-  .map {
+  .mapWrapper {
     height: 40%;
     background-color: lightgreen;
     border-radius: 10px;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px lightgray;
+    .loadingMap {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1em;
+      font-weight: bold;
+    }
+    #map_detail {
+      width: 100%;
+      height: 100%;
+    }
   }
-
   @media (max-width: ${MEDIA_LIMIT}) {
     height: auto;
     padding: 0;
@@ -229,6 +272,7 @@ const StyledDetail = styled.div`
       width: 100%;
       flex-direction: column;
       padding: 0;
+      border-radius: 0;
     }
     .imgWrapper {
       width: 100%;
@@ -265,10 +309,23 @@ const StyledDetail = styled.div`
         margin-top: 1em;
       }
     }
-    .map {
-      height: 30vh;
-      border-radius: 0;
-      margin-bottom: 2em;
+    .mapWrapper {
+      .loadingMap {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1em;
+        font-weight: bold;
+      }
+      #map_detail {
+        height: 30vh;
+        border-radius: 0;
+        margin-bottom: 2em;
+      }
     }
   }
 `;

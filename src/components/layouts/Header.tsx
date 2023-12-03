@@ -1,9 +1,14 @@
-import styled from 'styled-components';
-import { useState } from 'react';
+
+import styled from "styled-components";
+import { useEffect, useState } from "react";
+import SearchPage from "./SearchPage";
+import { Link, useLocation } from "react-router-dom";
+import { DateRange } from "react-day-picker";
+
 import SearchPage from './SearchPage';
-import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+
 // icons
 import logoImg from '@/assets/logo.svg';
 import logoTitleImg from '@/assets/logotitle.png';
@@ -20,10 +25,12 @@ import Avatar from '../Avatar';
 export default function Header() {
   const { isLoggedIn, logout, user } = useAuth();
   const [isSearchOpened, setSearchOpened] = useState<boolean>(false);
-  const [searchType, setSearchType] = useState<string>('');
+  const [searchType, setSearchType] = useState<string>("");
+
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const location = useLocation();
 
   const stringBtnHandler = () => {
-    if (document.body.clientWidth > 700) return;
     setSearchOpened(true);
     setSearchType('string');
   };
@@ -43,6 +50,10 @@ export default function Header() {
     });
   };
 
+  useEffect(() => {
+    setSearchOpened(false);
+  }, [location]);
+
   return (
     <>
       <SearchPage
@@ -51,6 +62,7 @@ export default function Header() {
         searchType={searchType}
         locationBtnHandler={locationBtnHandler}
         dateBtnHandler={dateBtnHandler}
+        stringBtnHandler={stringBtnHandler}
       />
 
       <StyledHeader>
@@ -60,19 +72,22 @@ export default function Header() {
         </StyledLink>
 
         <StyledSearch>
-          <div className='stringWrapper' onClick={stringBtnHandler}>
-            <input placeholder='✨Pick 하고 싶은 장소 찾기!✨' />
-            <button>
-              <FaSearch />
+          <div>
+            <input
+              placeholder='✨Pick 하고 싶은 이벤트 찾기!✨'
+              onClick={stringBtnHandler}
+            />
+            <button className='optBtns' onClick={locationBtnHandler}>
+              <MdLocationPin />
+              <div>위치</div>
+            </button>
+            <button className='optBtns' onClick={dateBtnHandler}>
+              <FaRegCalendarCheck />
+              <div>기간</div>
             </button>
           </div>
-          <button className='optBtns' onClick={locationBtnHandler}>
-            <div>위치</div>
-            <MdLocationPin />
-          </button>
-          <button className='optBtns' onClick={dateBtnHandler}>
-            <div>기간</div>
-            <FaRegCalendarCheck />
+          <button className='searchBtn'>
+            <FaSearch />
           </button>
         </StyledSearch>
 
@@ -157,36 +172,32 @@ const StyledSearch = styled.div`
   border-radius: 1000px;
   box-shadow: 0 3px 10px lightgray;
   display: flex;
-  & > * {
+  & > div:first-child {
+    width: calc(100% - 50px);
     height: 100%;
     display: flex;
-    align-items: center;
-    border-radius: 1000px;
+    justify-content: space-between;
   }
-  .stringWrapper {
-    width: 60%;
+  button {
+    background-color: transparent;
+    border: none;
     &:hover {
       background-color: lightgray;
     }
-    input {
-      width: 90%;
-      height: 100%;
-      padding: 0 10px;
-      border: none;
-      border-radius: 10000px;
-      font-size: 1em;
-      background-color: transparent;
+  }
+  input {
+    width: 60%;
+    height: 100%;
+    padding: 0 1.5em;
+    border: none;
+    font-size: 1em;
+    border-radius: 10000px;
+    background-color: transparent;
+    &::placeholder {
+      text-align: center;
     }
-    button {
-      width: 10%;
-      height: 100%;
-      padding: 0;
-      margin-right: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      background-color: transparent;
+    &:hover {
+      background-color: lightgray;
     }
   }
   .optBtns {
@@ -194,8 +205,8 @@ const StyledSearch = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-around;
-    border: none;
-    background-color: transparent;
+    border-radius: 10000px;
+    white-space: nowrap;
     &:hover {
       background-color: lightgray;
     }
@@ -204,11 +215,21 @@ const StyledSearch = styled.div`
       height: 1.2em;
     }
   }
+  .searchBtn {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: transparent;
+    border-radius: 10000px;
+  }
   @media (max-width: ${MEDIA_LIMIT}) {
     & {
       width: 70%;
     }
-    .stringWrapper {
+    input {
       width: 100%;
     }
     .optBtns {
