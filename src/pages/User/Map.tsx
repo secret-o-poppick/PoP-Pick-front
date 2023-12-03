@@ -207,17 +207,16 @@ const StyledPagenationDiv = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 5px;
+  margin: 10px;
 `;
 
 const StyledStoreGrid = styled.div`
-  height: 90%;
+  height: 100%;
   display: grid;
   grid-template-columns: repeat(2, 50%);
-  padding: 10px;
 
   & .storeInfoTagDiv {
-    width: 200px;
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -225,11 +224,12 @@ const StyledStoreGrid = styled.div`
   }
 
   & .storeInfoDiv {
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 1rem;
   }
 
   & .storeInfoDiv .tagMargin {
@@ -239,7 +239,7 @@ const StyledStoreGrid = styled.div`
   & > .storeInfoDiv img {
     border: 1px solid black;
     border-radius: 10px;
-    width: 200px;
+    width: 100%;
     height: 200px;
     margin-bottom: 10px;
   }
@@ -255,7 +255,12 @@ const StyledStoreGrid = styled.div`
   }
 
   & > .storeInfoDiv > .storeInfoContents {
-    width: 200px;
+    width: 100%;
+    h3 {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
   }
 
   @media (max-width: ${MEDIA_LIMIT}) {

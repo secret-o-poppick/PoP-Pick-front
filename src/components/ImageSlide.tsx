@@ -32,11 +32,12 @@ export default function ImageSlide({ images }: ImageProps) {
     speed: 800,
     slidesToShow: 1,
     slidesToScroll: 1,
-    arrow: true,
+    arrow: false,
     autoplay: true,
     autoplaySpeed: 5000,
     centerPadding: "0px",
   };
+
   const slickRef = useRef<any>(null);
 
   const previousButtonAction = useCallback(
@@ -71,8 +72,13 @@ const StyledSliderContainer = styled.div`
   margin: auto;
   position: relative;
 
-  & .slick-slider {
-    height: 320px;
+  & > .slick-slider {
+    height: 100%;
+
+    .slick-prev,
+    .slick-next {
+      display: none;
+    }
   }
 
   & .imageContainer {
@@ -83,15 +89,6 @@ const StyledSliderContainer = styled.div`
   & .imageContainer img {
     height: 320px;
     width: 100%;
-  }
-
-  & .slick-prev {
-    left: -30px;
-    position: absolute;
-  }
-
-  & .slick-next {
-    right: -30px;
   }
 `;
 

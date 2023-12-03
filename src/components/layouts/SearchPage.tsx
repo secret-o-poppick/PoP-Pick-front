@@ -1,10 +1,10 @@
-import styled, { css } from "styled-components";
-import { useState } from "react";
+import styled, { css } from 'styled-components';
+import { useState } from 'react';
 
-import { addDays, format } from "date-fns";
-import { ko } from "date-fns/locale";
-import { DayPicker, DateRange } from "react-day-picker";
-import "react-day-picker/dist/style.css";
+import { addDays, format } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { DayPicker, DateRange } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
 
 //icons
 import { PiMapTrifold } from "react-icons/pi";
@@ -14,6 +14,7 @@ import { MdLocationPin } from "react-icons/md";
 import { FaRegCalendarCheck } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { MEDIA_LIMIT } from "@/assets/styleVariable";
+import { TbLocation } from 'react-icons/tb';
 
 interface SearchPageProps {
   setSearchOpened: React.Dispatch<React.SetStateAction<boolean>>;
@@ -34,7 +35,7 @@ export default function SearchPage({
 }: SearchPageProps) {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [selectedCity, setSelectedCity] = useState<number>(0);
-  const [selectedDistrict, setSelectedDistrict] = useState<string>("");
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('');
 
   //Date Picker
   const today = new Date();
@@ -52,7 +53,7 @@ export default function SearchPage({
     <>
       <StyledBlack $isSearchOpened={isSearchOpened} />
       <StyledMore className='searchPage' $isSearchOpened={isSearchOpened}>
-        {searchType === "location" ? (
+        {searchType === 'location' ? (
           <StyledLocation className='searchTap'>
             <div className='btnWrapper'>
               <Link to='/map'>
@@ -80,6 +81,7 @@ export default function SearchPage({
                   <div key={index}>
                     <button
                       onClick={() => {
+                        alert(cities[selectedCity] + ' ' + district);
                         setSelectedDistrict(district);
                         stringBtnHandler();
                       }}
@@ -91,7 +93,7 @@ export default function SearchPage({
               </div>
             </div>
           </StyledLocation>
-        ) : searchType === "date" ? (
+        ) : searchType === 'date' ? (
           <StyledDate className='searchTap'>
             <StyledDayPicker
               mode='range'
@@ -102,16 +104,16 @@ export default function SearchPage({
             />
             <div className='dateRangeWrapper'>
               <div className='dateRange'>
-                {range?.from ? format(range.from, "PPP", { locale: ko }) : null}
+                {range?.from ? format(range.from, 'PPP', { locale: ko }) : null}
               </div>
               <FaLongArrowAltRight />
               <div className='dateRange'>
-                {range?.to ? format(range.to, "PPP", { locale: ko }) : null}
+                {range?.to ? format(range.to, 'PPP', { locale: ko }) : null}
               </div>
             </div>
             <button onClick={stringBtnHandler}>선택</button>
           </StyledDate>
-        ) : searchType === "string" ? (
+        ) : searchType === 'string' ? (
           <StyledString>
             <div>
               <div className='searchKeywords'>
@@ -153,7 +155,7 @@ const StyledBlack = styled.div<{
 }>`
   z-index: 10;
   ${({ $isSearchOpened }) => css`
-    visibility: ${$isSearchOpened ? "visible" : "hidden"};
+    visibility: ${$isSearchOpened ? 'visible' : 'hidden'};
   `}
   width: 100vw;
   height: 100vh;
@@ -183,8 +185,8 @@ const StyledMore = styled.div<{
   }
 
   ${({ $isSearchOpened }) => css`
-    visibility: ${$isSearchOpened ? "visible" : "hidden"};
-    height: ${$isSearchOpened ? "100vh" : "0"};
+    visibility: ${$isSearchOpened ? 'visible' : 'hidden'};
+    height: ${$isSearchOpened ? '100vh' : '0'};
   `}
 `;
 
