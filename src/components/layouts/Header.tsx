@@ -4,8 +4,8 @@ import SearchPage from './SearchPage';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import axios from 'axios';
 import { StoreType } from '@/types'
+import { DateRange } from 'react-day-picker';
 
 
 // icons
@@ -27,6 +27,9 @@ export default function Header() {
   const [searchType, setSearchType] = useState<string>('');
   const [searchInput, setSearchInput] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState<string>('');
+  const [dateFrom, setDateFrom] = useState<string | undefined>('');
+  const [dateTo, setDateTo] = useState<string | undefined>('');
+
   const navigate = useNavigate()
 
   const stringBtnHandler = () => {
@@ -43,19 +46,47 @@ export default function Header() {
     setSearchType('date');
   };
 
+  // 위치 선택
   const handleDistrictSelect = (districtId: string) => {
     setSelectedDistrict(districtId);
   };
 
+  // 기간 선택
+  const setDateRange = (newRange: DateRange | undefined) => {
+    if (newRange) {
+      const formatDateString = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}${month}${day}`;
+      };
+
+      const fromDateString = newRange.from ? formatDateString(newRange.from) : '';
+      const toDateString = newRange.to ? formatDateString(newRange.to) : '';
+
+      setDateFrom(fromDateString);
+      setDateTo(toDateString);
+
+      console.log('From:', fromDateString);
+      console.log('To:', toDateString);
+    }
+  };
+
+  // 검색버튼
   const searchButtonHandler = () => {
-    // 스토어 제목으로 검색하기
+    // 스토어 제목으로 검색
     if (searchInput) {
       navigate(`stores?title=${searchInput}`)
     }
-    // 위치로 검색하기
+    // 위치로 검색
     if (selectedDistrict) {
       navigate(`stores?locationId=${selectedDistrict}`)
     }
+    // 기간으로 검색
+    if (dateFrom && dateFrom) {
+      navigate(`stores?startDate=${dateFrom}&endDate=${dateTo}`)
+    }
+
     setSearchOpened(false)
     setSearchInput('')
   };
@@ -80,6 +111,7 @@ export default function Header() {
         locationBtnHandler={locationBtnHandler}
         dateBtnHandler={dateBtnHandler}
         setSelectedDistrict={handleDistrictSelect}
+        onDateChange={setDateRange}
       />
 
       <StyledHeader>

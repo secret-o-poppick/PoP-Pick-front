@@ -22,6 +22,7 @@ interface SearchPageProps {
   locationBtnHandler: () => void;
   dateBtnHandler: () => void;
   setSelectedDistrict: (districtId: string) => void;
+  onDateChange: (newRange: DateRange | undefined) => void;
 }
 
 interface CitiesType {
@@ -40,6 +41,7 @@ export default function SearchPage({
   locationBtnHandler,
   dateBtnHandler,
   setSelectedDistrict,
+  onDateChange,
 }: SearchPageProps) {
   const [selectedCity, setSelectedCity] = useState<string>('');
   const [cities, setCities] = useState<CitiesType[]>([]);
@@ -62,7 +64,7 @@ export default function SearchPage({
         setCities(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error', error);
       }
     };
     fetchData();
@@ -147,7 +149,10 @@ export default function SearchPage({
               mode='range'
               defaultMonth={today}
               selected={range}
-              onSelect={setRange}
+              onSelect={(newRange) => {
+                setRange(newRange);
+                onDateChange(newRange);
+              }}
               locale={ko}
             />
             <div className='dateRangeWrapper'>
