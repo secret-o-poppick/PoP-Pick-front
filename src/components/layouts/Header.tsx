@@ -294,7 +294,9 @@ const StyledSearch = styled.div`
     justify-content: center;
     border: none;
     background-color: transparent;
-    border-radius: 10000px;
+    border-radius: 50%;
+    cursor: pointer;
+
   }
 
   @media (max-width: ${MEDIA_LIMIT}) {
@@ -326,7 +328,7 @@ const StyledUser = styled.div`
     justify-content: center;
     &:hover {
       background-color: #eeeeee;
-      border-radius: 1000px;
+      border-radius: 50%;
     }
     svg {
       width: 50%;
@@ -343,5 +345,8 @@ const StyledUser = styled.div`
     .login {
       display: none;
     }
+  }
+  .userinfo{
+    cursor: pointer;
   }
 `;
