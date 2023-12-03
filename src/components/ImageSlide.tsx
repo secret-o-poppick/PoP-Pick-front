@@ -1,14 +1,13 @@
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
-import styled from 'styled-components';
-import { useRef, useCallback } from 'react';
+import styled from "styled-components";
+import { useRef, useCallback } from "react";
 
-import { images } from '@/data/sliderImage';
-import { MEDIA_LIMIT } from '@/assets/styleVariable';
-import { HeaderTag } from '@/components/Tag';
+import { MEDIA_LIMIT } from "@/assets/styleVariable";
+import { HeaderTag } from "@/components/Tag";
 
 interface SliderSettings {
   dots: boolean;
@@ -22,7 +21,11 @@ interface SliderSettings {
   centerPadding: string;
 }
 
-export default function ImageSlide() {
+interface ImageProps {
+  images: string[];
+}
+
+export default function ImageSlide({ images }: ImageProps) {
   const settings: SliderSettings = {
     dots: false,
     infinite: true,
@@ -32,7 +35,7 @@ export default function ImageSlide() {
     arrow: true,
     autoplay: true,
     autoplaySpeed: 5000,
-    centerPadding: '0px',
+    centerPadding: "0px",
   };
   const slickRef = useRef<any>(null);
 
@@ -48,7 +51,7 @@ export default function ImageSlide() {
         {images.map((image, index) => (
           <div className='imageContainer' key={index}>
             <HeaderTag color='header' title='오늘의 POP PICK!' />
-            <img src={image.url} alt={`slide-${index}`} />
+            <img src={image} alt={`slide-${index}`} />
             <StyledPrevArrow onClick={previousButtonAction}>
               <IoIosArrowBack size={55} color='white' />
             </StyledPrevArrow>

@@ -1,14 +1,14 @@
-import styled from 'styled-components';
-import Select from 'react-select';
+import styled from "styled-components";
+import Select from "react-select";
 
-import { FaRegHeart, FaRegBookmark } from 'react-icons/fa';
+import { FaRegHeart, FaRegBookmark } from "react-icons/fa";
 
-import { MEDIA_LIMIT } from '@/assets/styleVariable';
-import { StoreTag } from '@/components/Tag';
-import FilterButton from '@/components/FilterButton';
+import { MEDIA_LIMIT } from "@/assets/styleVariable";
+import { StoreTag } from "@/components/Tag";
+import FilterButton from "@/components/FilterButton";
 
-import { data } from '@/data/stores';
-import { useState } from 'react';
+import { data } from "@/data/stores";
+import { useState } from "react";
 
 interface optionsProp {
   value: string;
@@ -18,23 +18,23 @@ interface optionsProp {
 export default function Stores() {
   const selectOptions = [
     {
-      value: 'latetes',
-      label: '최신 오픈 순',
+      value: "latetes",
+      label: "최신 오픈 순",
     },
     {
-      value: 'likes',
-      label: '좋아요 순',
+      value: "likes",
+      label: "좋아요 순",
     },
     {
-      value: 'views',
-      label: '조회수 순',
+      value: "views",
+      label: "조회수 순",
     },
   ];
 
   const [stores, setStores] = useState(data);
 
   const handleFilterButton = () => {
-    console.log('Filter Button click');
+    console.log("Filter Button click");
   };
 
   const handleFilter = (e: optionsProp | null) => {
@@ -69,7 +69,7 @@ export default function Stores() {
 
       <StyledMainStoreGrid>
         {stores.map((store, index) => {
-          const title = store.type === 'popup' ? '팝업' : '전시';
+          const title = store.type === "popup" ? "팝업" : "전시";
 
           return (
             <div key={index} className='storeInfoDiv'>

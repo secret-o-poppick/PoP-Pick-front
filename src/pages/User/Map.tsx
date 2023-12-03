@@ -1,10 +1,16 @@
-import styled, { css } from 'styled-components';
-import { useState } from 'react';
-import { FaRegHeart, FaRegBookmark } from 'react-icons/fa';
+import styled, { css } from "styled-components";
+import { useEffect, useRef, useState } from "react";
+import { FaRegHeart, FaRegBookmark } from "react-icons/fa";
 
-import { MEDIA_LIMIT, MEDIA_MAX_LIMIT } from '@/assets/styleVariable';
-import { StoreTag } from '@/components/Tag';
-import { data } from '@/data/stores';
+import { MEDIA_LIMIT, MEDIA_MAX_LIMIT } from "@/assets/styleVariable";
+import { StoreTag } from "@/components/Tag";
+import { data } from "@/data/stores";
+
+//icons
+import { IoMdRefresh } from "react-icons/io";
+import { TbLocation } from "react-icons/tb";
+
+import { coordinate } from "@/data/coordinate";
 
 export default function Map() {
   const [stores, setStores] = useState(data);
@@ -12,13 +18,138 @@ export default function Map() {
   const listOpenHandler = () => {
     setListOpened((cur) => !cur);
   };
+
+  // kakao map
+  const { kakao } = window as any;
+  interface Location {
+    x: number;
+    y: number;
+  }
+  const currentLocation = useRef<Location>({
+    x: 0,
+    y: 0,
+  });
+
+  let map: any;
+
+  const markers: any = [];
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      currentLocation.current = {
+        x: position.coords.latitude, //위도
+        y: position.coords.longitude, //경도
+      };
+
+      const currentLatLng = new kakao.maps.LatLng(
+        currentLocation.current.x,
+        currentLocation.current.y
+      );
+      console.log(currentLatLng);
+      const container = document.getElementById("map");
+      const options = {
+        center: currentLatLng,
+        level: 3,
+      };
+      map = new kakao.maps.Map(container, options);
+
+      refreshMap();
+
+      // 마커로 좌표 로깅
+      // const marker = new kakao.maps.Marker({
+      //   map: map,
+      //   position: currentLatLng,
+      // });
+      // kakao.maps.event.addListener(marker, "dragend", function () {
+      //   const loc = marker.getPosition();
+      //   console.log(`${loc.La}, ${loc.Ma}`);
+      // });
+
+      // 지도 이동시 가운데 좌표 로깅
+      // kakao.maps.event.addListener(map, "center_changed", function () {
+      //   const latlng = map.getCenter();
+      //   const msg = `${latlng.getLat()}, ${latlng.getLng()}`;
+      //   console.log(msg);
+      // });
+    });
+  }, []);
+
+  const refreshMap = () => {
+    // 마커 리셋
+    markers.forEach((marker: any) => {
+      marker.setMap(null);
+    });
+
+    const bounds = map.getBounds();
+    const SW = bounds.getSouthWest();
+    const NE = bounds.getNorthEast();
+    const boundLimits = {
+      x1: SW.La,
+      x2: NE.La,
+      y1: SW.Ma,
+      y2: NE.Ma,
+    };
+
+    // 확인용 타임아웃
+    // setTimeout(() => {
+    const positions = coordinate.filter(
+      (loc) =>
+        loc[1] > boundLimits.x1 &&
+        loc[1] < boundLimits.x2 &&
+        loc[2] > boundLimits.y1 &&
+        loc[2] < boundLimits.y2
+    );
+
+    positions.forEach((loc) => {
+      const marker = new kakao.maps.Marker({
+        map: map,
+        position: new kakao.maps.LatLng(loc[2], loc[1]),
+        title: loc[0],
+      });
+      markers.push(marker);
+      console.log(marker, markers);
+    });
+    // 현위치 표시
+    const circle = new kakao.maps.Circle({
+      center: new kakao.maps.LatLng(
+        currentLocation.current.x,
+        currentLocation.current.y
+      ),
+      radius: 30, // 미터 단위의 원의 반지름입니다
+      strokeWeight: 1, // 선의 두께입니다
+      strokeColor: "#75B8FA", // 선의 색깔입니다
+      strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+      fillColor: "#CFE7FF", // 채우기 색깔입니다
+      fillOpacity: 0.7, // 채우기 불투명도 입니다
+      map: map,
+    });
+    markers.push(circle);
+    // }, 1000);
+  };
+
+  const toCurrentLocation = () => {
+    const moveLatLon = new kakao.maps.LatLng(
+      currentLocation.current.x,
+      currentLocation.current.y
+    );
+    map.setCenter(moveLatLon);
+  };
+  // kakao map
+
   return (
     <>
       <StyledMap $isListOpened={isListOpened}>
         <div>
           <div className='mapWrapper'>
-            <div className='refreshBtn'>
-              <div>주변 팝업 보기</div>
+            <div className='loadingMap'>지도를 불러오는중</div>
+            <div id='map'></div>
+            <div className='mapBtns'>
+              <div id='refreshBtn' onClick={refreshMap}>
+                <IoMdRefresh />
+              </div>
+              <div id='currentLocBtn' onClick={toCurrentLocation}>
+                <TbLocation />
+              </div>
             </div>
           </div>
           <div className='listWrapper'>
@@ -29,10 +160,10 @@ export default function Map() {
               <StyledStoreGrid>
                 {stores.map((store, index) => {
                   /**페이지 네이션으로 처리하기 */
-                  if (index >= 4) {
+                  if (index >= 6) {
                     return;
                   }
-                  const title = store.type === 'popup' ? '팝업' : '전시';
+                  const title = store.type === "popup" ? "팝업" : "전시";
 
                   return (
                     <div key={index} className='storeInfoDiv'>
@@ -132,7 +263,10 @@ const StyledStoreGrid = styled.div`
       padding: 0 25px;
       grid-template-columns: repeat(1, 100%);
       position: relative;
-      overflow: scroll;
+      overflow-y: scroll;
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
 
     & .storeInfoDiv {
@@ -186,36 +320,60 @@ const StyledMap = styled.div<{
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2.5em;
   box-sizing: border-box;
+  overflow: hidden;
   & > div:first-child {
     width: 100%;
     height: 100%;
     display: flex;
-    gap: 2em;
-    border-radius: 20px;
   }
   .mapWrapper {
     width: 100%;
     height: 100%;
-    background-color: lightgreen;
-    border-radius: 20px;
+    background-color: gray;
     box-shadow: 0 0 10px gray;
-    .refreshBtn {
+    position: relative;
+    overflow: hidden;
+    .loadingMap {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1em;
+      font-weight: bold;
+    }
+    .mapBtns {
+      top: 0;
+      z-index: 1;
       margin-top: 1em;
       width: 100%;
       display: flex;
-      justify-content: center;
+      justify-content: flex-end;
+      position: absolute;
       div {
-        width: 50%;
-        padding: 5px 0;
-        border: 2px solid #1778f2;
-        border-radius: 10000px;
+        width: 40px;
+        height: 40px;
+        border: 3px solid #1778f2;
+        border-radius: 50%;
         color: #1778f2;
-        font-weight: bold;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background-color: white;
+        margin-right: 1em;
+        svg {
+          width: 60%;
+          height: 60%;
+        }
       }
+    }
+    #map {
+      width: 100%;
+      height: 100%;
+      z-index: 0;
     }
   }
   .listWrapper {
@@ -244,6 +402,7 @@ const StyledMap = styled.div<{
     .mapWrapper {
       height: 100%;
       border-radius: 0;
+      box-shadow: none;
     }
     .listWrapper {
       margin-top: auto;
@@ -253,9 +412,9 @@ const StyledMap = styled.div<{
       transition-duration: 0.5s;
 
       ${({ $isListOpened }) => css`
-        height: ${$isListOpened ? '90%' : '5%'};
+        height: ${$isListOpened ? "90%" : "5%"};
         .list {
-          visibility: ${$isListOpened ? 'visible' : 'hidden'};
+          visibility: ${$isListOpened ? "visible" : "hidden"};
         }
       `}
 
