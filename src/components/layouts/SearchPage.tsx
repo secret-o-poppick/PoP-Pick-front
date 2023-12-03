@@ -21,6 +21,7 @@ interface SearchPageProps {
   searchType: string;
   locationBtnHandler: () => void;
   dateBtnHandler: () => void;
+  setSelectedDistrict: (districtId: string) => void;
 }
 
 interface CitiesType {
@@ -38,9 +39,9 @@ export default function SearchPage({
   searchType,
   locationBtnHandler,
   dateBtnHandler,
+  setSelectedDistrict,
 }: SearchPageProps) {
   const [selectedCity, setSelectedCity] = useState<string>('');
-  const [selectedDistrict, setSelectedDistrict] = useState<string>('');
   const [cities, setCities] = useState<CitiesType[]>([]);
   const [districts, setDistricts] = useState<CitiesType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -79,6 +80,10 @@ export default function SearchPage({
     }
   };
 
+  const selectDistrictHandler = (districtId: string) => {
+    setSelectedDistrict(districtId);
+  };
+
   return (
     <>
       <StyledBlack $isSearchOpened={isSearchOpened} />
@@ -111,6 +116,7 @@ export default function SearchPage({
                         selectCityHandler(city._id);
                         console.log(city._id);
                       }}
+
                     >
                       {city.name}
                     </li>
@@ -125,7 +131,7 @@ export default function SearchPage({
                     <button
                       key={index}
                       onClick={() => {
-                        setSelectedDistrict(district.name);
+                        selectDistrictHandler(district._id);
                       }}
                     >
                       {district.name}

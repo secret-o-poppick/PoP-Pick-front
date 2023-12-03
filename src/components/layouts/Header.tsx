@@ -26,6 +26,7 @@ export default function Header() {
   const [isSearchOpened, setSearchOpened] = useState<boolean>(false);
   const [searchType, setSearchType] = useState<string>('');
   const [searchInput, setSearchInput] = useState('');
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('');
   const navigate = useNavigate()
 
   const stringBtnHandler = () => {
@@ -42,9 +43,21 @@ export default function Header() {
     setSearchType('date');
   };
 
+  const handleDistrictSelect = (districtId: string) => {
+    setSelectedDistrict(districtId);
+  };
+
   const searchButtonHandler = () => {
-    navigate(`stores?title=${searchInput}`)
-    // 유효성 검사(없을 경우)
+    // 스토어 제목으로 검색하기
+    if (searchInput) {
+      navigate(`stores?title=${searchInput}`)
+    }
+    // 위치로 검색하기
+    if (selectedDistrict) {
+      navigate(`stores?locationId=${selectedDistrict}`)
+    }
+    setSearchOpened(false)
+    setSearchInput('')
   };
 
   const searchInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,6 +79,7 @@ export default function Header() {
         searchType={searchType}
         locationBtnHandler={locationBtnHandler}
         dateBtnHandler={dateBtnHandler}
+        setSelectedDistrict={handleDistrictSelect}
       />
 
       <StyledHeader>
