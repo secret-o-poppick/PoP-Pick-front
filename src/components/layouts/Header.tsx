@@ -30,7 +30,7 @@ export default function Header() {
 
   const [isLogin, setIsLogin] = useState<boolean>(false);
   const location = useLocation();
-  const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useState<string>('');
   const [selectedDistrict, setSelectedDistrict] = useState<string>('');
   const [dateFrom, setDateFrom] = useState<string | undefined>('');
   const [dateTo, setDateTo] = useState<string | undefined>('');
@@ -78,21 +78,33 @@ export default function Header() {
 
   // 검색버튼
   const searchButtonHandler = () => {
+    let queryString = '';
+
     // 스토어 제목으로 검색
     if (searchInput) {
-      navigate(`stores?title=${searchInput}`)
-    }
-    // 위치로 검색
-    if (selectedDistrict) {
-      navigate(`stores?locationId=${selectedDistrict}`)
-    }
-    // 기간으로 검색
-    if (dateFrom && dateFrom) {
-      navigate(`stores?startDate=${dateFrom}&endDate=${dateTo}`)
+      queryString = `title=${searchInput}`;
     }
 
-    setSearchOpened(false)
-    setSearchInput('')
+    // 위치로 검색
+    if (selectedDistrict) {
+      const locationQueryString = `locationId=${selectedDistrict}`;
+      queryString = queryString ? `${queryString}&${locationQueryString}` : locationQueryString;
+    }
+
+    // 기간으로 검색
+    if (dateFrom && dateTo) {
+      const dateQueryString = `startDate=${dateFrom}&endDate=${dateTo}`;
+      queryString = queryString ? `${queryString}&${dateQueryString}` : dateQueryString;
+    }
+
+    if (queryString) {
+      navigate(`stores?${queryString}`);
+    }
+
+    setSearchOpened(false);
+    console.log('before:', searchInput);
+    setSearchInput('');
+    console.log('after:', searchInput);
   };
 
   const searchInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,6 +130,7 @@ export default function Header() {
         searchType={searchType}
         locationBtnHandler={locationBtnHandler}
         dateBtnHandler={dateBtnHandler}
+        selectedDistrict={selectedDistrict}
         setSelectedDistrict={handleDistrictSelect}
         onDateChange={setDateRange}
       />
@@ -129,7 +142,7 @@ export default function Header() {
         </StyledLink>
 
         <StyledSearch>
-        <div>
+          <div>
             <input
               placeholder='✨Pick 하고 싶은 이벤트 찾기!✨'
               onClick={stringBtnHandler}
@@ -284,7 +297,6 @@ const StyledSearch = styled.div`
     border-radius: 10000px;
   }
 
-  }
   @media (max-width: ${MEDIA_LIMIT}) {
     & {
       width: 70%;
@@ -296,7 +308,6 @@ const StyledSearch = styled.div`
       display: none;
     }
   }
-
 
 `;
 
