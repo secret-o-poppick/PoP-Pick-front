@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
+import { REACT_APP_BACKEND_HOST } from '@/assets/config';
 
 export default function KakaoLogin() {
   const { login, accessToken } = useAuth();
@@ -21,7 +22,7 @@ export default function KakaoLogin() {
       setAccessTokenFetching(true); // Set fetching to true
 
       const response = await axios.post(
-        'http://localhost:3310/api/auth/kakao',
+        `${REACT_APP_BACKEND_HOST}/api/auth/kakao`,
         {
           authorizationCode: KAKAO_CODE,
         },

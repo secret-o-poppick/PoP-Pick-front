@@ -1,7 +1,9 @@
-import styled from 'styled-components';
-import { useState } from 'react';
-import SearchPage from './SearchPage';
-import { Link, useNavigate } from 'react-router-dom';
+
+import styled from "styled-components";
+import { useEffect, useState } from "react";
+import SearchPage from "./SearchPage";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { StoreType } from '@/types'
@@ -24,7 +26,10 @@ import Avatar from '../Avatar';
 export default function Header() {
   const { isLoggedIn, logout, user } = useAuth();
   const [isSearchOpened, setSearchOpened] = useState<boolean>(false);
-  const [searchType, setSearchType] = useState<string>('');
+  const [searchType, setSearchType] = useState<string>("");
+
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const location = useLocation();
   const [searchInput, setSearchInput] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState<string>('');
   const [dateFrom, setDateFrom] = useState<string | undefined>('');
@@ -33,7 +38,6 @@ export default function Header() {
   const navigate = useNavigate()
 
   const stringBtnHandler = () => {
-    if (document.body.clientWidth > 700) return;
     setSearchOpened(true);
     setSearchType('string');
   };
@@ -102,6 +106,10 @@ export default function Header() {
     });
   };
 
+  useEffect(() => {
+    setSearchOpened(false);
+  }, [location]);
+
   return (
     <>
       <SearchPage
@@ -121,22 +129,22 @@ export default function Header() {
         </StyledLink>
 
         <StyledSearch>
-          <div className='stringWrapper' onClick={stringBtnHandler}>
-            <input value={searchInput} onChange={searchInputHandler}
-              placeholder='✨Pick 하고 싶은 장소 찾기!✨' />
-            <button>
-              <FaSearch />
+        <div>
+            <input
+              placeholder='✨Pick 하고 싶은 이벤트 찾기!✨'
+              onClick={stringBtnHandler}
+              onChange={searchInputHandler}
+            />
+            <button className='optBtns' onClick={locationBtnHandler}>
+              <MdLocationPin />
+              <div>위치</div>
+            </button>
+            <button className='optBtns' onClick={dateBtnHandler}>
+              <FaRegCalendarCheck />
+              <div>기간</div>
             </button>
           </div>
-          <button className='optBtns' onClick={locationBtnHandler}>
-            <div>위치</div>
-            <MdLocationPin />
-          </button>
-          <button className='optBtns' onClick={dateBtnHandler}>
-            <div>기간</div>
-            <FaRegCalendarCheck />
-          </button>
-          <button className='searchBtn' onClick={searchButtonHandler}>검색</button>
+          <button className='searchBtn' onClick={searchButtonHandler}><FaSearch /></button>
 
         </StyledSearch>
 
@@ -221,36 +229,32 @@ const StyledSearch = styled.div`
   border-radius: 1000px;
   box-shadow: 0 3px 10px lightgray;
   display: flex;
-  & > * {
+  & > div:first-child {
+    width: calc(100% - 50px);
     height: 100%;
     display: flex;
-    align-items: center;
-    border-radius: 1000px;
+    justify-content: space-between;
   }
-  .stringWrapper {
-    width: 60%;
+  button {
+    background-color: transparent;
+    border: none;
     &:hover {
       background-color: lightgray;
     }
-    input {
-      width: 90%;
-      height: 100%;
-      padding: 0 10px;
-      border: none;
-      border-radius: 10000px;
-      font-size: 1em;
-      background-color: transparent;
+  }
+  input {
+    width: 60%;
+    height: 100%;
+    padding: 0 1.5em;
+    border: none;
+    font-size: 1em;
+    border-radius: 10000px;
+    background-color: transparent;
+    &::placeholder {
+      text-align: center;
     }
-    button {
-      width: 10%;
-      height: 100%;
-      padding: 0;
-      margin-right: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      background-color: transparent;
+    &:hover {
+      background-color: lightgray;
     }
   }
   .optBtns {
@@ -258,8 +262,8 @@ const StyledSearch = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-around;
-    border: none;
-    background-color: transparent;
+    border-radius: 10000px;
+    white-space: nowrap;
     &:hover {
       background-color: lightgray;
     }
@@ -269,32 +273,30 @@ const StyledSearch = styled.div`
     }
     
   }
+  .searchBtn {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: transparent;
+    border-radius: 10000px;
+  }
+
+  }
   @media (max-width: ${MEDIA_LIMIT}) {
     & {
       width: 70%;
     }
-    .stringWrapper {
+    input {
       width: 100%;
     }
     .optBtns {
       display: none;
     }
   }
-  .searchBtn {
-    width: 10%;
-    padding: 10px;
-    text-align: center;
-    display: inline-block;
-    background-color: transparent;
-    border: none;
-    word-break: keep-all;
 
-    &:hover {
-      box-shadow: 0 0 10px lightgray;
-      background-color: lightgray;
-      border-radius: 1000px;
-    }
-  }
 
 `;
 

@@ -2,13 +2,12 @@ import styled from 'styled-components';
 import Select from 'react-select';
 import axios from 'axios';
 
-import { FaRegHeart, FaRegBookmark } from 'react-icons/fa';
+import { FaRegHeart, FaRegBookmark } from "react-icons/fa";
 
-import { MEDIA_LIMIT } from '@/assets/styleVariable';
-import { StoreTag } from '@/components/Tag';
-import FilterButton from '@/components/FilterButton';
+import { MEDIA_LIMIT } from "@/assets/styleVariable";
+import { StoreTag } from "@/components/Tag";
+import FilterButton from "@/components/FilterButton";
 
-// import { data } from '@/data/stores';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { StoreType } from '@/types'
@@ -21,16 +20,16 @@ interface optionsProp {
 export default function Stores() {
   const selectOptions = [
     {
-      value: 'latest',
+      value: 'latests',
       label: '최신 오픈 순',
     },
     {
-      value: 'likes',
-      label: '좋아요 순',
+      value: "likes",
+      label: "좋아요 순",
     },
     {
-      value: 'views',
-      label: '조회수 순',
+      value: "views",
+      label: "조회수 순",
     },
   ];
 
@@ -50,7 +49,7 @@ export default function Stores() {
   }, [location.search])
 
   const handleFilterButton = () => {
-    console.log('Filter Button click');
+    console.log("Filter Button click");
   };
 
   const handleFilter = (e: optionsProp | null) => {
