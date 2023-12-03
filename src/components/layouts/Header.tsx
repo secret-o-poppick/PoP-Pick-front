@@ -5,7 +5,6 @@ import SearchPage from "./SearchPage";
 import { Link, useLocation } from "react-router-dom";
 import { DateRange } from "react-day-picker";
 
-import SearchPage from './SearchPage';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
