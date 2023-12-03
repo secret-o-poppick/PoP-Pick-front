@@ -74,6 +74,8 @@ export default function Header() {
             <div>기간</div>
             <FaRegCalendarCheck />
           </button>
+          <button className='searchBtn'>검색</button>
+
         </StyledSearch>
 
         <StyledUser>
@@ -203,6 +205,7 @@ const StyledSearch = styled.div`
       width: 1.2em;
       height: 1.2em;
     }
+    
   }
   @media (max-width: ${MEDIA_LIMIT}) {
     & {
@@ -215,6 +218,22 @@ const StyledSearch = styled.div`
       display: none;
     }
   }
+  .searchBtn {
+    width: 10%;
+    padding: 10px;
+    text-align: center;
+    display: inline-block;
+    background-color: transparent;
+    border: none;
+    word-break: keep-all;
+
+    &:hover {
+      box-shadow: 0 0 10px lightgray;
+      background-color: lightgray;
+      border-radius: 1000px;
+    }
+  }
+
 `;
 
 const StyledUser = styled.div`
