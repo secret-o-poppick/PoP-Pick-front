@@ -10,31 +10,12 @@ import FilterButton from '@/components/FilterButton';
 
 // import { data } from '@/data/stores';
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { StoreType } from '@/types'
 
 interface optionsProp {
   value: string;
   label: string;
-}
-
-interface StoreType {
-  _id: string;
-  title: string;
-  brandName: string;
-  adultVerification: boolean;
-  startDate: number;
-  endDate: number;
-  images: string;
-  isActive: boolean;
-  views: number;
-  likes: number;
-  isFree: boolean;
-  fee: number;
-  event: string;
-  socialLink: string;
-  desc: string;
-  etc: string;
-  categoryId: string;
-  locationId: string[];
 }
 
 export default function Stores() {
@@ -54,18 +35,19 @@ export default function Stores() {
   ];
 
   const [stores, setStores] = useState<StoreType[]>([]);
+  const location = useLocation();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3310/api/stores');
-        setStores(response.data); // Update the state with the fetched data
+        const response = await axios.get(`http://localhost:3310/api/stores${decodeURIComponent(location.search)}`);
+        setStores(response.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error', error);
       }
     };
     fetchData();
-  }, [])
+  }, [location.search])
 
   const handleFilterButton = () => {
     console.log('Filter Button click');

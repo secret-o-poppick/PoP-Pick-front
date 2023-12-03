@@ -1,9 +1,13 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import SearchPage from './SearchPage';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import axios from 'axios';
+import { StoreType } from '@/types'
+
+
 // icons
 import logoImg from '@/assets/logo.svg';
 import logoTitleImg from '@/assets/logotitle.png';
@@ -21,6 +25,8 @@ export default function Header() {
   const { isLoggedIn, logout, user } = useAuth();
   const [isSearchOpened, setSearchOpened] = useState<boolean>(false);
   const [searchType, setSearchType] = useState<string>('');
+  const [searchInput, setSearchInput] = useState('');
+  const navigate = useNavigate()
 
   const stringBtnHandler = () => {
     if (document.body.clientWidth > 700) return;
@@ -34,6 +40,15 @@ export default function Header() {
   const dateBtnHandler = () => {
     setSearchOpened(true);
     setSearchType('date');
+  };
+
+  const searchButtonHandler = () => {
+    navigate(`stores?title=${searchInput}`)
+    // 유효성 검사(없을 경우)
+  };
+
+  const searchInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value);
   };
 
   const handleLoginButtonClick = () => {
@@ -61,7 +76,8 @@ export default function Header() {
 
         <StyledSearch>
           <div className='stringWrapper' onClick={stringBtnHandler}>
-            <input placeholder='✨Pick 하고 싶은 장소 찾기!✨' />
+            <input value={searchInput} onChange={searchInputHandler}
+              placeholder='✨Pick 하고 싶은 장소 찾기!✨' />
             <button>
               <FaSearch />
             </button>
@@ -74,7 +90,7 @@ export default function Header() {
             <div>기간</div>
             <FaRegCalendarCheck />
           </button>
-          <button className='searchBtn'>검색</button>
+          <button className='searchBtn' onClick={searchButtonHandler}>검색</button>
 
         </StyledSearch>
 
