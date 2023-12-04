@@ -50,6 +50,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           }
         );
 
+        if (response.data.id_token) {
+          localStorage.setItem('access_token', response.data.id_token);
+        }
         setUser(response.data); // Assuming the response data is the user object
       }
     } catch (error) {
@@ -92,14 +95,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       );
 
       if (response) {
-        setAccessToken(null);
-        setLoggedIn(false);
-        setUser(null);
-
-        localStorage.removeItem('access_token');
+        console.log('로그아웃 성공');
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setAccessToken(null);
+      setLoggedIn(false);
+      setUser(null);
+
+      localStorage.removeItem('access_token');
     }
   };
 
