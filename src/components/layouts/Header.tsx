@@ -102,9 +102,14 @@ export default function Header() {
     }
 
     setSearchOpened(false);
-    console.log('before:', searchInput);
     setSearchInput('');
-    console.log('after:', searchInput);
+  };
+
+  // 엔터로 검색
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      searchButtonHandler();
+    }
   };
 
   const searchInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -148,6 +153,8 @@ export default function Header() {
               placeholder='✨Pick 하고 싶은 이벤트 찾기!✨'
               onClick={stringBtnHandler}
               onChange={searchInputHandler}
+              onKeyDown={handleKeyPress}
+              value={searchInput}
             />
             <button className='optBtns' onClick={locationBtnHandler}>
               <MdLocationPin />
