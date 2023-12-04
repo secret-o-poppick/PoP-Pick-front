@@ -172,6 +172,12 @@ const StyledMainStoreGrid = styled.div`
 
   & > .storeInfoDiv > .storeInfoContents {
     width: 100%;
+
+    & > h3{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   @media (max-width: ${MEDIA_LIMIT}) {
@@ -211,10 +217,16 @@ const StyledMainStoreGrid = styled.div`
 
     & > .storeInfoDiv > .storeInfoContents {
       height: 130px;
-      width: 400px;
+      width: 66%;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
+
+        & > h3{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 `;
