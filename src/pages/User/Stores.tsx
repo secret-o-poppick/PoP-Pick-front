@@ -84,24 +84,22 @@ export default function Stores() {
 
       <StyledMainStoreGrid>
         {stores.map((store: StoreType, index: number) => {
-          const title = store.categoryId === 'popup' ? '팝업' : '전시';
 
           return (
             <div key={index} className='storeInfoDiv'>
               <div className='storeInfoTagDiv'>
-                {/* color 태그 불러오는 것 수정 필요 */}
-                <StoreTag color='adult' title={title} />
+                <StoreTag color={store.categoryId.name === '팝업' ? 'popup' : 'exhibit'} title={store.categoryId.name} />
                 {store.adultVerification && (
                   <div className='tagMargin'>
                     <StoreTag color='adult' title='성인' />
                   </div>
                 )}
               </div>
-              <img src={store.images[0]} />
+              <img src={store.images[0]} alt={store.title} />
 
               <div className='storeInfoContents'>
                 <h3>{store.title}</h3>
-                <p>{store.startDate}</p> {/* Assuming 'date' is renamed to 'startDate' */}
+                <p>{store.startDate}</p>
                 {/* address 받아와야 함 */}
                 <p>{store.brandName}</p>
                 <div className='storeIconsDiv'>
