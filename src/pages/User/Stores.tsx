@@ -113,12 +113,11 @@ const StyledPagenationDiv = styled.div`
 const StyledMainStoreGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 25%);
-
   padding: 0 50px;
   margin-bottom: 20px;
 
   & .storeInfoTagDiv {
-    width: 300px;
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -131,6 +130,7 @@ const StyledMainStoreGrid = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 1rem;
   }
 
   & .storeInfoDiv .tagMargin {
@@ -140,7 +140,7 @@ const StyledMainStoreGrid = styled.div`
   & > .storeInfoDiv img {
     border: 1px solid black;
     border-radius: 10px;
-    width: 19rem;
+    width: 100%;
     height: 300px;
     margin-bottom: 20px;
   }
@@ -156,7 +156,7 @@ const StyledMainStoreGrid = styled.div`
   }
 
   & > .storeInfoDiv > .storeInfoContents {
-    width: 300px;
+    width: 100%;
   }
 
   @media (max-width: ${MEDIA_LIMIT}) {

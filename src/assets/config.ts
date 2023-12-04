@@ -41,3 +41,5 @@ export const AUTH_ACTIVE_VALID_OPTIONS: SelectBoxOption[] = [
   { value: '숨기기', label: '숨긴 게시물' },
   { value: '숨기기 해제', label: '안숨긴 게시물' },
 ];
+
+export const { REACT_APP_BACKEND_HOST } = process.env;
