@@ -133,6 +133,7 @@ export default function Header() {
         selectedDistrict={selectedDistrict}
         setSelectedDistrict={handleDistrictSelect}
         onDateChange={setDateRange}
+        searchButtonHandler={searchButtonHandler}
       />
 
       <StyledHeader>

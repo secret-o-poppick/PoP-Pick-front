@@ -25,6 +25,7 @@ interface SearchPageProps {
   selectedDistrict: string;
   setSelectedDistrict: (districtId: string) => void;
   onDateChange: (newRange: DateRange | undefined) => void;
+  searchButtonHandler: () => void
 }
 
 interface CitiesType {
@@ -45,6 +46,7 @@ export default function SearchPage({
   selectedDistrict,
   setSelectedDistrict,
   onDateChange,
+  searchButtonHandler,
 }: SearchPageProps) {
   const [selectedCity, setSelectedCity] = useState<string>('');
   const [cities, setCities] = useState<CitiesType[]>([]);
@@ -192,7 +194,7 @@ export default function SearchPage({
                   <FaRegCalendarCheck />
                 </button>
               </div>
-              <button className='searchBtn'>검색</button>
+              <button className='searchBtn' onClick={searchButtonHandler}>검색</button>
             </div>
           </StyledString>
         ) : null}
