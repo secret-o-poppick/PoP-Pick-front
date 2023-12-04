@@ -1,20 +1,20 @@
 import styled, { css } from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 import { addDays, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { DayPicker, DateRange } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
+import { MEDIA_LIMIT } from '@/assets/styleVariable';
 
-//icons
-import { PiMapTrifold } from "react-icons/pi";
-import { cities, districts } from "@/data";
-import { FaLongArrowAltRight } from "react-icons/fa";
-import { MdLocationPin } from "react-icons/md";
-import { FaRegCalendarCheck } from "react-icons/fa6";
-import { Link } from "react-router-dom";
-import { MEDIA_LIMIT } from "@/assets/styleVariable";
+//Icons
 import { TbLocation } from 'react-icons/tb';
+import { PiMapTrifold } from 'react-icons/pi';
+import { FaLongArrowAltRight } from 'react-icons/fa';
+import { MdLocationPin } from 'react-icons/md';
+import { FaRegCalendarCheck } from 'react-icons/fa6';
+import { Link } from 'react-router-dom';
 
 interface SearchPageProps {
   setSearchOpened: React.Dispatch<React.SetStateAction<boolean>>;
@@ -22,7 +22,19 @@ interface SearchPageProps {
   searchType: string;
   locationBtnHandler: () => void;
   dateBtnHandler: () => void;
-  stringBtnHandler: () => void;
+  selectedDistrict: string;
+  setSelectedDistrict: (districtId: string) => void;
+  onDateChange: (newRange: DateRange | undefined) => void;
+  searchButtonHandler: () => void
+}
+
+interface CitiesType {
+  _id: string;
+  name: string;
+  code: number;
+  createdAt: Date;
+  updateAt: Date;
+  children?: CitiesType[];
 }
 
 export default function SearchPage({
@@ -31,22 +43,56 @@ export default function SearchPage({
   searchType,
   locationBtnHandler,
   dateBtnHandler,
-  stringBtnHandler,
+  selectedDistrict,
+  setSelectedDistrict,
+  onDateChange,
+  searchButtonHandler,
 }: SearchPageProps) {
-  const [range, setRange] = useState<DateRange | undefined>(undefined);
-  const [selectedCity, setSelectedCity] = useState<number>(0);
-  const [selectedDistrict, setSelectedDistrict] = useState<string>('');
+  const [selectedCity, setSelectedCity] = useState<string>('');
+  const [cities, setCities] = useState<CitiesType[]>([]);
+  const [districts, setDistricts] = useState<CitiesType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const selectedCityName = cities.find(city => city._id === selectedCity)?.name || '';
+  const selectedDistrictName = districts.find(district => district._id === selectedDistrict)?.name || '';
 
-  //Date Picker
   const today = new Date();
-  //Date Picker
+  const defaultSelected: DateRange = {
+    from: today,
+    to: addDays(today, 0),
+  };
+  const [range, setRange] = useState<DateRange | undefined>(defaultSelected);
+  // const [range, setRange] = useState<DateRange | undefined>(undefined);
 
-  const closeSearchtab = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get<CitiesType[]>(
+          'http://localhost:3310/api/regionCategories'
+        );
+        setCities(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const closeSearchTab = () => {
     setSearchOpened(false);
     console.log(1);
   };
-  const selectCityHandler = (index: number) => {
-    setSelectedCity(index);
+
+  const selectCityHandler = (cityId: string) => {
+    setSelectedCity(cityId);
+    const selectedCity = cities.find(city => city._id === cityId);
+    if (selectedCity) {
+      setDistricts(selectedCity.children || []);
+    }
+  };
+
+  const selectDistrictHandler = (districtId: string) => {
+    setSelectedDistrict(districtId);
   };
 
   return (
@@ -65,31 +111,38 @@ export default function SearchPage({
             </div>
             <div className='locationWrapper'>
               <ul>
-                {cities.map((city, index) => (
-                  <li
-                    key={index}
-                    onClick={() => {
-                      selectCityHandler(index);
-                    }}
-                  >
-                    {city}
-                  </li>
-                ))}
+                {loading ? (
+                  <li>Loading...</li>
+                ) : (
+                  cities.map((city, index) => (
+                    <li
+                      key={index}
+                      onClick={() => {
+                        selectCityHandler(city._id);
+                        console.log(city._id);
+                      }}
+
+                    >
+                      {city.name}
+                    </li>
+                  ))
+                )}
               </ul>
               <div className='districts'>
-                {districts[selectedCity].map((district, index) => (
-                  <div key={index}>
+                {loading ? (
+                  <div>Loading...</div>
+                ) : (
+                  districts.map((district, index) => (
                     <button
+                      key={index}
                       onClick={() => {
-                        alert(cities[selectedCity] + ' ' + district);
-                        setSelectedDistrict(district);
-                        stringBtnHandler();
+                        selectDistrictHandler(district._id);
                       }}
                     >
-                      {district}
+                      {district.name}
                     </button>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </StyledLocation>
@@ -99,7 +152,10 @@ export default function SearchPage({
               mode='range'
               defaultMonth={today}
               selected={range}
-              onSelect={setRange}
+              onSelect={(newRange) => {
+                setRange(newRange);
+                onDateChange(newRange);
+              }}
               locale={ko}
             />
             <div className='dateRangeWrapper'>
@@ -111,7 +167,7 @@ export default function SearchPage({
                 {range?.to ? format(range.to, 'PPP', { locale: ko }) : null}
               </div>
             </div>
-            <button onClick={stringBtnHandler}>선택</button>
+            {/* <button onClick={stringBtnHandler}>선택</button> */}
           </StyledDate>
         ) : searchType === 'string' ? (
           <StyledString>
@@ -119,15 +175,13 @@ export default function SearchPage({
               <div className='searchKeywords'>
                 <div>
                   <div>위치 : </div>
-                  {cities[selectedCity]} {selectedDistrict}
+                  {selectedCityName} {selectedDistrictName}
                 </div>
                 <div className='dateRange'>
                   <div>기간 : </div>
-                  {range?.from
-                    ? format(range.from, "PPP", { locale: ko })
-                    : null}
+                  {range?.from ? format(range.from, 'PPP', { locale: ko }) : null}
                   {range && <FaLongArrowAltRight />}
-                  {range?.to ? format(range.to, "PPP", { locale: ko }) : null}
+                  {range?.to ? format(range.to, 'PPP', { locale: ko }) : null}
                 </div>
               </div>
               <div className='optBtns'>
@@ -147,7 +201,7 @@ export default function SearchPage({
             </div>
           </StyledString>
         ) : null}
-        <div className='closeBtn' onClick={closeSearchtab}></div>
+        <div className='closeBtn' onClick={closeSearchTab}></div>
       </StyledMore>
     </>
   );
@@ -176,6 +230,7 @@ const StyledMore = styled.div<{
   position: fixed;
   transition-property: height;
   transition-duration: 0.5s;
+
   & > div:first-child {
     padding-top: 90px;
     transition-duration: 1s;
@@ -183,6 +238,7 @@ const StyledMore = styled.div<{
     overflow: hidden;
     border-radius: 0 0 10px 10px;
   }
+
   .closeBtn {
     height: 100%;
   }
@@ -199,7 +255,7 @@ const StyledLocation = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  .btnWrapper {
+.btnWrapper {
     margin-bottom: 20px;
     display: flex;
     flex-direction: row;
@@ -213,15 +269,18 @@ const StyledLocation = styled.div`
     justify-content: center;
     background-color: lightgray;
     border: none;
+
     &:hover {
       background-color: gray;
     }
+
     svg {
       width: 1.2em;
       height: 1.2em;
       margin-right: 10px;
     }
   }
+
   .locationWrapper {
     width: 80%;
     padding: 10px;
@@ -238,27 +297,33 @@ const StyledLocation = styled.div`
       flex-direction: column;
       background: lightgray;
     }
+
     li {
       width: 100%;
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
+
       &:hover {
         background-color: gray;
       }
     }
+
     .districts {
       width: 90%;
       display: grid;
       grid-template-columns: repeat(5, 20%);
+
       div {
         display: flex;
         align-items: center;
         justify-content: center;
+
         &:hover {
           background-color: lightgray;
         }
+
         button {
           width: 100%;
           height: 100%;
@@ -298,21 +363,26 @@ const StyledDayPicker = styled(DayPicker)`
   box-shadow: 0 0 10px lightgray;
   padding: 10px;
   border-radius: 10px;
+
   .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
     background-color: #1778f2;
   }
+
   .rdp-day {
     color: gray;
     display: flex;
     align-items: center;
   }
+
   .rdp-day_today:not(.rdp-day_outside) {
     font-weight: 800;
     color: black;
   }
+
   .rdp-day_selected {
     background-color: #ffcb52;
     color: black;
+
     &:hover {
       background-color: #ff5c40;
     }

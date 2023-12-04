@@ -1,5 +1,6 @@
-import styled from "styled-components";
-import Select from "react-select";
+import styled from 'styled-components';
+import Select from 'react-select';
+import axios from 'axios';
 
 import { FaRegHeart, FaRegBookmark } from "react-icons/fa";
 
@@ -7,8 +8,9 @@ import { MEDIA_LIMIT } from "@/assets/styleVariable";
 import { StoreTag } from "@/components/Tag";
 import FilterButton from "@/components/FilterButton";
 
-import { data } from "@/data/stores";
-import { useState } from "react";
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { StoreType } from '@/types'
 
 interface optionsProp {
   value: string;
@@ -18,8 +20,8 @@ interface optionsProp {
 export default function Stores() {
   const selectOptions = [
     {
-      value: "latetes",
-      label: "최신 오픈 순",
+      value: 'latests',
+      label: '최신 오픈 순',
     },
     {
       value: "likes",
@@ -31,7 +33,20 @@ export default function Stores() {
     },
   ];
 
-  const [stores, setStores] = useState(data);
+  const [stores, setStores] = useState<StoreType[]>([]);
+  const location = useLocation();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3310/api/stores${decodeURIComponent(location.search)}`);
+        setStores(response.data);
+      } catch (error) {
+        console.error('Error', error);
+      }
+    };
+    fetchData();
+  }, [location.search])
 
   const handleFilterButton = () => {
     console.log("Filter Button click");
@@ -68,13 +83,14 @@ export default function Stores() {
       </StyledMainButtonDiv>
 
       <StyledMainStoreGrid>
-        {stores.map((store, index) => {
-          const title = store.type === "popup" ? "팝업" : "전시";
+        {stores.map((store: StoreType, index: number) => {
+          const title = store.categoryId === 'popup' ? '팝업' : '전시';
 
           return (
             <div key={index} className='storeInfoDiv'>
               <div className='storeInfoTagDiv'>
-                <StoreTag color={store.type} title={title} />
+                {/* color 태그 불러오는 것 수정 필요 */}
+                <StoreTag color='adult' title={title} />
                 {store.adultVerification && (
                   <div className='tagMargin'>
                     <StoreTag color='adult' title='성인' />
@@ -84,9 +100,10 @@ export default function Stores() {
               <img src={store.images[0]} />
 
               <div className='storeInfoContents'>
-                <h3>{store.name}</h3>
-                <p>{store.date}</p>
-                <p>{store.address}</p>
+                <h3>{store.title}</h3>
+                <p>{store.startDate}</p> {/* Assuming 'date' is renamed to 'startDate' */}
+                {/* address 받아와야 함 */}
+                <p>{store.brandName}</p>
                 <div className='storeIconsDiv'>
                   <FaRegHeart style={{ marginRight: 10 }} />
                   <FaRegBookmark />

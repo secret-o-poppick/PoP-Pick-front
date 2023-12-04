@@ -48,6 +48,11 @@ const StyledStoreTagDiv = styled.div<{ color: TagStyleType }>`
   justify-content: center;
   align-items: center;
   border-radius: 10px;
+  -ms-user-select: none; 
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+   user-select: none;
 
   color: ${({ color }) => TAG_STYLE[color].color};
   background-color: ${({ color }) => TAG_STYLE[color].backgroundColor};

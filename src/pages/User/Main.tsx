@@ -12,8 +12,6 @@ import logoImg from "@/assets/logo.svg";
 import { MEDIA_LIMIT } from "@/assets/styleVariable";
 
 export default function Main() {
-  console.log(logoImg);
-
   return (
     <>
       <StyledMainHeader>

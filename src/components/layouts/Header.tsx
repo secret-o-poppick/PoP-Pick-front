@@ -2,12 +2,13 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import SearchPage from "./SearchPage";
-import { Link, useLocation } from "react-router-dom";
-import { DateRange } from "react-day-picker";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
-import SearchPage from './SearchPage';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { StoreType } from '@/types'
+import { DateRange } from 'react-day-picker';
+
 
 // icons
 import logoImg from '@/assets/logo.svg';
@@ -29,6 +30,12 @@ export default function Header() {
 
   const [isLogin, setIsLogin] = useState<boolean>(false);
   const location = useLocation();
+  const [searchInput, setSearchInput] = useState<string>('');
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('');
+  const [dateFrom, setDateFrom] = useState<string | undefined>('');
+  const [dateTo, setDateTo] = useState<string | undefined>('');
+
+  const navigate = useNavigate()
 
   const stringBtnHandler = () => {
     setSearchOpened(true);
@@ -41,6 +48,67 @@ export default function Header() {
   const dateBtnHandler = () => {
     setSearchOpened(true);
     setSearchType('date');
+  };
+
+  // 위치 선택
+  const handleDistrictSelect = (districtId: string) => {
+    setSelectedDistrict(districtId);
+  };
+
+  // 기간 선택
+  const setDateRange = (newRange: DateRange | undefined) => {
+    if (newRange) {
+      const formatDateString = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}${month}${day}`;
+      };
+
+      const fromDateString = newRange.from ? formatDateString(newRange.from) : '';
+      const toDateString = newRange.to ? formatDateString(newRange.to) : '';
+
+      setDateFrom(fromDateString);
+      setDateTo(toDateString);
+
+      console.log('From:', fromDateString);
+      console.log('To:', toDateString);
+    }
+  };
+
+  // 검색버튼
+  const searchButtonHandler = () => {
+    let queryString = '';
+
+    // 스토어 제목으로 검색
+    if (searchInput) {
+      queryString = `title=${searchInput}`;
+    }
+
+    // 위치로 검색
+    if (selectedDistrict) {
+      const locationQueryString = `locationId=${selectedDistrict}`;
+      queryString = queryString ? `${queryString}&${locationQueryString}` : locationQueryString;
+    }
+
+    // 기간으로 검색
+    if (dateFrom && dateTo) {
+      const dateQueryString = `startDate=${dateFrom}&endDate=${dateTo}`;
+      queryString = queryString ? `${queryString}&${dateQueryString}` : dateQueryString;
+    }
+
+    if (queryString) {
+      navigate(`stores?${queryString}`);
+    }
+
+    setSearchOpened(false);
+    console.log('before:', searchInput);
+    setSearchInput('');
+    console.log('after:', searchInput);
+  };
+
+  const searchInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value);
   };
 
   const handleLoginButtonClick = () => {
@@ -62,7 +130,10 @@ export default function Header() {
         searchType={searchType}
         locationBtnHandler={locationBtnHandler}
         dateBtnHandler={dateBtnHandler}
-        stringBtnHandler={stringBtnHandler}
+        selectedDistrict={selectedDistrict}
+        setSelectedDistrict={handleDistrictSelect}
+        onDateChange={setDateRange}
+        searchButtonHandler={searchButtonHandler}
       />
 
       <StyledHeader>
@@ -76,6 +147,7 @@ export default function Header() {
             <input
               placeholder='✨Pick 하고 싶은 이벤트 찾기!✨'
               onClick={stringBtnHandler}
+              onChange={searchInputHandler}
             />
             <button className='optBtns' onClick={locationBtnHandler}>
               <MdLocationPin />
@@ -86,9 +158,8 @@ export default function Header() {
               <div>기간</div>
             </button>
           </div>
-          <button className='searchBtn'>
-            <FaSearch />
-          </button>
+          <button className='searchBtn' onClick={searchButtonHandler}><FaSearch /></button>
+
         </StyledSearch>
 
         <StyledUser>
@@ -214,6 +285,7 @@ const StyledSearch = styled.div`
       width: 1.2em;
       height: 1.2em;
     }
+    
   }
   .searchBtn {
     width: 50px;
@@ -223,8 +295,11 @@ const StyledSearch = styled.div`
     justify-content: center;
     border: none;
     background-color: transparent;
-    border-radius: 10000px;
+    border-radius: 50%;
+    cursor: pointer;
+
   }
+
   @media (max-width: ${MEDIA_LIMIT}) {
     & {
       width: 70%;
@@ -236,6 +311,7 @@ const StyledSearch = styled.div`
       display: none;
     }
   }
+
 `;
 
 const StyledUser = styled.div`
@@ -253,7 +329,7 @@ const StyledUser = styled.div`
     justify-content: center;
     &:hover {
       background-color: #eeeeee;
-      border-radius: 1000px;
+      border-radius: 50%;
     }
     svg {
       width: 50%;
@@ -270,5 +346,8 @@ const StyledUser = styled.div`
     .login {
       display: none;
     }
+  }
+  .userinfo{
+    cursor: pointer;
   }
 `;
