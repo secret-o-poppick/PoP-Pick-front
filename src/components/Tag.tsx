@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-import { TAG_STYLE } from '@/assets/styleVariable';
-import { TagStyleType } from '@/utils/index';
-import { MEDIA_LIMIT } from '@/assets/styleVariable';
+import styled from "styled-components";
+import { TAG_STYLE } from "@/assets/styleVariable";
+import { TagStyleType } from "@/utils/index";
+import { MEDIA_LIMIT } from "@/assets/styleVariable";
 
 interface TagProps {
   color: TagStyleType;
@@ -48,17 +48,16 @@ const StyledStoreTagDiv = styled.div<{ color: TagStyleType }>`
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  -ms-user-select: none; 
+  -ms-user-select: none;
   -moz-user-select: -moz-none;
   -khtml-user-select: none;
   -webkit-user-select: none;
-   user-select: none;
+  user-select: none;
 
   color: ${({ color }) => TAG_STYLE[color].color};
   background-color: ${({ color }) => TAG_STYLE[color].backgroundColor};
 
-  position: absolute;
-  margin: 10px;
+  margin: 5px;
 
   @media (max-width: ${MEDIA_LIMIT}) {
     & {
