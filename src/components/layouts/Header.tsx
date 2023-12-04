@@ -1,12 +1,11 @@
 
-import styled from "styled-components";
-import { useEffect, useState } from "react";
-import SearchPage from "./SearchPage";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import styled from 'styled-components';
+import { useEffect, useState } from 'react';
+import SearchPage from './SearchPage';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { StoreType } from '@/types'
 import { DateRange } from 'react-day-picker';
 
 
@@ -26,7 +25,7 @@ import Avatar from '../Avatar';
 export default function Header() {
   const { isLoggedIn, logout, user } = useAuth();
   const [isSearchOpened, setSearchOpened] = useState<boolean>(false);
-  const [searchType, setSearchType] = useState<string>("");
+  const [searchType, setSearchType] = useState<string>('');
 
   const [isLogin, setIsLogin] = useState<boolean>(false);
   const location = useLocation();
@@ -82,33 +81,35 @@ export default function Header() {
 
   // 검색버튼
   const searchButtonHandler = () => {
-    let queryString = '';
 
-    // 스토어 제목으로 검색
+    const searchParams = new URLSearchParams(location.search);
+
+    // 검색어
     if (searchInput) {
-      queryString = `title=${searchInput}`;
+      searchParams.set('title', searchInput);
+    } else {
+      searchParams.delete('title');
     }
 
-    // 위치로 검색
-    if (selectedCity && !selectedDistrict) {
-      const cityQueryString = `locationId=${selectedCity}`;
-      queryString = queryString ? `${queryString}&${cityQueryString}` : cityQueryString;
+    // 위치
+    if (selectedCity) {
+      searchParams.set('locationId', selectedCity);
+    } else if (selectedDistrict) {
+      searchParams.set('locationId', selectedDistrict);
+    } else {
+      searchParams.delete('locationId');
     }
 
-    if (selectedDistrict) {
-      const districtQueryString = `locationId=${selectedDistrict}`;
-      queryString = queryString ? `${queryString}&${districtQueryString}` : districtQueryString;
-    }
-
-    // 기간으로 검색
+    // 기간
     if (dateFrom && dateTo) {
-      const dateQueryString = `startDate=${dateFrom}&endDate=${dateTo}`;
-      queryString = queryString ? `${queryString}&${dateQueryString}` : dateQueryString;
+      searchParams.set('startDate', dateFrom);
+      searchParams.set('endDate', dateTo);
+    } else {
+      searchParams.delete('startDate');
+      searchParams.delete('endDate');
     }
 
-    if (queryString) {
-      navigate(`stores?${queryString}`);
-    }
+    navigate(`/stores?${searchParams}`)
 
     setSearchOpened(false);
     setSearchInput('');
