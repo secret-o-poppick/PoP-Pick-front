@@ -1,27 +1,27 @@
-import styled from "styled-components";
-import { MEDIA_LIMIT } from "@/assets/styleVariable";
-import { useEffect, useRef } from "react";
-import { storeInfo } from "@/data/coordinate";
+import styled from 'styled-components';
+import { MEDIA_LIMIT } from '@/assets/styleVariable';
+import { useEffect, useRef } from 'react';
+import { storeInfo } from '@/data/coordinate';
 
 // icons
-import logo from "@/assets/logo.svg";
-import { FaRegHeart } from "react-icons/fa";
-import { FaRegBookmark } from "react-icons/fa";
-import { IoIosPin } from "react-icons/io";
-import { AiOutlineDollarCircle } from "react-icons/ai";
-import { IoIosGlobe } from "react-icons/io";
-import ImageSlide from "@/components/ImageSlide";
-import { images } from "@/data/sliderImage";
-import { MdLocationPin } from "react-icons/md";
+import logo from '@/assets/logo.svg';
+import { FaRegHeart } from 'react-icons/fa';
+import { FaRegBookmark } from 'react-icons/fa';
+import { IoIosPin } from 'react-icons/io';
+import { AiOutlineDollarCircle } from 'react-icons/ai';
+import { IoIosGlobe } from 'react-icons/io';
+import ImageSlide from '@/components/ImageSlide';
+import { images } from '@/data/sliderImage';
+import { MdLocationPin } from 'react-icons/md';
 
 export default function StoreDetail() {
   const data = storeInfo;
   const tags = [];
   if (data.adultVerification) {
-    tags.push("성인");
+    tags.push('성인');
   }
-  if (data.type === "popup") {
-    tags.push("팝업");
+  if (data.type === 'popup') {
+    tags.push('팝업');
   }
 
   // kakao map
@@ -40,7 +40,7 @@ export default function StoreDetail() {
   useEffect(() => {
     const LatLng = new kakao.maps.LatLng(data.coordinate.x, data.coordinate.y);
 
-    const container = document.getElementById("map_detail");
+    const container = document.getElementById('map_detail');
     const options = {
       center: LatLng,
       level: 3,

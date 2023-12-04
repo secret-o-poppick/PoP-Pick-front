@@ -1,13 +1,13 @@
-import styled from "styled-components";
-import { MEDIA_LIMIT } from "@/assets/styleVariable";
+import styled from 'styled-components';
+import { MEDIA_LIMIT } from '@/assets/styleVariable';
 import { useNavigate } from 'react-router-dom';
 // icons
-import logo from "@/assets/logo.svg";
-import { FaRegHeart } from "react-icons/fa";
-import { FaRegBookmark } from "react-icons/fa";
-import { IoIosPin } from "react-icons/io";
-import { AiOutlineDollarCircle } from "react-icons/ai";
-import { IoIosGlobe } from "react-icons/io";
+import logo from '@/assets/logo.svg';
+import { FaRegHeart } from 'react-icons/fa';
+import { FaRegBookmark } from 'react-icons/fa';
+import { IoIosPin } from 'react-icons/io';
+import { AiOutlineDollarCircle } from 'react-icons/ai';
+import { IoIosGlobe } from 'react-icons/io';
 import AdminTitle from '@/components/AdminTitle';
 import Button from '@/components/Button';
 
@@ -15,13 +15,13 @@ export default function AdminStoreDetail() {
   const navigate = useNavigate();
 
   const data = {
-    title: "도구리 막내클럽 <실수 세탁소>",
-    tags: ["팝업", "유료"],
-    likes: "99k",
-    date: "2023.10.20~2023.10.30",
-    location: "서울시 마포구 동교로 29길 34",
-    price: "1인 15,000원",
-    sns: "SNS 바로가기",
+    title: '도구리 막내클럽 <실수 세탁소>',
+    tags: ['팝업', '유료'],
+    likes: '99k',
+    date: '2023.10.20~2023.10.30',
+    location: '서울시 마포구 동교로 29길 34',
+    price: '1인 15,000원',
+    sns: 'SNS 바로가기',
     subscribe: `막내들이 행복한 세상을 위해 도구리가 창단한 비밀 조직 ‘막내클럽’이
   이번에는 막내들의 실수를 깨끗하게 지워주는 실수 세탁소로
   돌아왔습니다. 이곳에서 모든 나만의 아찔한 실수를 은밀하게 세탁하고
