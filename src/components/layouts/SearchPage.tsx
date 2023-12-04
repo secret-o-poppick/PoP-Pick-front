@@ -22,6 +22,8 @@ interface SearchPageProps {
   searchType: string;
   locationBtnHandler: () => void;
   dateBtnHandler: () => void;
+  selectedCity: string;
+  setSelectedCity: (cityId: string) => void;
   selectedDistrict: string;
   setSelectedDistrict: (districtId: string) => void;
   onDateChange: (newRange: DateRange | undefined) => void;
@@ -43,12 +45,13 @@ export default function SearchPage({
   searchType,
   locationBtnHandler,
   dateBtnHandler,
+  selectedCity,
+  setSelectedCity,
   selectedDistrict,
   setSelectedDistrict,
   onDateChange,
   searchButtonHandler,
 }: SearchPageProps) {
-  const [selectedCity, setSelectedCity] = useState<string>('');
   const [cities, setCities] = useState<CitiesType[]>([]);
   const [districts, setDistricts] = useState<CitiesType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -94,6 +97,13 @@ export default function SearchPage({
   const selectDistrictHandler = (districtId: string) => {
     setSelectedDistrict(districtId);
   };
+
+  // 위치, 기간 초기화
+  const resetButtonHandler = () => {
+    setSelectedCity('');
+    setSelectedDistrict('');
+    setRange(defaultSelected)
+  }
 
   return (
     <>
@@ -195,8 +205,8 @@ export default function SearchPage({
                 </button>
               </div>
               <div className='commitBtns'>
-                <button>초기화</button>
-                <button>검색</button>
+                <button onClick={resetButtonHandler}>초기화</button>
+                <button onClick={searchButtonHandler}>검색</button>
               </div>
             </div>
           </StyledString>

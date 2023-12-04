@@ -31,6 +31,7 @@ export default function Header() {
   const [isLogin, setIsLogin] = useState<boolean>(false);
   const location = useLocation();
   const [searchInput, setSearchInput] = useState<string>('');
+  const [selectedCity, setSelectedCity] = useState<string>('');
   const [selectedDistrict, setSelectedDistrict] = useState<string>('');
   const [dateFrom, setDateFrom] = useState<string | undefined>('');
   const [dateTo, setDateTo] = useState<string | undefined>('');
@@ -51,6 +52,9 @@ export default function Header() {
   };
 
   // 위치 선택
+  const handleCitySelect = (cityId: string) => {
+    setSelectedCity(cityId);
+  };
   const handleDistrictSelect = (districtId: string) => {
     setSelectedDistrict(districtId);
   };
@@ -86,9 +90,14 @@ export default function Header() {
     }
 
     // 위치로 검색
+    if (selectedCity && !selectedDistrict) {
+      const cityQueryString = `locationId=${selectedCity}`;
+      queryString = queryString ? `${queryString}&${cityQueryString}` : cityQueryString;
+    }
+
     if (selectedDistrict) {
-      const locationQueryString = `locationId=${selectedDistrict}`;
-      queryString = queryString ? `${queryString}&${locationQueryString}` : locationQueryString;
+      const districtQueryString = `locationId=${selectedDistrict}`;
+      queryString = queryString ? `${queryString}&${districtQueryString}` : districtQueryString;
     }
 
     // 기간으로 검색
@@ -135,6 +144,8 @@ export default function Header() {
         searchType={searchType}
         locationBtnHandler={locationBtnHandler}
         dateBtnHandler={dateBtnHandler}
+        selectedCity={selectedCity}
+        setSelectedCity={handleCitySelect}
         selectedDistrict={selectedDistrict}
         setSelectedDistrict={handleDistrictSelect}
         onDateChange={setDateRange}
