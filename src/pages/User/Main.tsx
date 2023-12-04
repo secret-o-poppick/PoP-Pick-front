@@ -35,4 +35,7 @@ const StyledMainHeader = styled.div`
     width: 100%;
     height: 320px;
   }
+  .slick-arrow {
+    display: none !important;
+  }
 `;

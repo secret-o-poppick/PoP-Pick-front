@@ -364,6 +364,9 @@ const StyledMap = styled.div<{
         justify-content: center;
         background-color: white;
         margin-right: 1em;
+        &:hover {
+          background-color: #cce3ff;
+        }
         svg {
           width: 60%;
           height: 60%;

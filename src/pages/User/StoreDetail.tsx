@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { MEDIA_LIMIT } from "@/assets/styleVariable";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { storeInfo } from "@/data/coordinate";
+
 // icons
 import logo from "@/assets/logo.svg";
 import { FaRegHeart } from "react-icons/fa";
@@ -10,44 +12,41 @@ import { AiOutlineDollarCircle } from "react-icons/ai";
 import { IoIosGlobe } from "react-icons/io";
 import ImageSlide from "@/components/ImageSlide";
 import { images } from "@/data/sliderImage";
+import { MdLocationPin } from "react-icons/md";
 
 export default function StoreDetail() {
-  const data = {
-    title: "도구리 막내클럽 <실수 세탁소>",
-    tags: ["팝업", "유료"],
-    likes: "99k",
-    date: "2023.10.20~2023.10.30",
-    location: "서울시 마포구 동교로 29길 34",
-    price: "1인 15,000원",
-    sns: "SNS 바로가기",
-    subscribe: `막내들이 행복한 세상을 위해 도구리가 창단한 비밀 조직 ‘막내클럽’이
-  이번에는 막내들의 실수를 깨끗하게 지워주는 실수 세탁소로
-  돌아왔습니다. 이곳에서 모든 나만의 아찔한 실수를 은밀하게 세탁하고
-  당당한 막내로 다시 태어나보세요!막내들이 행복한 세상을 위해 도구리가 창단한 비밀 조직 ‘막내클럽’이
-  이번에는 막내들의 실수를 깨끗하게 지워주는 실수 세탁소로
-  돌아왔습니다. 이곳에서 모든 나만의 아찔한 실수를 은밀하게 세탁하고
-  당당한 막내로 다시 태어나보세요!`,
-  };
+  const data = storeInfo;
+  const tags = [];
+  if (data.adultVerification) {
+    tags.push("성인");
+  }
+  if (data.type === "popup") {
+    tags.push("팝업");
+  }
 
   // kakao map
   const { kakao } = window as any;
+
+  let map: any;
+
+  const toCurrentLocation = () => {
+    const moveLatLon = new kakao.maps.LatLng(
+      data.coordinate.x,
+      data.coordinate.y
+    );
+    map.setCenter(moveLatLon);
+  };
+
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      const x = position.coords.latitude; // 위도
-      const y = position.coords.longitude; // 경도
+    const LatLng = new kakao.maps.LatLng(data.coordinate.x, data.coordinate.y);
 
-      const container = document.getElementById("map_detail");
-      const options = {
-        center: new kakao.maps.LatLng(x, y),
-        level: 3,
-      };
-
-      const map = new kakao.maps.Map(container, options);
-
-      const markerPosition = new kakao.maps.LatLng(x, y);
-      const marker = new kakao.maps.Marker({ position: markerPosition });
-      marker.setMap(map);
-    });
+    const container = document.getElementById("map_detail");
+    const options = {
+      center: LatLng,
+      level: 3,
+    };
+    map = new kakao.maps.Map(container, options);
+    const marker = new kakao.maps.Marker({ position: LatLng, map: map });
   }, []);
   // kakao map
 
@@ -63,7 +62,7 @@ export default function StoreDetail() {
               <h1>{data.title}</h1>
               <div className='tagsAndBtnsWrapper'>
                 <div className='tagsWrapper'>
-                  {data.tags.map((tag, index) => (
+                  {tags.map((tag, index) => (
                     <div key={index}>{tag}</div>
                   ))}
                 </div>
@@ -84,7 +83,9 @@ export default function StoreDetail() {
                     <div>
                       <IoIosPin />
                     </div>
-                    <div>{data.location}</div>
+                    <div>
+                      {data.city} {data.distirct}
+                    </div>
                   </div>
                   <div>
                     <div>
@@ -103,8 +104,12 @@ export default function StoreDetail() {
               </div>
             </div>
             <div className='mapWrapper'>
-              <div className='loading_map'></div>
+              <div className='loadingMap'>지도를 불러오는중</div>
               <div id='map_detail'></div>
+
+              <div className='currentLocBtn' onClick={toCurrentLocation}>
+                <MdLocationPin />
+              </div>
             </div>
           </div>
         </div>
@@ -243,12 +248,12 @@ const StyledDetail = styled.div`
   }
   .mapWrapper {
     height: 40%;
-    background-color: lightgreen;
     border-radius: 10px;
     position: relative;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 0 10px lightgray;
+    background-color: gray;
     .loadingMap {
       width: 100%;
       height: 100%;
@@ -263,6 +268,28 @@ const StyledDetail = styled.div`
     #map_detail {
       width: 100%;
       height: 100%;
+    }
+    .currentLocBtn {
+      z-index: 1;
+      width: 30px;
+      height: 30px;
+      border: 3px solid #1778f2;
+      border-radius: 50%;
+      color: #1778f2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      margin: 1em;
+      position: absolute;
+      top: 0;
+      svg {
+        width: 60%;
+        height: 60%;
+      }
+      &:hover {
+        background-color: #cce3ff;
+      }
     }
   }
   @media (max-width: ${MEDIA_LIMIT}) {

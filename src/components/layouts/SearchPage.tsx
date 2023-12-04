@@ -138,7 +138,10 @@ export default function SearchPage({
                   <FaRegCalendarCheck />
                 </button>
               </div>
-              <button className='searchBtn'>검색</button>
+              <div className='commitBtns'>
+                <button>초기화</button>
+                <button>검색</button>
+              </div>
             </div>
           </StyledString>
         ) : null}
@@ -327,7 +330,7 @@ const StyledString = styled.div`
     box-sizing: border-box;
   }
   .searchKeywords {
-    width: 50%;
+    width: 80%;
     height: 60%;
     display: flex;
     flex-direction: column;
@@ -362,15 +365,22 @@ const StyledString = styled.div`
       border-radius: 10px;
     }
   }
-  .searchBtn {
+  .commitBtns {
     width: 80%;
     height: 20%;
     margin-top: 1em;
-    background-color: transparent;
-    border: none;
-    border-radius: 10px;
-    &:hover {
-      background-color: lightgray;
+    display: flex;
+    justify-content: space-between;
+    & > button {
+      width: 50%;
+      height: 100%;
+
+      background-color: transparent;
+      border: none;
+      border-radius: 10px;
+      &:hover {
+        background-color: lightgray;
+      }
     }
   }
 
