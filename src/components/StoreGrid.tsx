@@ -3,7 +3,8 @@ import StoreCard from "./StoreCard";
 import { MEDIA_LIMIT, MEDIA_MAX_LIMIT } from "@/assets/styleVariable";
 import { StoreData } from "@/types";
 
-export default function StoreGrid({ storeDatas, max, half }: any) {
+// max : 전체화면 페이지는 4로, 절반만 쓰는 페이지는 3으로 해주세요
+export default function StoreGrid({ storeDatas, max }: any) {
   const maxper = `${100 / max}%`;
   return (
     <StyledStoreGrid $max={max} $maxper={maxper}>
