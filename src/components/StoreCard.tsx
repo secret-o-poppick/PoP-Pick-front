@@ -70,7 +70,6 @@ const StyledCard = styled.div`
       justify-content: flex-end;
       gap: 10px;
       width: 100%;
-      z-index: 1;
       margin: 0 1em;
     }
   }
@@ -139,6 +138,9 @@ const StyledCard = styled.div`
       position: absolute;
       top: 0;
       right: 0;
+      & > div {
+        margin: 0;
+      }
     }
     .imgLink {
       width: 50%;
