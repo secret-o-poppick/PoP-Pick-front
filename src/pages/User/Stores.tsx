@@ -1,18 +1,13 @@
-import styled from "styled-components";
-import Select from "react-select";
-import axios from "axios";
-
-import { FaRegHeart, FaRegBookmark } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import Select from 'react-select';
+import axios from 'axios';
 
 import { MEDIA_LIMIT } from '@/assets/styleVariable';
-import { StoreTag } from '@/components/Tag';
 import FilterButton from '@/components/FilterButton';
-
-import { useState, useEffect } from "react";
-import { StoreType, StoreData } from "@/types";
-import StoreGridSide from "@/components/StoreGrid";
-import { formatDate } from "@/utils";
-import { useLocation, useNavigate } from 'react-router-dom';
+import StoreCard from '@/components/Store/Card';
+import { StoreType } from '@/types';
 
 interface optionsProp {
   value: string;
@@ -22,8 +17,8 @@ interface optionsProp {
 export default function Stores() {
   const selectOptions = [
     {
-      value: "latests",
-      label: "최신 오픈 순",
+      value: 'latests',
+      label: '최신 오픈 순',
     },
     {
       value: 'likes',
@@ -36,32 +31,9 @@ export default function Stores() {
   ];
 
   const [stores, setStores] = useState<StoreType[]>([]);
-  const [storeDatas, setStoreDatas] = useState<StoreData[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const location = useLocation();
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    setStoreDatas(
-      stores.map((data: any) => {
-        const tag = data.type === "popup" ? "팝업" : "전시";
-        const startDate = formatDate(data.startDate);
-        const endDate = formatDate(data.endDate);
-        const storeData = {
-          storeId: data._id,
-          title: data.title,
-          tag,
-          adultVerification: data.adultVerification,
-          image: data.images[0],
-          startDate,
-          endDate,
-          location: data.title,
-          likes: data.likes,
-        };
-        return storeData;
-      })
-    );
-  }, [stores]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,17 +43,22 @@ export default function Stores() {
             location.search
           )}`
         );
+        console.log(response.data);
         setStores(response.data);
       } catch (error) {
-        console.error("Error", error);
+        console.error('Error', error);
       }
     };
 
     // 카테고리 탭
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:3310/api/categories');
-        setCategories(response.data.map((category: { name: string }) => category.name));
+        const response = await axios.get(
+          'http://localhost:3310/api/categories'
+        );
+        setCategories(
+          response.data.map((category: { name: string }) => category.name)
+        );
       } catch (error) {
         console.error('Error', error);
       }
@@ -93,7 +70,9 @@ export default function Stores() {
         const searchParams = new URLSearchParams(location.search);
         const selectedCategory = searchParams.get('categoryId');
 
-        const response = await axios.get(`http://localhost:3310/api/stores?${searchParams}`);
+        const response = await axios.get(
+          `http://localhost:3310/api/stores?${searchParams}`
+        );
 
         if (!selectedCategory) {
           setStores(response.data);
@@ -114,11 +93,11 @@ export default function Stores() {
     fetchTabData();
   }, [location.search]);
 
-
   // 전시/팝업 탭 클릭
   const categoryFilterHandler = async (selectedCategory: string) => {
     const searchParams = new URLSearchParams(location.search);
-    const isCategorySelected = searchParams.get('categoryId') === selectedCategory;
+    const isCategorySelected =
+      searchParams.get('categoryId') === selectedCategory;
 
     if (isCategorySelected) {
       searchParams.delete('categoryId');
@@ -132,7 +111,8 @@ export default function Stores() {
   // 성인 탭 클릭
   const adultFilterHandler = () => {
     const searchParams = new URLSearchParams(location.search);
-    const isAdultVerification = searchParams.get('adultVerification') === 'true';
+    const isAdultVerification =
+      searchParams.get('adultVerification') === 'true';
 
     if (isAdultVerification) {
       searchParams.delete('adultVerification');
@@ -140,7 +120,7 @@ export default function Stores() {
       searchParams.set('adultVerification', 'true');
     }
 
-    navigate(`/stores?${searchParams}`)
+    navigate(`/stores?${searchParams}`);
   };
 
   // 드롭박스
@@ -152,10 +132,16 @@ export default function Stores() {
     <>
       <StyledMainButtonDiv>
         <div className='mainButtonDiv'>
-          <FilterButton onClick={() => categoryFilterHandler(categories[0])} color='primary'>
+          <FilterButton
+            onClick={() => categoryFilterHandler(categories[0])}
+            color='primary'
+          >
             {categories[0]}
           </FilterButton>
-          <FilterButton onClick={() => categoryFilterHandler(categories[1])} color='notice'>
+          <FilterButton
+            onClick={() => categoryFilterHandler(categories[1])}
+            color='notice'
+          >
             {categories[1]}
           </FilterButton>
           <FilterButton onClick={adultFilterHandler} color='error'>
@@ -174,14 +160,19 @@ export default function Stores() {
         </StyledFilterDiv>
       </StyledMainButtonDiv>
 
-      <StoreGridSide storeDatas={storeDatas} max={4} />
+      {/* <StoreGridSide storeDatas={storeDatas} max={4} /> */}
+      <StyledStoreGrid>
+        {stores.map((store) => (
+          <StoreCard key={store._id} store={store} />
+        ))}
+      </StyledStoreGrid>
 
-      <StyledPaginationDiv>페이지네이션 들어갈 자리</StyledPaginationDiv>
+      <StyledPagenationDiv>페이지네이션 들어갈 자리</StyledPagenationDiv>
     </>
   );
 }
 
-const StyledPaginationDiv = styled.div`
+const StyledPagenationDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -228,6 +219,23 @@ const StyledFilterDiv = styled.div`
       display: flex;
       flex-direction: row;
       justify-content: flex-end;
+    }
+  }
+`;
+
+const StyledStoreGrid = styled.div`
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  box-sizing: border-box;
+  padding: 2rem 4rem;
+
+  @media (max-width: ${MEDIA_LIMIT}) {
+    & {
+      padding: 0.4rem 0.2rem;
+      grid-template-columns: repeat(1, 1fr);
     }
   }
 `;
