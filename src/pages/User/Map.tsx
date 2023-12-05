@@ -4,16 +4,19 @@ import { FaRegHeart, FaRegBookmark } from "react-icons/fa";
 
 import { MEDIA_LIMIT, MEDIA_MAX_LIMIT } from "@/assets/styleVariable";
 import { StoreTag } from "@/components/Tag";
-import { data } from "@/data/stores";
+// import { data } from "@/data/stores";
 
 //icons
 import { IoMdRefresh } from "react-icons/io";
 import { TbLocation } from "react-icons/tb";
 
-import { coordinate } from "@/data/coordinate";
-
 export default function Map() {
-  const [stores, setStores] = useState(data);
+  const [datas, setDatas] = useState([]);
+
+  const mapObj = useRef<any>();
+  const [markers, setMarkers] = useState<any>([]);
+  const infoWindows: any = [];
+
   const [isListOpened, setListOpened] = useState<boolean>(false);
   const listOpenHandler = () => {
     setListOpened((cur) => !cur);
@@ -30,9 +33,22 @@ export default function Map() {
     y: 0,
   });
 
-  let map: any;
-
-  const markers: any = [];
+  const getDatas = async () => {
+    const bounds = mapObj.current.getBounds();
+    const SW = bounds.getSouthWest();
+    const NE = bounds.getNorthEast();
+    const boundLimits = {
+      x1: SW.Ma,
+      x2: NE.Ma,
+      y1: SW.La,
+      y2: NE.La,
+    };
+    const response = await fetch(
+      `http://localhost:3310/api/address?x1=${boundLimits.x1}&x2=${boundLimits.x2}&y1=${boundLimits.y1}&y2=${boundLimits.y2}`
+    );
+    const resJson = await response.json();
+    setDatas(resJson);
+  };
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(function (position) {
@@ -45,16 +61,13 @@ export default function Map() {
         currentLocation.current.x,
         currentLocation.current.y
       );
-      console.log(currentLatLng);
       const container = document.getElementById("map");
       const options = {
         center: currentLatLng,
-        level: 3,
+        level: 5,
       };
-      map = new kakao.maps.Map(container, options);
-
-      refreshMap();
-
+      mapObj.current = new kakao.maps.Map(container, options);
+      getDatas();
       // 마커로 좌표 로깅
       // const marker = new kakao.maps.Marker({
       //   map: map,
@@ -74,40 +87,60 @@ export default function Map() {
     });
   }, []);
 
-  const refreshMap = () => {
+  useEffect(() => {
+    refreshMap();
+  }, [datas]);
+
+  const refreshMap = async () => {
     // 마커 리셋
     markers.forEach((marker: any) => {
       marker.setMap(null);
     });
+    setMarkers([]);
+    infoWindows.forEach((window: any) => {
+      window.close(mapObj.current);
+    });
+    infoWindows.splice(0, infoWindows.length);
 
-    const bounds = map.getBounds();
-    const SW = bounds.getSouthWest();
-    const NE = bounds.getNorthEast();
-    const boundLimits = {
-      x1: SW.La,
-      x2: NE.La,
-      y1: SW.Ma,
-      y2: NE.Ma,
-    };
-
-    // 확인용 타임아웃
-    // setTimeout(() => {
-    const positions = coordinate.filter(
-      (loc) =>
-        loc[1] > boundLimits.x1 &&
-        loc[1] < boundLimits.x2 &&
-        loc[2] > boundLimits.y1 &&
-        loc[2] < boundLimits.y2
-    );
-
-    positions.forEach((loc) => {
+    datas.forEach((data: any) => {
+      const { x, y } = data;
       const marker = new kakao.maps.Marker({
-        map: map,
-        position: new kakao.maps.LatLng(loc[2], loc[1]),
-        title: loc[0],
+        map: mapObj.current,
+        position: new kakao.maps.LatLng(x, y),
+        title: data.store.title,
+        isClicked: false,
       });
-      markers.push(marker);
-      console.log(marker, markers);
+
+      const infoContent = `<div class='infoWindow'>
+        <img src=${data.store.images[0]}/>
+        <div>
+          <div>${data.store.title}</div>
+          <div>${data.store.startDate} ~ ${data.store.endDate}</div>
+          <div>${data.detail1}</div>
+          <div>상세보기</div>
+        </div>
+      </div>`;
+      // 인포윈도우를 생성합니다
+      const infoWindow = new kakao.maps.InfoWindow({
+        content: infoContent,
+        removable: true,
+      });
+      infoWindows.push(infoWindow);
+
+      // 마커에 클릭이벤트를 등록합니다
+      kakao.maps.event.addListener(marker, "click", function () {
+        // 마커 위에 인포윈도우를 표시합니다
+        infoWindows.forEach((window: any) => {
+          window.close(mapObj.current);
+        });
+        infoWindow.open(mapObj.current, marker);
+      });
+
+      setMarkers((cur: any) => {
+        const newArr = [...cur];
+        newArr.push(marker);
+        return newArr;
+      });
     });
     // 현위치 표시
     const circle = new kakao.maps.Circle({
@@ -115,16 +148,15 @@ export default function Map() {
         currentLocation.current.x,
         currentLocation.current.y
       ),
-      radius: 30, // 미터 단위의 원의 반지름입니다
+      radius: 50, // 미터 단위의 원의 반지름입니다
       strokeWeight: 1, // 선의 두께입니다
       strokeColor: "#75B8FA", // 선의 색깔입니다
       strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
       fillColor: "#CFE7FF", // 채우기 색깔입니다
       fillOpacity: 0.7, // 채우기 불투명도 입니다
-      map: map,
+      map: mapObj.current,
     });
     markers.push(circle);
-    // }, 1000);
   };
 
   const toCurrentLocation = () => {
@@ -132,7 +164,8 @@ export default function Map() {
       currentLocation.current.x,
       currentLocation.current.y
     );
-    map.setCenter(moveLatLon);
+    mapObj.current.setCenter(moveLatLon);
+    mapObj.current.setLevel(5);
   };
   // kakao map
 
@@ -144,7 +177,13 @@ export default function Map() {
             <div className='loadingMap'>지도를 불러오는중</div>
             <div id='map'></div>
             <div className='mapBtns'>
-              <div id='refreshBtn' onClick={refreshMap}>
+              <div
+                id='refreshBtn'
+                onClick={() => {
+                  getDatas();
+                  refreshMap();
+                }}
+              >
                 <IoMdRefresh />
               </div>
               <div id='currentLocBtn' onClick={toCurrentLocation}>
@@ -158,37 +197,46 @@ export default function Map() {
             </div>
             <div className='list'>
               <StyledStoreGrid>
-                {stores.map((store, index) => {
-                  /**페이지 네이션으로 처리하기 */
-                  if (index >= 6) {
-                    return;
-                  }
-                  const title = store.type === "popup" ? "팝업" : "전시";
+                <div>
+                  {datas.map((data: any, index: number) => {
+                    const store = data.store;
+                    /**페이지 네이션으로 처리하기 */
+                    if (index >= 6) {
+                      return;
+                    }
+                    // type ???????
+                    const title = store.type === "popup" ? "팝업" : "전시";
+                    const sd = new Date(store.startDate);
+                    const ed = new Date(store.endDate);
+                    const startDate = `${sd.getFullYear()}-${sd.getMonth()}-${sd.getDate()}`;
+                    const endDate = `${ed.getFullYear()}-${ed.getMonth()}-${ed.getDate()}`;
 
-                  return (
-                    <div key={index} className='storeInfoDiv'>
-                      <div className='storeInfoTagDiv'>
-                        <StoreTag color={store.type} title={title} />
-                        {store.adultVerification && (
-                          <div className='tagMargin'>
+                    return (
+                      <div key={index} className='storeInfoDiv'>
+                        <div className='storeInfoTagDiv'>
+                          {/* color 뭔지 모르겠어요 ㅜㅜ (store.categoryId.name)을 사용하려고 했는데 한글입니다...*/}
+                          <StoreTag color={"popup"} title={title} />
+                          {store.adultVerification && (
                             <StoreTag color='adult' title='성인' />
-                          </div>
-                        )}
-                      </div>
-                      <img src={store.images[0]} />
+                          )}
+                        </div>
+                        <img src={store.images[0]} />
 
-                      <div className='storeInfoContents'>
-                        <h3>{store.name}</h3>
-                        <p>{store.date}</p>
-                        <p>{store.address}</p>
-                        <div className='storeIconsDiv'>
-                          <FaRegHeart style={{ marginRight: 10 }} />
-                          <FaRegBookmark />
+                        <div className='storeInfoContents'>
+                          <h3>{store.title}</h3>
+                          <p>
+                            {startDate} ~ {endDate}
+                          </p>
+                          <p>{data.detail1}</p>
+                          <div className='storeIconsDiv'>
+                            <FaRegHeart style={{ marginRight: 10 }} />
+                            <FaRegBookmark />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </StyledStoreGrid>
 
               <StyledPagenationDiv>
@@ -203,116 +251,106 @@ export default function Map() {
 }
 
 const StyledPagenationDiv = styled.div`
+  height: 50px;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 10px;
 `;
 
 const StyledStoreGrid = styled.div`
-  height: 100%;
-  display: grid;
-  grid-template-columns: repeat(2, 50%);
-
-  & .storeInfoTagDiv {
+  height: calc(100% - 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+  margin-right: 1em;
+  box-sizing: border-box;
+  & > div:first-child {
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    position: relative;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 33%);
+    grid-auto-rows: 50%;
+    gap: 1em;
   }
-
-  & .storeInfoDiv {
-    /* margin-bottom: 20px; */
+  .storeInfoDiv {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    padding: 1rem;
+    position: relative;
+    .storeInfoTagDiv {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      position: absolute;
+    }
+    img {
+      width: 100%;
+      height: 60%;
+      border: 1px solid black;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+    .storeInfoContents {
+      width: 100%;
+      height: 40%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-top: 5px;
+      box-sizing: border-box;
+      h3 {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+    .storeIconsDiv {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+    }
   }
 
-  & .storeInfoDiv .tagMargin {
-    margin-right: 140px;
-  }
-
-  & > .storeInfoDiv img {
-    border: 1px solid black;
-    border-radius: 10px;
-    width: 100%;
-    height: 200px;
-    margin-bottom: 10px;
-  }
-
-  & .storeIconsDiv {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-  }
-
-  & .storeInfoDiv .tagMargin {
-    margin-right: 140px;
-  }
-
-  & > .storeInfoDiv > .storeInfoContents {
-    width: 100%;
-    h3 {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
+  @media (max-width: ${MEDIA_MAX_LIMIT}) and (min-width: ${MEDIA_LIMIT}) {
+    & > div:first-child {
+      grid-template-columns: repeat(2, 50%);
+      grid-auto-rows: 33%;
     }
   }
 
   @media (max-width: ${MEDIA_LIMIT}) {
-    & {
-      padding: 0 25px;
+    margin: 0;
+    padding: 0 1em;
+    & > div:first-child {
       grid-template-columns: repeat(1, 100%);
-      position: relative;
+      grid-auto-rows: 30%;
       overflow-y: scroll;
       &::-webkit-scrollbar {
         display: none;
       }
     }
 
-    & .storeInfoDiv {
-      margin-bottom: 20px;
+    .storeInfoDiv {
       display: flex;
       flex-direction: row;
-      position: relative;
-    }
-    & .storeInfoDiv .tagMargin {
-      margin-right: 120px;
-    }
-
-    & .storeInfoTagDiv {
-      width: 340px;
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
-
-    & > .storeInfoDiv img {
-      border: 1px solid black;
-      margin-right: 10px;
-      width: 150px;
-      height: 150px;
-    }
-
-    & > .storeInfoDiv > .storeInfoContents {
-      height: 130px;
-      width: 400px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-    }
-  }
-
-  @media (min-width: ${MEDIA_MAX_LIMIT}) {
-    & {
-      grid-template-columns: repeat(3, 33%);
+      align-items: normal;
+      .storeInfoTagDiv {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+      img {
+        border: 1px solid black;
+        width: 50%;
+        height: 100%;
+      }
+      .storeInfoContents {
+        height: 100%;
+        width: 50%;
+        padding: 10% 0 0 1em;
+      }
     }
   }
 `;
@@ -396,6 +434,24 @@ const StyledMap = styled.div<{
       height: 100%;
     }
   }
+  .infoWindow {
+    width: 400px;
+    height: 150px;
+    display: flex;
+    img {
+      width: 40%;
+      height: 100%;
+    }
+    & > div {
+      width: 60%;
+      height: 100%;
+      padding: 1em;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
   @media (max-width: ${MEDIA_LIMIT}) {
     padding: 0;
     & > div:first-child {
@@ -428,6 +484,7 @@ const StyledMap = styled.div<{
 
       .list {
         transition-duration: 0.5s;
+        height: calc(100% - 30px);
       }
 
       .listBtn {
