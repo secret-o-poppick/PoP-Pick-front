@@ -25,7 +25,7 @@ const StyledStoreGrid = styled.div<{
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1em;
+  /* padding: 1em; */
   box-sizing: border-box;
   & > div:first-child {
     width: 100%;

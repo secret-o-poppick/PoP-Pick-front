@@ -60,10 +60,9 @@ const StyledCard = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
-  padding: 0 1em;
+  padding: 1em;
   .tags {
     width: 100%;
-    height: 100%;
     display: flex;
     position: absolute;
     & > div {
