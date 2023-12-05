@@ -32,6 +32,8 @@ export default function Stores() {
 
   const [stores, setStores] = useState<StoreType[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [isAdultVerification, setIsAdultVerification] = useState<boolean>(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -43,7 +45,6 @@ export default function Stores() {
             location.search
           )}`
         );
-        console.log(response.data);
         setStores(response.data);
       } catch (error) {
         console.error('Error', error);
@@ -68,6 +69,7 @@ export default function Stores() {
     const fetchTabData = async () => {
       try {
         const searchParams = new URLSearchParams(location.search);
+
         const selectedCategory = searchParams.get('categoryId');
 
         const response = await axios.get(
@@ -91,7 +93,13 @@ export default function Stores() {
     fetchData();
     fetchCategories();
     fetchTabData();
+
+    const searchParams = new URLSearchParams(location.search);
+    const selectedCategoryParam = searchParams.get('categoryId');
+    setSelectedCategory(selectedCategoryParam);
   }, [location.search]);
+
+
 
   // 전시/팝업 탭 클릭
   const categoryFilterHandler = async (selectedCategory: string) => {
@@ -111,8 +119,7 @@ export default function Stores() {
   // 성인 탭 클릭
   const adultFilterHandler = () => {
     const searchParams = new URLSearchParams(location.search);
-    const isAdultVerification =
-      searchParams.get('adultVerification') === 'true';
+    const isAdultVerification = searchParams.get('adultVerification') === 'true';
 
     if (isAdultVerification) {
       searchParams.delete('adultVerification');
@@ -121,6 +128,7 @@ export default function Stores() {
     }
 
     navigate(`/stores?${searchParams}`);
+    setIsAdultVerification(!isAdultVerification);
   };
 
   // 드롭박스
@@ -135,16 +143,18 @@ export default function Stores() {
           <FilterButton
             onClick={() => categoryFilterHandler(categories[0])}
             color='primary'
+            selected={selectedCategory === categories[0]}
           >
             {categories[0]}
           </FilterButton>
           <FilterButton
             onClick={() => categoryFilterHandler(categories[1])}
             color='notice'
+            selected={selectedCategory === categories[1]}
           >
             {categories[1]}
           </FilterButton>
-          <FilterButton onClick={adultFilterHandler} color='error'>
+          <FilterButton onClick={adultFilterHandler} color='error' selected={isAdultVerification}>
             성인
           </FilterButton>
         </div>
