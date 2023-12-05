@@ -9,6 +9,7 @@ interface IFileTypes {
 }
 
 interface DragDropProps {
+  setMainImage: React.Dispatch<React.SetStateAction<number>>;
   uploadedImages: IFileTypes[];
   setUploadedImages: React.Dispatch<React.SetStateAction<IFileTypes[]>>;
 }
@@ -57,10 +58,14 @@ const DragDrop: React.FC<DragDropProps> = (props) => {
   };
 
   const onDelete = (id: number) => {
-    props.setUploadedImages((prevImages) => prevImages.filter((image) => image.id !== id));
+    props.setUploadedImages((prevImages) =>
+      prevImages.filter((image) => image.id !== id)
+    );
   };
 
   const onSetMain = (id: number) => {
+    props.setMainImage(id);
+
     if (activeMain === id) {
       return;
     }

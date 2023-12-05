@@ -121,3 +121,22 @@ export type CardItemProps = {
   endDate: string;
   likes: number;
 };
+
+export type newStoreDataType = {
+  name: string;
+  brandName: string;
+  category: string;
+  mainImageNumber: number;
+  images: IFileTypes[];
+  adultVerification: boolean;
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+  fee: string;
+  event: string;
+  socialLink: string;
+  desc: string;
+  etc: string;
+  detail1: string | undefined;
+  detail2: string;
+  zipCode: string | undefined;
+};

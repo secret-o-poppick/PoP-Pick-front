@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
@@ -39,7 +39,13 @@ const DateTimeInput: React.FC<DateTimeInputProps> = ({
           <Button type='button' color='primary' onClick={handleClick}>
             저장
           </Button>
-          <StyledDayPicker mode='range' defaultMonth={today} selected={range} onSelect={setRange} locale={ko} />
+          <StyledDayPicker
+            mode='range'
+            defaultMonth={today}
+            selected={range}
+            onSelect={setRange}
+            locale={ko}
+          />
         </StyledDateDetail>
       )}
     </div>
@@ -47,79 +53,78 @@ const DateTimeInput: React.FC<DateTimeInputProps> = ({
 );
 
 const StyledInput = styled.div`
+  display: flex;
+
+  #labels {
+    width: 150px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #333;
+    display: inline-block;
+  }
+
+  #dateInput {
     display: flex;
+    align-self: flex-start;
+    flex-direction: column;
+  }
 
-    #labels {
-        width: 150px;
-        font-size: 1rem;
-        font-weight: 700;
-        color: #333;
-        display: inline-block;
-    }
+  .dateInputBtn {
+    background-color: transparent;
+    padding: 0.6em 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #888;
+  }
 
-    #dateInput {
-        display: flex;
-        align-self: flex-start;
-        flex-direction: column;
-    }
-
-    .dateInputBtn {
-        background-color: transparent;
-        padding: 0.6em 1em;
-        border-radius: 5px;
-        cursor: pointer;
-        border:1px solid #888;
-    }
-
-    #buttons {
-        display: flex;
-        column-gap: 1em;
-        align-items: center;
-    }
+  #buttons {
+    display: flex;
+    column-gap: 1em;
+    align-items: center;
+  }
 `;
 
 const StyledDateDetail = styled.div`
-    width: 340px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    & > Button {
-        width: 50px;
-        font-size: 0.7em;
-        padding: 6px;
-        margin: 20px 20px 0 0;
-        align-self: flex-end;
-    }
+  & > Button {
+    width: 50px;
+    font-size: 0.7em;
+    padding: 6px;
+    margin: 20px 20px 0 0;
+    align-self: flex-end;
+  }
 `;
 
 const StyledDayPicker = styled(DayPicker)`
-    box-shadow: 0 0 10px lightgray;
-    padding: 10px;
-    margin: 6px;
-    border-radius: 10px;
+  box-shadow: 0 0 10px lightgray;
+  padding: 10px;
+  margin: 6px;
+  border-radius: 10px;
 
-    .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
-        background-color: #1778f2;
-    }
-    .rdp-day {
-        color: gray;
-        display: flex;
-        align-items: center;
-    }
-    .rdp-day_today:not(.rdp-day_outside) {
-        font-weight: 800;
-        color: black;
-    }
-    .rdp-day_selected {
-        background-color: #ffcb52;
-        color: black;
+  .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
+    background-color: #1778f2;
+  }
+  .rdp-day {
+    color: gray;
+    display: flex;
+    align-items: center;
+  }
+  .rdp-day_today:not(.rdp-day_outside) {
+    font-weight: 800;
+    color: black;
+  }
+  .rdp-day_selected {
+    background-color: #ffcb52;
+    color: black;
 
-        &:hover {
-            background-color: #ff5c40;
-        }
+    &:hover {
+      background-color: #ff5c40;
     }
+  }
 `;
-
 
 export default DateTimeInput;
