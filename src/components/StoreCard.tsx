@@ -130,7 +130,7 @@ const StyledCard = styled.div`
       top: 0;
       right: 0;
     }
-    img {
+    .imgLink {
       width: 50%;
       height: 100%;
     }
