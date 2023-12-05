@@ -133,7 +133,7 @@ export default function User() {
               })}
             </StyledStoreGrid>
 
-            <StyledPagenationDiv>
+            <StyledPaginationDiv>
               <Pagination
                 currentPage={2}
                 totalPages={5}
@@ -141,7 +141,7 @@ export default function User() {
                 count={5}
                 onPageChange={() => {}}
               />
-            </StyledPagenationDiv>
+            </StyledPaginationDiv>
           </div>
         </div>
       </StyledUser>
@@ -200,7 +200,7 @@ const StyledFilterDiv = styled.div`
   }
 `;
 
-const StyledPagenationDiv = styled.div`
+const StyledPaginationDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;

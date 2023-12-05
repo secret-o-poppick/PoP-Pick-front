@@ -225,9 +225,9 @@ export default function Map() {
               )}
               <StoreGridSide storeDatas={storeDatas} max={3} half={true} />
 
-              <StyledPagenationDiv>
+              <StyledPaginationDiv>
                 페이지네이션 들어갈 자리
-              </StyledPagenationDiv>
+              </StyledPaginationDiv>
             </div>
           </div>
         </div>
@@ -236,7 +236,7 @@ export default function Map() {
   );
 }
 
-const StyledPagenationDiv = styled.div`
+const StyledPaginationDiv = styled.div`
   height: 50px;
   display: flex;
   justify-content: center;

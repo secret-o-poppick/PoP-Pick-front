@@ -176,12 +176,12 @@ export default function Stores() {
 
       <StoreGridSide storeDatas={storeDatas} max={4} />
 
-      <StyledPagenationDiv>페이지네이션 들어갈 자리</StyledPagenationDiv>
+      <StyledPaginationDiv>페이지네이션 들어갈 자리</StyledPaginationDiv>
     </>
   );
 }
 
-const StyledPagenationDiv = styled.div`
+const StyledPaginationDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
