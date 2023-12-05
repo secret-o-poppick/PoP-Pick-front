@@ -90,3 +90,34 @@ export type CategoryType = {
   _id: string;
   name: string;
 };
+
+export type optionsProp = {
+  value: string;
+  label: string;
+};
+
+export type Location = {
+  x: number;
+  y: number;
+};
+
+export type AuthContextType = {
+  isLoggedIn: boolean;
+  accessToken: string | null;
+  user: User | null;
+  login: (token: string) => void;
+  logout: () => void;
+  withdrawal: () => void;
+};
+
+export type CardImageProps = {
+  image: string;
+  alt?: string;
+};
+
+export type CardItemProps = {
+  title: string;
+  startDate: string;
+  endDate: string;
+  likes: number;
+};

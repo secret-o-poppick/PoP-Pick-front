@@ -1,10 +1,6 @@
 import styled from 'styled-components';
 import { MEDIA_LIMIT } from '@/assets/styleVariable';
-
-interface CardImageProps {
-  image: string;
-  alt?: string;
-}
+import { CardImageProps } from '@/types'
 
 export default function CardImage({ image, alt = 'profile' }: CardImageProps) {
   return <Image src={image} alt={alt} />;

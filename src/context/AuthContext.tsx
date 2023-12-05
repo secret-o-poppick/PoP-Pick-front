@@ -7,23 +7,8 @@ import {
   useCallback,
 } from 'react';
 import { REACT_APP_BACKEND_HOST } from '@/assets/config';
+import { User, AuthContextType } from '@/types'
 
-interface User {
-  _id: string;
-  name: string;
-  nickName: string;
-  role: string;
-  image: string;
-}
-
-interface AuthContextType {
-  isLoggedIn: boolean;
-  accessToken: string | null;
-  user: User | null;
-  login: (token: string) => void;
-  logout: () => void;
-  withdrawal: () => void;
-}
 
 const AuthContext = createContext<AuthContextType | null>(null);
 

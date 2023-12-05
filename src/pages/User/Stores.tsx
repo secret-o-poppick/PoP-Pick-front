@@ -4,15 +4,11 @@ import styled from 'styled-components';
 import Select from 'react-select';
 import axios from 'axios';
 
+
 import { MEDIA_LIMIT } from '@/assets/styleVariable';
 import FilterButton from '@/components/FilterButton';
 import StoreCard from '@/components/Store/Card';
-import { StoreType } from '@/types';
-
-interface optionsProp {
-  value: string;
-  label: string;
-}
+import { StoreType, optionsProp } from '@/types';
 
 export default function Stores() {
   const selectOptions = [

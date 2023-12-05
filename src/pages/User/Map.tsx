@@ -6,6 +6,7 @@ import { MEDIA_LIMIT } from "@/assets/styleVariable";
 import StoreGridSide from "@/components/StoreGrid";
 import { formatDate } from "@/utils";
 import { StoreData } from "@/types";
+import { Location } from '@/types'
 
 //icons
 import { IoMdRefresh } from "react-icons/io";
@@ -27,10 +28,7 @@ export default function Map() {
 
   // kakao map
   const { kakao } = window as any;
-  interface Location {
-    x: number;
-    y: number;
-  }
+
   const currentLocation = useRef<Location>({
     x: 0,
     y: 0,

@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import Select from 'react-select';
 import styled from 'styled-components';
+import { optionsProp, StoreType } from '@/types'
 
 import { MEDIA_LIMIT } from '@/assets/styleVariable';
 
@@ -10,16 +11,12 @@ import { useAuth } from '@/context/AuthContext';
 import MyPageCard from '@/components/MyPageCard/Card';
 import axios from 'axios';
 
-import { StoreType } from '@/types';
 import { REACT_APP_BACKEND_HOST } from '@/assets/config';
 import { useLocation } from 'react-router-dom';
-import StoreGrid from '@/components/StoreGrid';
+import StoreCrid from '@/components/StoreGrid'
 import StoreCard from '@/components/Store/Card';
 
-interface optionsProp {
-  value: string;
-  label: string;
-}
+
 type SelectedType = 'bookmark' | 'like';
 
 export default function User() {

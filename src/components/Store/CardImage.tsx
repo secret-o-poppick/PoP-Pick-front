@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 import { MEDIA_LIMIT } from '@/assets/styleVariable';
+import { CardImageProps } from '@/types'
 
-interface CardImageProps {
-  image: string;
-}
 
 export default function CardImage({ image }: CardImageProps) {
   return <Image src={image} alt='store-image' />;
