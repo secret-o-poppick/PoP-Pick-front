@@ -1,6 +1,6 @@
-import styled from 'styled-components';
-import Select from 'react-select';
-import axios from 'axios';
+import styled from "styled-components";
+import Select from "react-select";
+import axios from "axios";
 
 import { FaRegHeart, FaRegBookmark } from 'react-icons/fa';
 
@@ -8,9 +8,11 @@ import { MEDIA_LIMIT } from '@/assets/styleVariable';
 import { StoreTag } from '@/components/Tag';
 import FilterButton from '@/components/FilterButton';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+import { StoreType, StoreData } from "@/types";
+import StoreGridSide from "@/components/StoreGrid";
+import { formatDate } from "@/utils";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { StoreType } from '@/types'
 
 interface optionsProp {
   value: string;
@@ -20,8 +22,8 @@ interface optionsProp {
 export default function Stores() {
   const selectOptions = [
     {
-      value: 'latests',
-      label: '최신 오픈 순',
+      value: "latests",
+      label: "최신 오픈 순",
     },
     {
       value: 'likes',
@@ -34,17 +36,44 @@ export default function Stores() {
   ];
 
   const [stores, setStores] = useState<StoreType[]>([]);
+  const [storeDatas, setStoreDatas] = useState<StoreData[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const location = useLocation();
   const navigate = useNavigate()
 
   useEffect(() => {
+    setStoreDatas(
+      stores.map((data: any) => {
+        const tag = data.type === "popup" ? "팝업" : "전시";
+        const startDate = formatDate(data.startDate);
+        const endDate = formatDate(data.endDate);
+        const storeData = {
+          storeId: data._id,
+          title: data.title,
+          tag,
+          adultVerification: data.adultVerification,
+          image: data.images[0],
+          startDate,
+          endDate,
+          location: data.title,
+          likes: data.likes,
+        };
+        return storeData;
+      })
+    );
+  }, [stores]);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3310/api/stores${decodeURIComponent(location.search)}`);
+        const response = await axios.get(
+          `http://localhost:3310/api/stores${decodeURIComponent(
+            location.search
+          )}`
+        );
         setStores(response.data);
       } catch (error) {
-        console.error('Error', error);
+        console.error("Error", error);
       }
     };
 
@@ -145,35 +174,7 @@ export default function Stores() {
         </StyledFilterDiv>
       </StyledMainButtonDiv>
 
-      <StyledMainStoreGrid>
-        {stores.map((store: StoreType, index: number) => {
-
-          return (
-            <div key={index} className='storeInfoDiv'>
-              <div className='storeInfoTagDiv'>
-                <StoreTag color={store.categoryId.name === '팝업' ? 'popup' : 'exhibit'} title={store.categoryId.name} />
-                {store.adultVerification && (
-                  <div className='tagMargin'>
-                    <StoreTag color='adult' title='성인' />
-                  </div>
-                )}
-              </div>
-              <img src={store.images[0]} alt={store.title} />
-
-              <div className='storeInfoContents'>
-                <h3>{store.title}</h3>
-                <p>{store.startDate}</p>
-                {/* address 받아와야 함 */}
-                <p>{store.brandName}</p>
-                <div className='storeIconsDiv'>
-                  <FaRegHeart style={{ marginRight: 10 }} />
-                  <FaRegBookmark />
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </StyledMainStoreGrid>
+      <StoreGridSide storeDatas={storeDatas} max={4} />
 
       <StyledPagenationDiv>페이지네이션 들어갈 자리</StyledPagenationDiv>
     </>
@@ -186,112 +187,6 @@ const StyledPagenationDiv = styled.div`
   justify-content: center;
   align-items: center;
   margin: 20px;
-`;
-
-const StyledMainStoreGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 25%);
-  padding: 0 50px;
-  margin-bottom: 20px;
-
-  & .storeInfoTagDiv {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    position: relative;
-  }
-
-  & .storeInfoDiv {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-  }
-
-  & .storeInfoDiv .tagMargin {
-    margin-right: 140px;
-  }
-
-  & > .storeInfoDiv img {
-    border: 1px solid black;
-    border-radius: 10px;
-    width: 100%;
-    height: 300px;
-    margin-bottom: 20px;
-  }
-
-  & .storeIconsDiv {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-  }
-
-  & .storeInfoDiv .tagMargin {
-    margin-right: 140px;
-  }
-
-  & > .storeInfoDiv > .storeInfoContents {
-    width: 100%;
-
-    & > h3{
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-
-  @media (max-width: ${MEDIA_LIMIT}) {
-    & {
-      padding: 0 25px;
-      grid-template-columns: repeat(1, 100%);
-      position: relative;
-    }
-
-    & .storeInfoDiv {
-      margin-bottom: 20px;
-      display: flex;
-      flex-direction: row;
-      position: relative;
-    }
-
-    & .storeInfoDiv .tagMargin {
-      margin-right: 120px;
-    }
-
-    & .storeInfoTagDiv {
-      width: 340px;
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
-
-    & > .storeInfoDiv img {
-      border: 1px solid black;
-      margin-right: 10px;
-      width: 150px;
-      height: 150px;
-    }
-
-    & > .storeInfoDiv > .storeInfoContents {
-      height: 130px;
-      width: 66%;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-
-        & > h3{
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-  }
 `;
 
 const StyledMainButtonDiv = styled.div`

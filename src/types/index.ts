@@ -1,4 +1,4 @@
-export type AuthOption = '일반' | '등록자' | '관리자';
+export type AuthOption = "일반" | "등록자" | "관리자";
 
 export type SelectBoxOption = {
   value: string;
@@ -67,4 +67,16 @@ export type StoreType = {
     name: string;
   };
   locationId: string[];
+};
+
+export type StoreData = {
+  storeId: string;
+  title: string;
+  tag: string;
+  adultVerification: boolean;
+  image: string;
+  startDate: string;
+  endDate: string;
+  location: string;
+  likes: number;
 };

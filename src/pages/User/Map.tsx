@@ -1,17 +1,20 @@
 import styled, { css } from "styled-components";
 import { useEffect, useRef, useState } from "react";
-import { FaRegHeart, FaRegBookmark } from "react-icons/fa";
 
-import { MEDIA_LIMIT, MEDIA_MAX_LIMIT } from "@/assets/styleVariable";
-import { StoreTag } from "@/components/Tag";
+import { MEDIA_LIMIT } from "@/assets/styleVariable";
 // import { data } from "@/data/stores";
+import StoreGridSide from "@/components/StoreGrid";
+import { formatDate } from "@/utils";
+import { StoreData } from "@/types";
 
 //icons
 import { IoMdRefresh } from "react-icons/io";
 import { TbLocation } from "react-icons/tb";
+import { FaRegHeart, FaRegBookmark } from "react-icons/fa";
 
 export default function Map() {
   const [datas, setDatas] = useState([]);
+  const [storeDatas, setStoreDatas] = useState<StoreData[]>([]);
 
   const mapObj = useRef<any>();
   const [markers, setMarkers] = useState<any>([]);
@@ -89,6 +92,27 @@ export default function Map() {
 
   useEffect(() => {
     refreshMap();
+    setStoreDatas(
+      datas.map((data: any) => {
+        const store = data.store;
+        const tag = store.type === "popup" ? "팝업" : "전시";
+        const startDate = formatDate(store.startDate);
+        const endDate = formatDate(store.endDate);
+
+        const storeData = {
+          storeId: store._id,
+          title: store.title,
+          tag,
+          adultVerification: store.adultVerification,
+          image: store.images[0],
+          startDate,
+          endDate,
+          location: data.detail1,
+          likes: store.likes,
+        };
+        return storeData;
+      })
+    );
   }, [datas]);
 
   const refreshMap = async () => {
@@ -196,48 +220,10 @@ export default function Map() {
               <div></div>
             </div>
             <div className='list'>
-              <StyledStoreGrid>
-                <div>
-                  {datas.map((data: any, index: number) => {
-                    const store = data.store;
-                    /**페이지 네이션으로 처리하기 */
-                    if (index >= 6) {
-                      return;
-                    }
-                    // type ???????
-                    const title = store.type === "popup" ? "팝업" : "전시";
-                    const sd = new Date(store.startDate);
-                    const ed = new Date(store.endDate);
-                    const startDate = `${sd.getFullYear()}-${sd.getMonth()}-${sd.getDate()}`;
-                    const endDate = `${ed.getFullYear()}-${ed.getMonth()}-${ed.getDate()}`;
-
-                    return (
-                      <div key={index} className='storeInfoDiv'>
-                        <div className='storeInfoTagDiv'>
-                          {/* color 뭔지 모르겠어요 ㅜㅜ (store.categoryId.name)을 사용하려고 했는데 한글입니다...*/}
-                          <StoreTag color={"popup"} title={title} />
-                          {store.adultVerification && (
-                            <StoreTag color='adult' title='성인' />
-                          )}
-                        </div>
-                        <img src={store.images[0]} />
-
-                        <div className='storeInfoContents'>
-                          <h3>{store.title}</h3>
-                          <p>
-                            {startDate} ~ {endDate}
-                          </p>
-                          <p>{data.detail1}</p>
-                          <div className='storeIconsDiv'>
-                            <FaRegHeart style={{ marginRight: 10 }} />
-                            <FaRegBookmark />
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </StyledStoreGrid>
+              {!datas[0] && (
+                <div className='none'>검색된 스토어가 없습니다.</div>
+              )}
+              <StoreGridSide storeDatas={storeDatas} max={3} half={true} />
 
               <StyledPagenationDiv>
                 페이지네이션 들어갈 자리
@@ -255,104 +241,6 @@ const StyledPagenationDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const StyledStoreGrid = styled.div`
-  height: calc(100% - 50px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1em;
-  margin-right: 1em;
-  box-sizing: border-box;
-  & > div:first-child {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, 33%);
-    grid-auto-rows: 50%;
-    gap: 1em;
-  }
-  .storeInfoDiv {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    .storeInfoTagDiv {
-      width: 100%;
-      display: flex;
-      justify-content: flex-end;
-      position: absolute;
-    }
-    img {
-      width: 100%;
-      height: 60%;
-      border: 1px solid black;
-      border-radius: 10px;
-      object-fit: cover;
-    }
-    .storeInfoContents {
-      width: 100%;
-      height: 40%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding-top: 5px;
-      box-sizing: border-box;
-      h3 {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-      }
-    }
-    .storeIconsDiv {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
-    }
-  }
-
-  @media (max-width: ${MEDIA_MAX_LIMIT}) and (min-width: ${MEDIA_LIMIT}) {
-    & > div:first-child {
-      grid-template-columns: repeat(2, 50%);
-      grid-auto-rows: 33%;
-    }
-  }
-
-  @media (max-width: ${MEDIA_LIMIT}) {
-    margin: 0;
-    padding: 0 1em;
-    & > div:first-child {
-      grid-template-columns: repeat(1, 100%);
-      grid-auto-rows: 30%;
-      overflow-y: scroll;
-      &::-webkit-scrollbar {
-        display: none;
-      }
-    }
-
-    .storeInfoDiv {
-      display: flex;
-      flex-direction: row;
-      align-items: normal;
-      .storeInfoTagDiv {
-        width: 100%;
-        position: absolute;
-        top: 0;
-        right: 0;
-      }
-      img {
-        border: 1px solid black;
-        width: 50%;
-        height: 100%;
-      }
-      .storeInfoContents {
-        height: 100%;
-        width: 50%;
-        padding: 10% 0 0 1em;
-      }
-    }
-  }
 `;
 
 const StyledMap = styled.div<{
@@ -432,6 +320,15 @@ const StyledMap = styled.div<{
     .list {
       width: 100%;
       height: 100%;
+      position: relative;
+      .none {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
   .infoWindow {
