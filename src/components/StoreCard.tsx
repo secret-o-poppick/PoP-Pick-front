@@ -23,8 +23,10 @@ export default function StoreCard({ storeData }: any) {
   return (
     <StyledCard key={index}>
       <div className='tags'>
-        <StoreTag color={"popup"} title={tag} />
-        {adultVerification && <StoreTag color='adult' title='성인' />}
+        <div>
+          <StoreTag color={"popup"} title={tag} />
+          {adultVerification && <StoreTag color='adult' title='성인' />}
+        </div>
       </div>
 
       <Link className='imgLink' to={`/stores/${storeId}`}>
@@ -58,12 +60,18 @@ const StyledCard = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
+  padding: 1em;
   .tags {
     width: 100%;
     display: flex;
-    justify-content: flex-end;
     position: absolute;
-    gap: 10px;
+    & > div {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      width: 100%;
+      margin: 0 1em;
+    }
   }
   .imgLink {
     width: 100%;
@@ -124,11 +132,15 @@ const StyledCard = styled.div`
     flex-direction: row;
     align-items: normal;
     gap: 1em;
+    padding: 0 0 1em 0;
     .tags {
       width: 100%;
       position: absolute;
       top: 0;
       right: 0;
+      & > div {
+        margin: 0;
+      }
     }
     .imgLink {
       width: 50%;

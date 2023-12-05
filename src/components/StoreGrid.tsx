@@ -25,19 +25,16 @@ const StyledStoreGrid = styled.div<{
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1em;
-  margin-right: 1em;
+  /* padding: 1em; */
   box-sizing: border-box;
   & > div:first-child {
     width: 100%;
     height: 100%;
     display: grid;
-
+    grid-auto-rows: 50%;
     ${({ $max, $maxper }) => css`
       grid-template-columns: repeat(${$max}, ${$maxper});
     `}
-    grid-auto-rows: 50%;
-    gap: 1em;
   }
 
   @media (max-width: ${MEDIA_MAX_LIMIT}) and (min-width: ${MEDIA_LIMIT}) {
