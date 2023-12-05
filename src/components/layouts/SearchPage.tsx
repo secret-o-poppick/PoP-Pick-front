@@ -64,7 +64,6 @@ export default function SearchPage({
     to: addDays(today, 0),
   };
   const [range, setRange] = useState<DateRange | undefined>(defaultSelected);
-  // const [range, setRange] = useState<DateRange | undefined>(undefined);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,6 +79,20 @@ export default function SearchPage({
     };
     fetchData();
   }, []);
+
+
+  useEffect(() => {
+    const body = document.body;
+
+    if (isSearchOpened) {
+      body.style.overflow = 'hidden';
+    } else {
+      body.style.overflow = 'auto';
+    }
+    return () => {
+      body.style.overflow = 'auto';
+    };
+  }, [isSearchOpened]);
 
   const closeSearchTab = () => {
     setSearchOpened(false);
