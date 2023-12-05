@@ -24,7 +24,7 @@ export default function StoreCard({ storeData }: any) {
     <StyledCard key={index}>
       <div className='tags'>
         <div>
-          <StoreTag color={"popup"} title={tag} />
+          <StoreTag color={tag === '팝업' ? 'popup' : 'exhibit'} title={tag} />
           {adultVerification && <StoreTag color='adult' title='성인' />}
         </div>
       </div>
