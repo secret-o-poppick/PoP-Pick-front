@@ -15,6 +15,7 @@ import { FaLongArrowAltRight } from 'react-icons/fa';
 import { MdLocationPin } from 'react-icons/md';
 import { FaRegCalendarCheck } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
+import Button from '@/components/Button'
 
 interface SearchPageProps {
   setSearchOpened: React.Dispatch<React.SetStateAction<boolean>>;
@@ -55,6 +56,8 @@ export default function SearchPage({
   const [cities, setCities] = useState<CitiesType[]>([]);
   const [districts, setDistricts] = useState<CitiesType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [selectedCityItem, setSelectedCityItem] = useState<string | null>(null);
+  const [selectedDistrictItem, setSelectedDistrictItem] = useState<string | null>(null);
   const selectedCityName = cities.find(city => city._id === selectedCity)?.name || '';
   const selectedDistrictName = districts.find(district => district._id === selectedDistrict)?.name || '';
 
@@ -137,14 +140,13 @@ export default function SearchPage({
                 {loading ? (
                   <li>Loading...</li>
                 ) : (
-                  cities.map((city, index) => (
+                  cities.map((city) => (
                     <li
-                      key={index}
                       onClick={() => {
                         selectCityHandler(city._id);
-                        console.log(city._id);
+                        setSelectedCityItem(city._id);
                       }}
-
+                      className={selectedCityItem === city._id ? 'selected' : ''}
                     >
                       {city.name}
                     </li>
@@ -160,7 +162,10 @@ export default function SearchPage({
                       key={index}
                       onClick={() => {
                         selectDistrictHandler(district._id);
+                        setSelectedDistrictItem(district._id);
                       }}
+                      className={selectedDistrictItem === district._id ? 'selected' : ''}
+
                     >
                       {district.name}
                     </button>
@@ -197,11 +202,11 @@ export default function SearchPage({
             <div>
               <div className='searchKeywords'>
                 <div>
-                  <div>위치 : </div>
+                  <div><span>위치</span> : </div>
                   {selectedCityName} {selectedDistrictName}
                 </div>
                 <div className='dateRange'>
-                  <div>기간 : </div>
+                  <div><span>기간</span> : </div>
                   {range?.from ? format(range.from, 'PPP', { locale: ko }) : null}
                   {range && <FaLongArrowAltRight />}
                   {range?.to ? format(range.to, 'PPP', { locale: ko }) : null}
@@ -218,8 +223,8 @@ export default function SearchPage({
                 </button>
               </div>
               <div className='commitBtns'>
-                <button onClick={resetButtonHandler}>초기화</button>
-                <button onClick={searchButtonHandler}>검색</button>
+                <Button color='default' onClick={resetButtonHandler}>초기화</Button>
+                <Button color='primary' onClick={searchButtonHandler}>검색</Button>
               </div>
             </div>
           </StyledString>
@@ -273,28 +278,24 @@ const StyledMore = styled.div<{
 `;
 
 const StyledLocation = styled.div`
-  height: 60%;
+  height: 68vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 .btnWrapper {
     margin-bottom: 20px;
-    display: flex;
-    flex-direction: row;
   }
   button {
     width: 200px;
-    height: 40px;
-    margin: 0 5px;
+    height: 3em;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: lightgray;
     border: none;
-
+    
     &:hover {
-      background-color: gray;
+      background-color: lightgray;
     }
 
     svg {
@@ -306,35 +307,51 @@ const StyledLocation = styled.div`
 
   .locationWrapper {
     width: 80%;
-    padding: 10px;
     border-radius: 5px;
     display: flex;
     justify-content: center;
     box-shadow: 0 0 5px lightgray;
     ul {
       width: 10%;
-      padding: 1em 0;
-      gap: 1em;
       list-style: none;
       display: flex;
       flex-direction: column;
-      background: lightgray;
+      justify-content:space-between;
     }
 
     li {
       width: 100%;
+      padding:0.5em 0;
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
+      border-right: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
 
       &:hover {
-        background-color: gray;
+        background-color: #b8d8ff;
       }
+      &.selected {
+        background-color: #1778F2;
+        color: #fff;
+      }
+    }
+
+    li:first-child{
+      border-right: 1px solid #ccc;
+      border-top-left-radius: 5px;
+    }
+
+    li:last-child{
+      border:none;
+      border-right: 1px solid #ccc;
+      border-bottom-left-radius: 5px;
     }
 
     .districts {
       width: 90%;
+      margin-left:0.5em;
       display: grid;
       grid-template-columns: repeat(5, 20%);
 
@@ -342,18 +359,21 @@ const StyledLocation = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
+      }
+      button {
+        width: 100%;
+        height: 5em;
+        background-color: transparent;
+        margin: 0;
+        padding: 0;
 
         &:hover {
-          background-color: lightgray;
+          background-color: #b8d8ff;
         }
-
-        button {
-          width: 100%;
-          height: 100%;
-          background-color: transparent;
-          margin: 0;
-          padding: 0;
-        }
+              &.selected {
+        background-color: #1778F2;
+        color: #fff;
+      }
       }
     }
   }
@@ -439,6 +459,9 @@ const StyledString = styled.div`
       & > div:first-child {
         margin-right: 10px;
       }
+      & span{
+       font-weight: bold;
+      }
     }
     .dateRange > svg {
       margin: 0 10px;
@@ -461,21 +484,17 @@ const StyledString = styled.div`
     }
   }
   .commitBtns {
-    width: 80%;
-    height: 20%;
-    margin-top: 1em;
     display: flex;
-    justify-content: space-between;
-    & > button {
+  column-gap: 2em;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  height:2.3em;
+    & > Button {
       width: 50%;
-      height: 100%;
-
-      background-color: transparent;
-      border: none;
-      border-radius: 10px;
-      &:hover {
-        background-color: lightgray;
-      }
+    font-weight: bold;
+    font-size: 9pt;
+      transition: background-color 0.3s ease;
     }
   }
 
