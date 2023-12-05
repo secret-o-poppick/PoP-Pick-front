@@ -25,8 +25,9 @@ export default function StoreCard({ storeData }: any) {
       <div className='tags'>
         <div>
           <StoreTag color={tag === '팝업' ? 'popup' : 'exhibit'} title={tag} />
-          {adultVerification && <StoreTag color='adult' title='성인' />}
+          {adultVerification && <div className='tagMargin'><StoreTag color='adult' title='성인' />  </div>}
         </div>
+
       </div>
 
       <Link className='imgLink' to={`/stores/${storeId}`}>
@@ -71,6 +72,9 @@ const StyledCard = styled.div`
       gap: 10px;
       width: 100%;
       margin: 0 1em;
+    }
+    .tagMargin{
+      margin-right: 140px;
     }
   }
   .imgLink {
@@ -141,6 +145,9 @@ const StyledCard = styled.div`
       & > div {
         margin: 0;
       }
+      .tagMargin{
+      margin-right: 105px;
+    }
     }
     .imgLink {
       width: 50%;
