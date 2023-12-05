@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { MEDIA_LIMIT } from "@/assets/styleVariable";
 // import { data } from "@/data/stores";
-import StoreGridSide from "@/components/StoreGridSide";
+import StoreGridSide from "@/components/StoreGrid";
 import { formatDate } from "@/utils";
 import { StoreData } from "@/types";
 
@@ -223,7 +223,7 @@ export default function Map() {
               {!datas[0] && (
                 <div className='none'>검색된 스토어가 없습니다.</div>
               )}
-              <StoreGridSide storeDatas={storeDatas} />
+              <StoreGridSide storeDatas={storeDatas} max={3} half={true} />
 
               <StyledPagenationDiv>
                 페이지네이션 들어갈 자리

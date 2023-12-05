@@ -27,7 +27,9 @@ export default function StoreCard({ storeData }: any) {
         {adultVerification && <StoreTag color='adult' title='성인' />}
       </div>
 
-      <img src={image} />
+      <Link className='imgLink' to={`/stores/${storeId}`}>
+        <img src={image} />
+      </Link>
 
       <div className='contents'>
         <Link to={`/stores/${storeId}`}>
@@ -61,12 +63,18 @@ const StyledCard = styled.div`
     display: flex;
     justify-content: flex-end;
     position: absolute;
+    gap: 10px;
   }
-  img {
+  .imgLink {
     width: 100%;
+    height: 100%;
     height: 60%;
-    border-radius: 10px;
-    object-fit: cover;
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      object-fit: cover;
+    }
   }
 
   .contents {
@@ -79,14 +87,15 @@ const StyledCard = styled.div`
     padding-top: 10px;
     a {
       color: black;
-      h3 {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-      }
     }
+    h3,
     p {
-      white-space: nowrap;
+      width: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
     }
   }
 
@@ -129,7 +138,7 @@ const StyledCard = styled.div`
     .contents {
       height: 100%;
       width: 50%;
-      padding-top: 30px;
+      padding-top: 35px;
     }
   }
 `;

@@ -1,12 +1,12 @@
-import styled from "styled-components";
-import { formatDate } from "@/utils";
+import styled, { css } from "styled-components";
 import StoreCard from "./StoreCard";
 import { MEDIA_LIMIT, MEDIA_MAX_LIMIT } from "@/assets/styleVariable";
 import { StoreData } from "@/types";
 
-export default function StoreGridSide({ storeDatas }: any) {
+export default function StoreGrid({ storeDatas, max, half }: any) {
+  const maxper = `${100 / max}%`;
   return (
-    <StyledStoreGrid>
+    <StyledStoreGrid $max={max} $maxper={maxper}>
       <div>
         {storeDatas.map((data: StoreData, index: number) => {
           return <StoreCard storeData={data} key={index} />;
@@ -16,7 +16,10 @@ export default function StoreGridSide({ storeDatas }: any) {
   );
 }
 
-const StyledStoreGrid = styled.div`
+const StyledStoreGrid = styled.div<{
+  $max: number;
+  $maxper: string;
+}>`
   height: calc(100% - 50px);
   display: flex;
   align-items: center;
@@ -28,7 +31,10 @@ const StyledStoreGrid = styled.div`
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: repeat(3, 33%);
+
+    ${({ $max, $maxper }) => css`
+      grid-template-columns: repeat(${$max}, ${$maxper});
+    `}
     grid-auto-rows: 50%;
     gap: 1em;
   }
@@ -39,7 +45,6 @@ const StyledStoreGrid = styled.div`
       grid-auto-rows: 33%;
     }
   }
-
   @media (max-width: ${MEDIA_LIMIT}) {
     margin: 0;
     padding: 0 1em;
