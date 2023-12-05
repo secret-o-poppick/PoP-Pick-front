@@ -2,17 +2,17 @@ import styled from "styled-components";
 import Select from "react-select";
 import axios from "axios";
 
-import { FaRegHeart, FaRegBookmark } from "react-icons/fa";
+import { FaRegHeart, FaRegBookmark } from 'react-icons/fa';
 
-import { MEDIA_LIMIT } from "@/assets/styleVariable";
-import { StoreTag } from "@/components/Tag";
-import FilterButton from "@/components/FilterButton";
+import { MEDIA_LIMIT } from '@/assets/styleVariable';
+import { StoreTag } from '@/components/Tag';
+import FilterButton from '@/components/FilterButton';
 
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { StoreType, StoreData } from "@/types";
 import StoreGridSide from "@/components/StoreGrid";
 import { formatDate } from "@/utils";
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface optionsProp {
   value: string;
@@ -26,18 +26,20 @@ export default function Stores() {
       label: "최신 오픈 순",
     },
     {
-      value: "likes",
-      label: "좋아요 순",
+      value: 'likes',
+      label: '좋아요 순',
     },
     {
-      value: "views",
-      label: "조회수 순",
+      value: 'views',
+      label: '조회수 순',
     },
   ];
 
   const [stores, setStores] = useState<StoreType[]>([]);
   const [storeDatas, setStoreDatas] = useState<StoreData[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const location = useLocation();
+  const navigate = useNavigate()
 
   useEffect(() => {
     setStoreDatas(
@@ -74,13 +76,74 @@ export default function Stores() {
         console.error("Error", error);
       }
     };
+
+    // 카테고리 탭
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:3310/api/categories');
+        setCategories(response.data.map((category: { name: string }) => category.name));
+      } catch (error) {
+        console.error('Error', error);
+      }
+    };
+
+    // 전시/팝업 데이터 불러오기
+    const fetchTabData = async () => {
+      try {
+        const searchParams = new URLSearchParams(location.search);
+        const selectedCategory = searchParams.get('categoryId');
+
+        const response = await axios.get(`http://localhost:3310/api/stores?${searchParams}`);
+
+        if (!selectedCategory) {
+          setStores(response.data);
+          return;
+        }
+        const filteredStores = response.data.filter((store: StoreType) => {
+          return store.categoryId.name === selectedCategory;
+        });
+
+        setStores(filteredStores);
+      } catch (error) {
+        console.error('Error', error);
+      }
+    };
+
     fetchData();
+    fetchCategories();
+    fetchTabData();
   }, [location.search]);
 
-  const handleFilterButton = () => {
-    console.log("Filter Button click");
+
+  // 전시/팝업 탭 클릭
+  const categoryFilterHandler = async (selectedCategory: string) => {
+    const searchParams = new URLSearchParams(location.search);
+    const isCategorySelected = searchParams.get('categoryId') === selectedCategory;
+
+    if (isCategorySelected) {
+      searchParams.delete('categoryId');
+    } else {
+      searchParams.set('categoryId', selectedCategory);
+    }
+
+    navigate(`/stores?${searchParams}`);
   };
 
+  // 성인 탭 클릭
+  const adultFilterHandler = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const isAdultVerification = searchParams.get('adultVerification') === 'true';
+
+    if (isAdultVerification) {
+      searchParams.delete('adultVerification');
+    } else {
+      searchParams.set('adultVerification', 'true');
+    }
+
+    navigate(`/stores?${searchParams}`)
+  };
+
+  // 드롭박스
   const handleFilter = (e: optionsProp | null) => {
     console.log(`${e?.label}으로 필터링 : value = ${e?.value}`);
   };
@@ -89,13 +152,13 @@ export default function Stores() {
     <>
       <StyledMainButtonDiv>
         <div className='mainButtonDiv'>
-          <FilterButton onClick={handleFilterButton} color='primary'>
-            전시
+          <FilterButton onClick={() => categoryFilterHandler(categories[0])} color='primary'>
+            {categories[0]}
           </FilterButton>
-          <FilterButton onClick={handleFilterButton} color='notice'>
-            팝업
+          <FilterButton onClick={() => categoryFilterHandler(categories[1])} color='notice'>
+            {categories[1]}
           </FilterButton>
-          <FilterButton onClick={handleFilterButton} color='error'>
+          <FilterButton onClick={adultFilterHandler} color='error'>
             성인
           </FilterButton>
         </div>

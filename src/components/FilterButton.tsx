@@ -58,13 +58,13 @@ const StyledFilterButton = styled.button<{
 
   &:hover {
     background-color: ${({ color }) =>
-      FILTER_BUTTON_STYLE[color].hoverBackgroundColor};
+    FILTER_BUTTON_STYLE[color].hoverBackgroundColor};
     color: ${({ color }) => FILTER_BUTTON_STYLE[color].hoverColor};
   }
 
   &:active {
     background-color: ${({ color }) =>
-      FILTER_BUTTON_STYLE[color].hoverBackgroundColor};
+    FILTER_BUTTON_STYLE[color].hoverBackgroundColor};
     color: ${({ color }) => FILTER_BUTTON_STYLE[color].hoverColor};
   }
 

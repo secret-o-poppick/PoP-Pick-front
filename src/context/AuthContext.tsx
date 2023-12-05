@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         if (response.data.id_token) {
           localStorage.setItem('access_token', response.data.id_token);
         }
-        setUser(response.data); // Assuming the response data is the user object
+        setUser(response.data);
       }
     } catch (error) {
       console.error('Error:', error);

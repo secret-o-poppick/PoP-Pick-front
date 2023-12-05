@@ -62,7 +62,10 @@ export type StoreType = {
   socialLink: string;
   desc: string;
   etc: string;
-  categoryId: string;
+  categoryId: {
+    _id: string;
+    name: string;
+  };
   locationId: string[];
 };
 

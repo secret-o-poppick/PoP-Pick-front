@@ -3,39 +3,39 @@ import styled from 'styled-components';
 import { MEDIA_LIMIT } from '@/assets/styleVariable';
 
 interface RadioInputProps {
-    name: string;
-    options: { label: string; value: string }[];
-    selectedValue: string;
-    onChange: (value: string) => void;
-    label?: string;
+  name: string;
+  options: { label: string; value: string }[];
+  selectedValue: string;
+  onChange: (value: string) => void;
+  label?: string;
 }
 
 export default function RadioInput({
-    name,
-    options,
-    selectedValue,
-    onChange,
-    label
+  name,
+  options,
+  selectedValue,
+  onChange,
+  label
 }: RadioInputProps) {
-    return (
-        <Wrapper>
-            {label && <Label>{label}</Label>}
-            <RadioGroup>
-                {options.map((option, index) => (
-                    <RadioLabel key={option.value}>
-                        <RadioInputStyled
-                            type="radio"
-                            name={name}
-                            value={option.value}
-                            checked={selectedValue === option.value || (index === 0 && selectedValue === '')}
-                            onChange={() => onChange(option.value)}
-                        />
-                        {option.label}
-                    </RadioLabel>
-                ))}
-            </RadioGroup>
-        </Wrapper>
-    );
+  return (
+    <Wrapper>
+      {label && <Label>{label}</Label>}
+      <RadioGroup>
+        {options.map((option, index) => (
+          <RadioLabel key={option.value}>
+            <RadioInputStyled
+              type='radio'
+              name={name}
+              value={option.value}
+              checked={selectedValue === option.value || (index === 0 && selectedValue === '')}
+              onChange={() => onChange(option.value)}
+            />
+            {option.label}
+          </RadioLabel>
+        ))}
+      </RadioGroup>
+    </Wrapper>
+  );
 }
 
 const Wrapper = styled.div`
