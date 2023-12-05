@@ -15,26 +15,26 @@ export default function StoreCard({ store }: StoreCardProps) {
 
   console.log(store);
   return (
-    <Container>
-      <CardLink to={`/stores/${_id}`}>
+    <CardLink to={`/stores/${_id}`}>
+      <Container>
         <CardImage image={images[0]} />
-      </CardLink>
 
-      <CardTagWrapper>
-        <CardTag
-          color={categoryId.name === '팝업' ? 'popup' : 'exhibit'}
-          title={categoryId.name}
+        <CardTagWrapper>
+          <CardTag
+            color={categoryId.name === '팝업' ? 'popup' : 'exhibit'}
+            title={categoryId.name}
+          />
+          {store.adultVerification && <CardTag color='adult' title='성인' />}
+        </CardTagWrapper>
+
+        <CardItem
+          title={title}
+          startDate={startDate}
+          endDate={endDate}
+          likes={likes}
         />
-        {store.adultVerification && <CardTag color='adult' title='성인' />}
-      </CardTagWrapper>
-
-      <CardItem
-        title={title}
-        startDate={startDate}
-        endDate={endDate}
-        likes={likes}
-      />
-    </Container>
+      </Container>
+    </CardLink>
   );
 }
 
@@ -43,8 +43,6 @@ const CardLink = styled(Link)`
   box-sizing: border-box;
   text-decoration: none;
   color: #000;
-  width: 100%;
-  height: 60%;
 `;
 
 const Container = styled.div`

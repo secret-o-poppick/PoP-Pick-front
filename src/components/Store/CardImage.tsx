@@ -14,7 +14,7 @@ const Image = styled.img`
   border: 1px solid black;
   border-radius: 10px;
   width: 100%;
-  height: 100%;
+  height: 60%;
 
   @media (max-width: ${MEDIA_LIMIT}) {
     width: 100px;
