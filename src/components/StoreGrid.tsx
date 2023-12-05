@@ -5,7 +5,7 @@ import { StoreData } from "@/types";
 
 // max : 전체화면 페이지는 4로, 절반만 쓰는 페이지는 3으로 해주세요
 export default function StoreGrid({ storeDatas, max }: any) {
-  const maxper = `${100 / max}%`;
+  const maxper = `calc(${100 / max}% - ${(max - 1) / max}em)`;
   return (
     <StyledStoreGrid $max={max} $maxper={maxper}>
       <div>
@@ -26,7 +26,6 @@ const StyledStoreGrid = styled.div<{
   align-items: center;
   justify-content: center;
   padding: 1em;
-  margin-right: 1em;
   box-sizing: border-box;
   & > div:first-child {
     width: 100%;
