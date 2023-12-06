@@ -45,14 +45,27 @@ export type AddressInputProps = {
   setDetailAddress: React.Dispatch<React.SetStateAction<string>>;
 };
 
+export type AddressType = {
+  _id: string;
+  zipCode: number;
+  detail1: string;
+  detail2: string;
+  x: number;
+  y: number;
+  store: string;
+};
+
 export type StoreType = {
   _id: string;
   title: string;
   brandName: string;
   adultVerification: boolean;
-  startDate: string;
-  endDate: string;
-  images: string;
+  startDate: Date;
+  endDate: Date;
+  images: {
+    url: string;
+    isMain: boolean;
+  }[];
   isActive: boolean;
   views: number;
   likes: number;
@@ -62,6 +75,7 @@ export type StoreType = {
   socialLink: string;
   desc: string;
   etc: string;
+  address: AddressType;
   categoryId: CategoryType;
   locationId: string[];
 };
