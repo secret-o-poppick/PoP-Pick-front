@@ -6,7 +6,7 @@ import { MEDIA_LIMIT } from '@/assets/styleVariable';
 interface CardIconProps {
   icon: IconType;
   count?: number;
-  onClick?: () => Promise<number> | Promise<void>;
+  onClick?: () => Promise<number | void>;
   color?: string;
   selected?: boolean;
   selectedIcon?: IconType;
@@ -27,8 +27,8 @@ export default function CardIcon({
     if (!onClick) return;
 
     const response = await onClick();
-    setChecked((prev) => !prev);
     if (response) {
+      setChecked((prev) => !prev);
       setData(response);
     }
   };

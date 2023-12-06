@@ -15,8 +15,8 @@ type CardItemProps = {
   endDate: Date;
   likes: number;
 };
-    
-type HandleClick = () => Promise<number> | Promise<void>;
+
+type HandleClick = () => Promise<number | void>;
 
 export default function CardItem({
   _id,
@@ -28,6 +28,7 @@ export default function CardItem({
   const { accessToken, user, getUserInfo } = useAuth();
 
   const handleClickLikesCount: HandleClick = async () => {
+    if (!user) return;
     const res = await axios.put<StoreType>(
       `${REACT_APP_BACKEND_HOST}/api/stores/${_id}/likes`,
       null,
@@ -42,6 +43,7 @@ export default function CardItem({
   };
 
   const handleClickBookMarksCount: HandleClick = async () => {
+    if (!user) return;
     await axios.put<StoreType>(
       `${REACT_APP_BACKEND_HOST}/api/stores/${_id}/bookmarks`,
       null,
@@ -52,6 +54,7 @@ export default function CardItem({
       }
     );
     await getUserInfo();
+    return 1;
   };
 
   return (
