@@ -7,6 +7,7 @@ import StoreGridSide from "@/components/StoreGrid";
 import { formatDate } from "@/utils";
 import { StoreData } from "@/types";
 import axios from "axios";
+import { Location } from '@/types'
 
 //icons
 import { IoMdRefresh } from "react-icons/io";
@@ -28,10 +29,7 @@ export default function Map() {
 
   // kakao map
   const { kakao } = window as any;
-  interface Location {
-    x: number;
-    y: number;
-  }
+
   const currentLocation = useRef<Location>({
     x: 0,
     y: 0,
@@ -226,9 +224,9 @@ export default function Map() {
               )}
               <StoreGridSide storeDatas={storeDatas} max={3} half={true} />
 
-              <StyledPagenationDiv>
+              <StyledPaginationDiv>
                 페이지네이션 들어갈 자리
-              </StyledPagenationDiv>
+              </StyledPaginationDiv>
             </div>
           </div>
         </div>
@@ -237,7 +235,7 @@ export default function Map() {
   );
 }
 
-const StyledPagenationDiv = styled.div`
+const StyledPaginationDiv = styled.div`
   height: 50px;
   display: flex;
   justify-content: center;

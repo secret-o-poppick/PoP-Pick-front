@@ -1,59 +1,63 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
-import { addDays } from 'date-fns';
-import { DateRange } from 'react-day-picker';
-import AdminDateInput from '@/components/AdminDateInput'
-import AdminLocationSelect from '@/components/AdminLocationSelect'
-import AdminAddressInputs from '@/components/AdminAddressInputs'
-import { AddressData, StoreCreateStepProps } from '@/types/index'
+import AdminDateInput from '@/components/AdminDateInput';
+import AdminLocationSelect from '@/components/AdminLocationSelect';
+import AdminAddressInputs from '@/components/AdminAddressInputs';
+import { StoreCreateStepProps } from '@/types/index';
+
+import { useCreateStoreStep3Context } from '@/context/StoreContext';
 
 const StoreCreateStep3: React.FC<StoreCreateStepProps> = () => {
-    const today = new Date();
-    const defaultSelected: DateRange = {
-        from: today,
-        to: addDays(today, 0),
-    };
-    const [range, setRange] = useState<DateRange | undefined>(defaultSelected);
-    const [isDetailVisible, setIsDetailVisible] = useState(false);
+  const today = new Date();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const handleClick = () => {
-        setIsDetailVisible(!isDetailVisible);
-    };
+  const openPostCode = () => {
+    setIsModalOpen(true);
+  };
 
-    const [addressData, setAddressData] = useState<AddressData | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [detailAddress, setDetailAddress] = useState('');
+  const closePostCode = () => {
+    setIsModalOpen(false);
+  };
 
-    const openPostCode = () => {
-        setIsModalOpen(true);
-    };
+  const {
+    range,
+    setRange,
+    handleClick,
+    isDetailVisible,
+    addressData,
+    setAddressData,
+    detailAddress,
+    setDetailAddress,
+  } = useCreateStoreStep3Context();
 
-    const closePostCode = () => {
-        setIsModalOpen(false);
-    };
-
-    return (
-        <StyledContent>
-            <AdminDateInput range={range} setRange={setRange} isDetailVisible={isDetailVisible} handleClick={handleClick} today={today} />
-            <AdminLocationSelect />
-            <AdminAddressInputs
-                addressData={addressData}
-                setAddressData={setAddressData}
-                isModalOpen={isModalOpen}
-                openPostCode={openPostCode}
-                closePostCode={closePostCode}
-                detailAddress={detailAddress}
-                setDetailAddress={setDetailAddress}
-            />
-        </StyledContent>
-    );
+  return (
+    <StyledContent>
+      <AdminDateInput
+        range={range}
+        setRange={setRange}
+        isDetailVisible={isDetailVisible}
+        handleClick={handleClick}
+        today={today}
+      />
+      <AdminLocationSelect />
+      <AdminAddressInputs
+        addressData={addressData}
+        setAddressData={setAddressData}
+        isModalOpen={isModalOpen}
+        openPostCode={openPostCode}
+        closePostCode={closePostCode}
+        detailAddress={detailAddress}
+        setDetailAddress={setDetailAddress}
+      />
+    </StyledContent>
+  );
 };
 
 const StyledContent = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 500px;
-    row-gap: 50px;
-  `;
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  row-gap: 50px;
+`;
 
 export default StoreCreateStep3;

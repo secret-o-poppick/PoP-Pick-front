@@ -10,6 +10,7 @@ interface ButtonProps {
   fontSize?: string;
   buttonSize?: string[];
   onClick?: () => void;
+  selected?: boolean;
 }
 
 export default function FilterButton({
@@ -19,6 +20,7 @@ export default function FilterButton({
   fontSize = '1rem',
   buttonSize = ['0.3rem', '1.5rem'],
   onClick,
+  selected = false,
 }: ButtonProps) {
   const handleClick = () => {
     if (!onClick) return;
@@ -33,6 +35,7 @@ export default function FilterButton({
       onClick={handleClick}
       fontSize={fontSize}
       $buttonSize={buttonSize}
+      $selected={selected}
     >
       {children}
     </StyledFilterButton>
@@ -43,6 +46,7 @@ const StyledFilterButton = styled.button<{
   color: PopPickStyleType;
   fontSize: string;
   $buttonSize: string[];
+  $selected: boolean;
 }>`
   padding: ${({ $buttonSize }) => `${$buttonSize[0]} ${$buttonSize[1]}`};
   font-size: ${({ fontSize }) => fontSize};
@@ -52,19 +56,24 @@ const StyledFilterButton = styled.button<{
   margin-right: 12px;
   border: ${({ color }) => FILTER_BUTTON_STYLE[color].border};
 
-  background-color: ${({ color }) =>
-    FILTER_BUTTON_STYLE[color].backgroundColor};
-  color: ${({ color }) => FILTER_BUTTON_STYLE[color].color};
+  background-color: ${({ color, $selected }) =>
+    $selected
+      ? FILTER_BUTTON_STYLE[color].hoverBackgroundColor
+      : FILTER_BUTTON_STYLE[color].backgroundColor};
+  color: ${({ color, $selected }) =>
+    $selected
+      ? FILTER_BUTTON_STYLE[color].hoverColor
+      : FILTER_BUTTON_STYLE[color].color};
 
   &:hover {
     background-color: ${({ color }) =>
-    FILTER_BUTTON_STYLE[color].hoverBackgroundColor};
+      FILTER_BUTTON_STYLE[color].hoverBackgroundColor};
     color: ${({ color }) => FILTER_BUTTON_STYLE[color].hoverColor};
   }
 
   &:active {
     background-color: ${({ color }) =>
-    FILTER_BUTTON_STYLE[color].hoverBackgroundColor};
+      FILTER_BUTTON_STYLE[color].hoverBackgroundColor};
     color: ${({ color }) => FILTER_BUTTON_STYLE[color].hoverColor};
   }
 

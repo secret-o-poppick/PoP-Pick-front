@@ -15,6 +15,8 @@ import { FaLongArrowAltRight } from 'react-icons/fa';
 import { MdLocationPin } from 'react-icons/md';
 import { FaRegCalendarCheck } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
+import Button from '@/components/Button';
+import { CitiesType } from '@/types';
 
 interface SearchPageProps {
   setSearchOpened: React.Dispatch<React.SetStateAction<boolean>>;
@@ -22,21 +24,18 @@ interface SearchPageProps {
   searchType: string;
   locationBtnHandler: () => void;
   dateBtnHandler: () => void;
-  selectedCity: string;
   setSelectedCity: (cityId: string) => void;
+  selectedCity: string;
   selectedDistrict: string;
   setSelectedDistrict: (districtId: string) => void;
   onDateChange: (newRange: DateRange | undefined) => void;
-  searchButtonHandler: () => void
-}
-
-interface CitiesType {
-  _id: string;
-  name: string;
-  code: number;
-  createdAt: Date;
-  updateAt: Date;
-  children?: CitiesType[];
+  searchButtonHandler: () => void;
+  selectedCityName: string;
+  selectedDistrictName: string;
+  cities: CitiesType[];
+  districts: CitiesType[];
+  setCities: React.Dispatch<React.SetStateAction<CitiesType[]>>;
+  setDistricts: React.Dispatch<React.SetStateAction<CitiesType[]>>;
 }
 
 export default function SearchPage({
@@ -45,18 +44,20 @@ export default function SearchPage({
   searchType,
   locationBtnHandler,
   dateBtnHandler,
-  selectedCity,
   setSelectedCity,
-  selectedDistrict,
   setSelectedDistrict,
   onDateChange,
   searchButtonHandler,
+  selectedCityName,
+  selectedDistrictName,
+  cities,
+  districts,
+  setCities,
+  setDistricts,
 }: SearchPageProps) {
-  const [cities, setCities] = useState<CitiesType[]>([]);
-  const [districts, setDistricts] = useState<CitiesType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const selectedCityName = cities.find(city => city._id === selectedCity)?.name || '';
-  const selectedDistrictName = districts.find(district => district._id === selectedDistrict)?.name || '';
+  const [selectedCityItem, setSelectedCityItem] = useState<string | null>(null);
+  const [selectedDistrictItem, setSelectedDistrictItem] = useState<string | null>(null);
 
   const today = new Date();
   const defaultSelected: DateRange = {
@@ -64,7 +65,7 @@ export default function SearchPage({
     to: addDays(today, 0),
   };
   const [range, setRange] = useState<DateRange | undefined>(defaultSelected);
-  // const [range, setRange] = useState<DateRange | undefined>(undefined);
+  const isDateRangeSelected = !!range?.from && !!range?.to;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,6 +81,20 @@ export default function SearchPage({
     };
     fetchData();
   }, []);
+
+
+  useEffect(() => {
+    const body = document.body;
+
+    if (isSearchOpened) {
+      body.style.overflow = 'hidden';
+    } else {
+      body.style.overflow = 'auto';
+    }
+    return () => {
+      body.style.overflow = 'auto';
+    };
+  }, [isSearchOpened]);
 
   const closeSearchTab = () => {
     setSearchOpened(false);
@@ -129,9 +144,9 @@ export default function SearchPage({
                       key={index}
                       onClick={() => {
                         selectCityHandler(city._id);
-                        console.log(city._id);
+                        setSelectedCityItem(city._id);
                       }}
-
+                      className={selectedCityItem === city._id ? 'selected' : ''}
                     >
                       {city.name}
                     </li>
@@ -147,7 +162,11 @@ export default function SearchPage({
                       key={index}
                       onClick={() => {
                         selectDistrictHandler(district._id);
+                        setSelectedDistrictItem(district._id);
+                        setTimeout(() => dateBtnHandler(), 500)
                       }}
+                      className={selectedDistrictItem === district._id ? 'selected' : ''}
+
                     >
                       {district.name}
                     </button>
@@ -157,7 +176,7 @@ export default function SearchPage({
             </div>
           </StyledLocation>
         ) : searchType === 'date' ? (
-          <StyledDate className='searchTap'>
+          <StyledDate className='searchTap' $rangeToExists={isDateRangeSelected}>
             <StyledDayPicker
               mode='range'
               defaultMonth={today}
@@ -168,7 +187,10 @@ export default function SearchPage({
               }}
               locale={ko}
             />
-            <div className='dateRangeWrapper'>
+            <div
+              className={`dateRangeWrapper ${isDateRangeSelected ? 'scale-up' : ''}`}
+              onClick={isDateRangeSelected ? searchButtonHandler : undefined}
+            >
               <div className='dateRange'>
                 {range?.from ? format(range.from, 'PPP', { locale: ko }) : null}
               </div>
@@ -184,11 +206,11 @@ export default function SearchPage({
             <div>
               <div className='searchKeywords'>
                 <div>
-                  <div>위치 : </div>
+                  <div><span>위치</span> : </div>
                   {selectedCityName} {selectedDistrictName}
                 </div>
                 <div className='dateRange'>
-                  <div>기간 : </div>
+                  <div><span>기간</span> : </div>
                   {range?.from ? format(range.from, 'PPP', { locale: ko }) : null}
                   {range && <FaLongArrowAltRight />}
                   {range?.to ? format(range.to, 'PPP', { locale: ko }) : null}
@@ -205,8 +227,8 @@ export default function SearchPage({
                 </button>
               </div>
               <div className='commitBtns'>
-                <button onClick={resetButtonHandler}>초기화</button>
-                <button onClick={searchButtonHandler}>검색</button>
+                <Button onClick={resetButtonHandler}>초기화</Button>
+                <Button onClick={searchButtonHandler}>검색</Button>
               </div>
             </div>
           </StyledString>
@@ -260,28 +282,24 @@ const StyledMore = styled.div<{
 `;
 
 const StyledLocation = styled.div`
-  height: 60%;
+  height: 68vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 .btnWrapper {
     margin-bottom: 20px;
-    display: flex;
-    flex-direction: row;
   }
   button {
     width: 200px;
-    height: 40px;
-    margin: 0 5px;
+    height: 3em;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: lightgray;
     border: none;
-
+    
     &:hover {
-      background-color: gray;
+      background-color: lightgray;
     }
 
     svg {
@@ -293,35 +311,51 @@ const StyledLocation = styled.div`
 
   .locationWrapper {
     width: 80%;
-    padding: 10px;
     border-radius: 5px;
     display: flex;
     justify-content: center;
     box-shadow: 0 0 5px lightgray;
     ul {
       width: 10%;
-      padding: 1em 0;
-      gap: 1em;
       list-style: none;
       display: flex;
       flex-direction: column;
-      background: lightgray;
+      justify-content:space-between;
     }
 
     li {
       width: 100%;
+      padding:0.5em 0;
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
+      border-right: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
+      cursor: pointer;
 
       &:hover {
-        background-color: gray;
+        background-color: #fff2d4;
       }
+      &.selected {
+        background-color: #F5C553;
+      }
+    }
+
+    li:first-child{
+      border-right: 1px solid #ccc;
+      border-top-left-radius: 5px;
+    }
+
+    li:last-child{
+      border:none;
+      border-right: 1px solid #ccc;
+      border-bottom-left-radius: 5px;
     }
 
     .districts {
       width: 90%;
+      margin-left:0.5em;
       display: grid;
       grid-template-columns: repeat(5, 20%);
 
@@ -329,17 +363,20 @@ const StyledLocation = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
+      }
+      button {
+        width: 100%;
+        height: 5em;
+        background-color: transparent;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
 
         &:hover {
-          background-color: lightgray;
+          background-color: #fff2d4;
         }
-
-        button {
-          width: 100%;
-          height: 100%;
-          background-color: transparent;
-          margin: 0;
-          padding: 0;
+        &.selected {
+        background-color: #F5C553;
         }
       }
     }
@@ -351,7 +388,9 @@ const StyledLocation = styled.div`
   }
 `;
 
-const StyledDate = styled.div`
+const StyledDate = styled.div<{ $rangeToExists?: boolean }>`
+  height: 60%;
+  height: 60%;
   height: 60%;
   display: flex;
   flex-direction: column;
@@ -363,9 +402,28 @@ const StyledDate = styled.div`
 
   .dateRangeWrapper {
     width: 35%;
+    height: 1em;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-top: 1em;
+    border-radius: 20px;
+    border: 2px solid ${(props) => (props.$rangeToExists ? '#ffcb52' : 'lightgray')};
+    background-color:${(props) => (props.$rangeToExists ? '#ffcb52' : 'transparent')};
+    color:'#000';
+    cursor: pointer;
+    padding: 1em;
+    transform: scale(100%);
+    transition: transform 0.3s ease;
+
+    &.scale-up {
+      transform: scale(103%);
+    }
+
+    .dateRange{
+      width:50%;
+      text-align: center;
+    }
   }
 `;
 
@@ -375,7 +433,7 @@ const StyledDayPicker = styled(DayPicker)`
   border-radius: 10px;
 
   .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
-    background-color: #1778f2;
+    background-color: #fff2d4;
   }
 
   .rdp-day {
@@ -394,7 +452,7 @@ const StyledDayPicker = styled(DayPicker)`
     color: black;
 
     &:hover {
-      background-color: #ff5c40;
+      background-color: #EB5B42;
     }
   }
 `;
@@ -426,6 +484,9 @@ const StyledString = styled.div`
       & > div:first-child {
         margin-right: 10px;
       }
+      & span{
+       font-weight: bold;
+      }
     }
     .dateRange > svg {
       margin: 0 10px;
@@ -448,21 +509,28 @@ const StyledString = styled.div`
     }
   }
   .commitBtns {
-    width: 80%;
-    height: 20%;
-    margin-top: 1em;
     display: flex;
-    justify-content: space-between;
-    & > button {
+  column-gap: 2em;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  height:2.3em;
+    & > Button {
       width: 50%;
-      height: 100%;
-
+    font-weight: bold;
+    font-size: 9pt;
+    transition: background-color 0.3s ease;
+    color:#000;
+    }
+    & Button:first-child{
       background-color: transparent;
-      border: none;
-      border-radius: 10px;
-      &:hover {
-        background-color: lightgray;
-      }
+      box-shadow: 0 0 0 2px #F5C553 inset; 
+    }
+    & Button:last-child{
+      background-color: #F5C553;
+    }
+    & Button:last-child:hover{
+      background-color: #ffb70f;
     }
   }
 

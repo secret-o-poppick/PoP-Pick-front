@@ -1,4 +1,4 @@
-export type AuthOption = "일반" | "등록자" | "관리자";
+export type AuthOption = '일반' | '등록자' | '관리자';
 
 export type SelectBoxOption = {
   value: string;
@@ -75,12 +75,9 @@ export type StoreType = {
   socialLink: string;
   desc: string;
   etc: string;
-  locationId: string[];
-  categoryId: {
-    _id: string;
-    name: string;
-  };
   address: AddressType;
+  categoryId: CategoryType;
+  locationId: string[];
 };
 
 export type StoreData = {
@@ -93,4 +90,76 @@ export type StoreData = {
   endDate: string;
   location: string;
   likes: number;
+};
+
+export type User = {
+  _id: string;
+  name: string;
+  nickName: string;
+  role: string;
+  image: string;
+};
+
+export type CategoryType = {
+  _id: string;
+  name: string;
+};
+
+export type optionsProp = {
+  value: string;
+  label: string;
+};
+
+export type Location = {
+  x: number;
+  y: number;
+};
+
+export type AuthContextType = {
+  isLoggedIn: boolean;
+  accessToken: string | null;
+  user: User | null;
+  login: (token: string) => void;
+  logout: () => void;
+  withdrawal: () => void;
+};
+
+export type CardImageProps = {
+  image: string;
+  alt?: string;
+};
+
+export type CardItemProps = {
+  title: string;
+  startDate: string;
+  endDate: string;
+  likes: number;
+};
+
+export type newStoreDataType = {
+  name: string;
+  brandName: string;
+  category: string;
+  mainImageNumber: number;
+  images: IFileTypes[];
+  adultVerification: boolean;
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+  fee: string;
+  event: string;
+  socialLink: string;
+  desc: string;
+  etc: string;
+  detail1: string | undefined;
+  detail2: string;
+  zipCode: string | undefined;
+};
+
+export type CitiesType = {
+  _id: string;
+  name: string;
+  code: number;
+  createdAt: Date;
+  updateAt: Date;
+  children?: CitiesType[];
 };
