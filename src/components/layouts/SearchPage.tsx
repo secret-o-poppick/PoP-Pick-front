@@ -192,11 +192,11 @@ export default function SearchPage({
               onClick={isDateRangeSelected ? searchButtonHandler : undefined}
             >
               <div className='dateRange'>
-                {range?.from ? format(range.from, 'PPP', { locale: ko }) : null}
+                <span className='mDate'>{range?.from ? format(range.from, 'PPP', { locale: ko }) : null}</span>
               </div>
               <FaLongArrowAltRight />
               <div className='dateRange'>
-                {range?.to ? format(range.to, 'PPP', { locale: ko }) : null}
+                <span className='mDate'>{range?.to ? format(range.to, 'PPP', { locale: ko }) : null}</span>
               </div>
             </div>
             {/* <button onClick={stringBtnHandler}>선택</button> */}
@@ -385,12 +385,13 @@ const StyledLocation = styled.div`
     .districts {
       grid-template-columns: repeat(3, 33%) !important;
     }
+    .locationWrapper li {
+      font-size: 0.8em;
+    }
   }
 `;
 
 const StyledDate = styled.div<{ $rangeToExists?: boolean }>`
-  height: 60%;
-  height: 60%;
   height: 60%;
   display: flex;
   flex-direction: column;
@@ -409,8 +410,8 @@ const StyledDate = styled.div<{ $rangeToExists?: boolean }>`
     margin-top: 1em;
     border-radius: 20px;
     border: 2px solid ${(props) => (props.$rangeToExists ? '#ffcb52' : 'lightgray')};
-    background-color:${(props) => (props.$rangeToExists ? '#ffcb52' : 'transparent')};
-    color:'#000';
+    background-color: ${(props) => (props.$rangeToExists ? '#ffcb52' : 'transparent')}; /* Fix: Removed unnecessary quotes */
+    color: #000; /* Fix: Removed unnecessary quotes */
     cursor: pointer;
     padding: 1em;
     transform: scale(100%);
@@ -420,9 +421,15 @@ const StyledDate = styled.div<{ $rangeToExists?: boolean }>`
       transform: scale(103%);
     }
 
-    .dateRange{
-      width:50%;
+    .dateRange {
+      width: 50%;
       text-align: center;
+    }
+  }
+  @media (max-width: ${MEDIA_LIMIT}) {
+    .mDate {
+      font-size: 0.8em;
+      word-break: keep-all;
     }
   }
 `;
@@ -452,17 +459,22 @@ const StyledDayPicker = styled(DayPicker)`
     color: black;
 
     &:hover {
-      background-color: #EB5B42;
+      background-color: #eb5b42;
     }
   }
 `;
 
 const StyledString = styled.div`
-  height: 30%;
+  height: 40%;
+
+  & > div {
+    display: flex;
+    row-gap: 2em;
+  }
+
   & > div:first-child {
     width: 100%;
     height: 100%;
-    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -471,11 +483,11 @@ const StyledString = styled.div`
   }
   .searchKeywords {
     width: 80%;
-    height: 60%;
+    height: 20%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
     white-space: nowrap;
     & > div {
       width: 100%;
@@ -484,8 +496,8 @@ const StyledString = styled.div`
       & > div:first-child {
         margin-right: 10px;
       }
-      & span{
-       font-weight: bold;
+      & span {
+        font-weight: bold;
       }
     }
     .dateRange > svg {
@@ -498,38 +510,42 @@ const StyledString = styled.div`
     display: none;
     align-items: center;
     justify-content: space-between;
-    gap: 1em;
+    gap: 2em;
     button {
       width: 50%;
       height: 100%;
       padding: 10px 0;
-      background-color: lightgray;
-      border: none;
+      background-color: transparent;
+      border: 2px solid #ffb70f;
       border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      row-gap: 1em;
     }
   }
   .commitBtns {
     display: flex;
-  column-gap: 2em;
-  justify-content: center;
-  align-items: center;
-  width: 80%;
-  height:2.3em;
+    column-gap: 2em;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 2.3em;
     & > Button {
       width: 50%;
-    font-weight: bold;
-    font-size: 9pt;
-    transition: background-color 0.3s ease;
-    color:#000;
+      font-weight: bold;
+      font-size: 9px;
+      transition: background-color 0.3s ease;
+      color: #000;
     }
-    & Button:first-child{
+    & Button:first-child {
       background-color: transparent;
-      box-shadow: 0 0 0 2px #F5C553 inset; 
+      box-shadow: 0 0 0 2px #f5c553 inset;
     }
-    & Button:last-child{
-      background-color: #F5C553;
+    & Button:last-child {
+      background-color: #f5c553;
     }
-    & Button:last-child:hover{
+    & Button:last-child:hover {
       background-color: #ffb70f;
     }
   }

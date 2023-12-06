@@ -7,8 +7,7 @@ import {
   useCallback,
 } from 'react';
 import { REACT_APP_BACKEND_HOST } from '@/assets/config';
-import { User, AuthContextType } from '@/types'
-
+import { User, AuthContextType } from '@/types';
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -120,7 +119,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, accessToken, user, login, logout, withdrawal }}
+      value={{
+        isLoggedIn,
+        accessToken,
+        user,
+        login,
+        logout,
+        withdrawal,
+        getUserInfo,
+      }}
     >
       {children}
     </AuthContext.Provider>
