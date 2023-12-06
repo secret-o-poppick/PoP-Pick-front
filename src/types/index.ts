@@ -103,6 +103,7 @@ export type User = {
 export type CategoryType = {
   _id: string;
   name: string;
+  type: string;
 };
 
 export type optionsProp = {
@@ -127,13 +128,6 @@ export type AuthContextType = {
 export type CardImageProps = {
   image: string;
   alt?: string;
-};
-
-export type CardItemProps = {
-  title: string;
-  startDate: string;
-  endDate: string;
-  likes: number;
 };
 
 export type newStoreDataType = {

@@ -1,4 +1,3 @@
-
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import SearchPage from './SearchPage';
@@ -7,7 +6,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { DateRange } from 'react-day-picker';
-
 
 // icons
 import logoImg from '@/assets/logo.svg';
@@ -21,7 +19,7 @@ import { MEDIA_LIMIT } from '@/assets/styleVariable';
 import LoginModal from '../LoginModal';
 import { useAuth } from '@/context/AuthContext';
 import Avatar from '../Avatar';
-import { CitiesType } from '@/types'
+import { CitiesType } from '@/types';
 
 export default function Header() {
   const { isLoggedIn, logout, user } = useAuth();
@@ -37,11 +35,12 @@ export default function Header() {
   const [dateTo, setDateTo] = useState<string | undefined>('');
   const [cities, setCities] = useState<CitiesType[]>([]);
   const [districts, setDistricts] = useState<CitiesType[]>([]);
-  const selectedCityName = cities.find(city => city._id === selectedCity)?.name || '';
-  const selectedDistrictName = districts.find(district => district._id === selectedDistrict)?.name || '';
+  const selectedCityName =
+    cities.find((city) => city._id === selectedCity)?.name || '';
+  const selectedDistrictName =
+    districts.find((district) => district._id === selectedDistrict)?.name || '';
 
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const stringBtnHandler = () => {
     setSearchOpened(true);
@@ -74,7 +73,9 @@ export default function Header() {
         return `${year}-${month}-${day}`;
       };
 
-      const fromDateString = newRange.from ? formatDateString(newRange.from) : '';
+      const fromDateString = newRange.from
+        ? formatDateString(newRange.from)
+        : '';
       const toDateString = newRange.to ? formatDateString(newRange.to) : '';
 
       setDateFrom(fromDateString);
@@ -87,7 +88,6 @@ export default function Header() {
 
   // 검색버튼
   const searchButtonHandler = () => {
-
     const searchParams = new URLSearchParams(location.search);
 
     // 검색어
@@ -115,7 +115,7 @@ export default function Header() {
       searchParams.delete('endDate');
     }
 
-    navigate(`/stores?${searchParams}`)
+    navigate(`/stores?${searchParams}`);
 
     setSearchOpened(false);
     setSearchInput('');
@@ -182,15 +182,32 @@ export default function Header() {
             />
             <button className='optBtns' onClick={locationBtnHandler}>
               <div>
-                {(selectedCityName || selectedDistrictName) ? `${selectedCityName} ${selectedDistrictName}` : <div><MdLocationPin />위치</div>}
+                {selectedCityName || selectedDistrictName ? (
+                  `${selectedCityName} ${selectedDistrictName}`
+                ) : (
+                  <div>
+                    <MdLocationPin />
+                    위치
+                  </div>
+                )}
               </div>
             </button>
             <button className='optBtns' onClick={dateBtnHandler}>
-              <div>{(dateFrom || dateTo) ? `${dateFrom} ${dateTo}` : <div><FaRegCalendarCheck />기간</div>}</div>
+              <div>
+                {dateFrom || dateTo ? (
+                  `${dateFrom} ${dateTo}`
+                ) : (
+                  <div>
+                    <FaRegCalendarCheck />
+                    기간
+                  </div>
+                )}
+              </div>
             </button>
           </div>
-          <button className='searchBtn' onClick={searchButtonHandler}><FaSearch /></button>
-
+          <button className='searchBtn' onClick={searchButtonHandler}>
+            <FaSearch />
+          </button>
         </StyledSearch>
 
         <StyledUser>
@@ -315,16 +332,15 @@ const StyledSearch = styled.div`
       background-color: lightgray;
     }
 
-    &>div>div{
+    & > div > div {
       display: flex;
       align-items: center;
     }
     svg {
       width: 1.2em;
       height: 1.2em;
-      margin-right:0.5em;
+      margin-right: 0.5em;
     }
-    
   }
   .searchBtn {
     width: 50px;
@@ -333,10 +349,12 @@ const StyledSearch = styled.div`
     align-items: center;
     justify-content: center;
     border: none;
-    background-color: transparent;
-    border-radius: 50%;
+    background-color: white;
+    border-radius: 0 50% 50% 0;
     cursor: pointer;
-
+    &:hover {
+      border-radius: 50%;
+    }
   }
 
   @media (max-width: ${MEDIA_LIMIT}) {
@@ -350,7 +368,6 @@ const StyledSearch = styled.div`
       display: none;
     }
   }
-
 `;
 
 const StyledUser = styled.div`
@@ -358,6 +375,7 @@ const StyledUser = styled.div`
   height: 100%;
   display: flex;
   justify-content: flex-end;
+  gap: 1em;
   button {
     width: 50px;
     height: 50px;
@@ -382,11 +400,11 @@ const StyledUser = styled.div`
     & {
       width: 15%;
     }
-    .login {
+    .logout {
       display: none;
     }
   }
-  .userinfo{
+  .userinfo {
     cursor: pointer;
   }
 `;

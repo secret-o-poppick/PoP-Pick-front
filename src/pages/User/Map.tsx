@@ -1,26 +1,21 @@
-import styled, { css } from "styled-components";
-import { useEffect, useRef, useState } from "react";
+import styled, { css } from 'styled-components';
+import { useEffect, useRef, useState } from 'react';
 
-import { MEDIA_LIMIT } from "@/assets/styleVariable";
+import { MEDIA_LIMIT } from '@/assets/styleVariable';
 // import { data } from "@/data/stores";
-import StoreGridSide from "@/components/StoreGrid";
-import { formatDate } from "@/utils";
-import { StoreData } from "@/types";
-import axios from "axios";
-import { Location } from '@/types'
+import StoreGrid from '@/components/StoreGrid';
+import { StoreType } from '@/types';
+import axios from 'axios';
+import { Location } from '@/types';
 
 //icons
-import { IoMdRefresh } from "react-icons/io";
-import { TbLocation } from "react-icons/tb";
-import { FaRegHeart, FaRegBookmark } from "react-icons/fa";
+import { IoMdRefresh } from 'react-icons/io';
+import { TbLocation } from 'react-icons/tb';
+import { FaRegHeart, FaRegBookmark } from 'react-icons/fa';
+import { formatDate } from '@/utils';
 
 export default function Map() {
-  const [datas, setDatas] = useState([]);
-  const [storeDatas, setStoreDatas] = useState<StoreData[]>([]);
-
-  const mapObj = useRef<any>();
-  const [markers, setMarkers] = useState<any>([]);
-  const infoWindows: any = [];
+  const [storeDatas, setStoreDatas] = useState<StoreType[]>([]);
 
   const [isListOpened, setListOpened] = useState<boolean>(false);
   const listOpenHandler = () => {
@@ -28,6 +23,9 @@ export default function Map() {
   };
 
   // kakao map
+  const mapObj = useRef<any>();
+  const [markers, setMarkers] = useState<any>([]);
+  const infoWindows: any = [];
   const { kakao } = window as any;
 
   const currentLocation = useRef<Location>({
@@ -40,81 +38,44 @@ export default function Map() {
     const SW = bounds.getSouthWest();
     const NE = bounds.getNorthEast();
     const boundLimits = {
-      x1: SW.Ma,
-      x2: NE.Ma,
-      y1: SW.La,
-      y2: NE.La,
+      x1: SW.La,
+      x2: NE.La,
+      y1: SW.Ma,
+      y2: NE.Ma,
     };
     const response = await axios.get(
       `http://localhost:3310/api/address?x1=${boundLimits.x1}&x2=${boundLimits.x2}&y1=${boundLimits.y1}&y2=${boundLimits.y2}`
     );
-    const resJson = response.data;
-    setDatas(resJson);
+    console.log(response.data);
+    setStoreDatas(response.data);
   };
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(function (position) {
       currentLocation.current = {
-        x: position.coords.latitude, //위도
-        y: position.coords.longitude, //경도
+        x: position.coords.longitude, //경도
+        y: position.coords.latitude, //위도
       };
-
       const currentLatLng = new kakao.maps.LatLng(
-        currentLocation.current.x,
-        currentLocation.current.y
+        currentLocation.current.y,
+        currentLocation.current.x
       );
-      const container = document.getElementById("map");
+      const container = document.getElementById('map');
       const options = {
         center: currentLatLng,
         level: 5,
       };
       mapObj.current = new kakao.maps.Map(container, options);
       getDatas();
-      // 마커로 좌표 로깅
-      // const marker = new kakao.maps.Marker({
-      //   map: map,
-      //   position: currentLatLng,
-      // });
-      // kakao.maps.event.addListener(marker, "dragend", function () {
-      //   const loc = marker.getPosition();
-      //   console.log(`${loc.La}, ${loc.Ma}`);
-      // });
-
-      // 지도 이동시 가운데 좌표 로깅
-      // kakao.maps.event.addListener(map, "center_changed", function () {
-      //   const latlng = map.getCenter();
-      //   const msg = `${latlng.getLat()}, ${latlng.getLng()}`;
-      //   console.log(msg);
-      // });
     });
   }, []);
 
   useEffect(() => {
     refreshMap();
-    setStoreDatas(
-      datas.map((data: any) => {
-        const store = data.store;
-        const tag = store.type === "popup" ? "팝업" : "전시";
-        const startDate = formatDate(store.startDate);
-        const endDate = formatDate(store.endDate);
-
-        const storeData = {
-          storeId: store._id,
-          title: store.title,
-          tag,
-          adultVerification: store.adultVerification,
-          image: store.images[0],
-          startDate,
-          endDate,
-          location: data.detail1,
-          likes: store.likes,
-        };
-        return storeData;
-      })
-    );
-  }, [datas]);
+  }, [storeDatas]);
 
   const refreshMap = async () => {
+    if (!storeDatas) return;
     // 마커 리셋
     markers.forEach((marker: any) => {
       marker.setMap(null);
@@ -125,22 +86,21 @@ export default function Map() {
     });
     infoWindows.splice(0, infoWindows.length);
 
-    datas.forEach((data: any) => {
-      const { x, y } = data;
+    storeDatas.forEach((data) => {
       const marker = new kakao.maps.Marker({
         map: mapObj.current,
-        position: new kakao.maps.LatLng(x, y),
-        title: data.store.title,
+        position: new kakao.maps.LatLng(data.address.y, data.address.x),
+        title: data.title,
         isClicked: false,
       });
 
       const infoContent = `<div class='infoWindow'>
-        <img src=${data.store.images[0]}/>
+        <img src=${data.images.find((img) => img.isMain)?.url}/>
         <div>
-          <div>${data.store.title}</div>
-          <div>${data.store.startDate} ~ ${data.store.endDate}</div>
-          <div>${data.detail1}</div>
-          <div>상세보기</div>
+          <div>${data.title}</div>
+          <div>${formatDate(data.startDate)} ~ ${formatDate(data.endDate)}</div>
+          <div>${data.address.detail1}</div>
+          <a href="http://localhost:3000/stores/${data._id}">상세보기</a>
         </div>
       </div>`;
       // 인포윈도우를 생성합니다
@@ -151,7 +111,7 @@ export default function Map() {
       infoWindows.push(infoWindow);
 
       // 마커에 클릭이벤트를 등록합니다
-      kakao.maps.event.addListener(marker, "click", function () {
+      kakao.maps.event.addListener(marker, 'click', function () {
         // 마커 위에 인포윈도우를 표시합니다
         infoWindows.forEach((window: any) => {
           window.close(mapObj.current);
@@ -168,14 +128,14 @@ export default function Map() {
     // 현위치 표시
     const circle = new kakao.maps.Circle({
       center: new kakao.maps.LatLng(
-        currentLocation.current.x,
-        currentLocation.current.y
+        currentLocation.current.y,
+        currentLocation.current.x
       ),
       radius: 50, // 미터 단위의 원의 반지름입니다
       strokeWeight: 1, // 선의 두께입니다
-      strokeColor: "#75B8FA", // 선의 색깔입니다
+      strokeColor: '#75B8FA', // 선의 색깔입니다
       strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-      fillColor: "#CFE7FF", // 채우기 색깔입니다
+      fillColor: '#CFE7FF', // 채우기 색깔입니다
       fillOpacity: 0.7, // 채우기 불투명도 입니다
       map: mapObj.current,
     });
@@ -184,8 +144,8 @@ export default function Map() {
 
   const toCurrentLocation = () => {
     const moveLatLon = new kakao.maps.LatLng(
-      currentLocation.current.x,
-      currentLocation.current.y
+      currentLocation.current.y,
+      currentLocation.current.x
     );
     mapObj.current.setCenter(moveLatLon);
     mapObj.current.setLevel(5);
@@ -219,10 +179,11 @@ export default function Map() {
               <div></div>
             </div>
             <div className='list'>
-              {!datas[0] && (
+              {storeDatas.length !== 0 ? (
+                <StoreGrid storeDatas={storeDatas} max={3} />
+              ) : (
                 <div className='none'>검색된 스토어가 없습니다.</div>
               )}
-              <StoreGridSide storeDatas={storeDatas} max={3} half={true} />
 
               <StyledPaginationDiv>
                 페이지네이션 들어갈 자리
@@ -327,6 +288,7 @@ const StyledMap = styled.div<{
         display: flex;
         align-items: center;
         justify-content: center;
+        background-color: white;
       }
     }
   }
@@ -372,9 +334,9 @@ const StyledMap = styled.div<{
       transition-duration: 0.5s;
 
       ${({ $isListOpened }) => css`
-        height: ${$isListOpened ? "90%" : "5%"};
+        height: ${$isListOpened ? '90%' : '5%'};
         .list {
-          visibility: ${$isListOpened ? "visible" : "hidden"};
+          visibility: ${$isListOpened ? 'visible' : 'hidden'};
         }
       `}
 

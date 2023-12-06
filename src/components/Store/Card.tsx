@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import CardImage from '@/components/Store/CardImage';
 import CardItem from '@/components/Store/CardItem';
 import CardTag from '@/components/Store/CardTag';
+import { formatDate } from '@/utils';
 
 interface StoreCardProps {
   store: StoreType;
@@ -16,7 +17,7 @@ export default function StoreCard({ store }: StoreCardProps) {
   return (
     <CardLink to={`/stores/${_id}`}>
       <Container>
-        <CardImage image={images[0]} />
+        <CardImage image={images[0].url} />
 
         <CardTagWrapper>
           <CardTag

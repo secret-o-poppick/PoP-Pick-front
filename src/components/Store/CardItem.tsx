@@ -3,7 +3,13 @@ import { FaRegBookmark, FaRegHeart } from 'react-icons/fa';
 import { MEDIA_LIMIT } from '@/assets/styleVariable';
 import { formatDate } from '@/utils';
 import CardIcon from '@/components/Store/CardIcon';
-import { CardItemProps } from '@/types'
+
+type CardItemProps = {
+  title: string;
+  startDate: Date;
+  endDate: Date;
+  likes: number;
+};
 
 export default function CardItem({
   title,
