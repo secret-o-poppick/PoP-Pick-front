@@ -98,6 +98,8 @@ export type User = {
   nickName: string;
   role: string;
   image: string;
+  bookmarks: string[];
+  likes: string[];
 };
 
 export type CategoryType = {
@@ -122,6 +124,7 @@ export type AuthContextType = {
   login: (token: string) => void;
   logout: () => void;
   withdrawal: () => void;
+  getUserInfo: () => void;
 };
 
 export type CardImageProps = {

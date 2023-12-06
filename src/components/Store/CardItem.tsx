@@ -25,7 +25,7 @@ export default function CardItem({
   endDate,
   likes,
 }: CardItemProps) {
-  const { accessToken, user } = useAuth();
+  const { accessToken, user, getUserInfo } = useAuth();
 
   const handleClickLikesCount: HandleClick = async () => {
     const res = await axios.put<StoreType>(
@@ -37,6 +37,7 @@ export default function CardItem({
         },
       }
     );
+    await getUserInfo();
     return res.data.likes;
   };
 
@@ -50,6 +51,7 @@ export default function CardItem({
         },
       }
     );
+    await getUserInfo();
   };
 
   return (

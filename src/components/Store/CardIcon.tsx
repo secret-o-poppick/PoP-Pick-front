@@ -36,9 +36,9 @@ export default function CardIcon({
   return (
     <Container $color={color}>
       {checked && SelectedIcon ? (
-        <SelectedIcon onClick={handleClick} fill={color} />
+        <SelectedIcon onClick={handleClick} fill={checked && color} />
       ) : (
-        <Icon onClick={handleClick} fill={color} />
+        <Icon onClick={handleClick} />
       )}
       {count && <IconCount>{data}</IconCount>}
     </Container>
