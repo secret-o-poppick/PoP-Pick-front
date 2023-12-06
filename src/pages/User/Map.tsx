@@ -6,6 +6,7 @@ import { MEDIA_LIMIT } from "@/assets/styleVariable";
 import StoreGridSide from "@/components/StoreGrid";
 import { formatDate } from "@/utils";
 import { StoreData } from "@/types";
+import axios from "axios";
 
 //icons
 import { IoMdRefresh } from "react-icons/io";
@@ -46,10 +47,10 @@ export default function Map() {
       y1: SW.La,
       y2: NE.La,
     };
-    const response = await fetch(
+    const response = await axios.get(
       `http://localhost:3310/api/address?x1=${boundLimits.x1}&x2=${boundLimits.x2}&y1=${boundLimits.y1}&y2=${boundLimits.y2}`
     );
-    const resJson = await response.json();
+    const resJson = response.data;
     setDatas(resJson);
   };
 
