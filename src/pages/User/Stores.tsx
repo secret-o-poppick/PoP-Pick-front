@@ -4,11 +4,11 @@ import styled from 'styled-components';
 import Select from 'react-select';
 import axios from 'axios';
 
-
 import { MEDIA_LIMIT } from '@/assets/styleVariable';
 import FilterButton from '@/components/FilterButton';
 import StoreCard from '@/components/Store/Card';
 import { StoreType, optionsProp } from '@/types';
+import StoreGrid from '@/components/StoreGrid';
 
 export default function Stores() {
   const selectOptions = [
@@ -29,7 +29,8 @@ export default function Stores() {
   const [stores, setStores] = useState<StoreType[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [isAdultVerification, setIsAdultVerification] = useState<boolean>(false);
+  const [isAdultVerification, setIsAdultVerification] =
+    useState<boolean>(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -95,8 +96,6 @@ export default function Stores() {
     setSelectedCategory(selectedCategoryParam);
   }, [location.search]);
 
-
-
   // 전시/팝업 탭 클릭
   const categoryFilterHandler = async (selectedCategory: string) => {
     const searchParams = new URLSearchParams(location.search);
@@ -115,7 +114,8 @@ export default function Stores() {
   // 성인 탭 클릭
   const adultFilterHandler = () => {
     const searchParams = new URLSearchParams(location.search);
-    const isAdultVerification = searchParams.get('adultVerification') === 'true';
+    const isAdultVerification =
+      searchParams.get('adultVerification') === 'true';
 
     if (isAdultVerification) {
       searchParams.delete('adultVerification');
@@ -150,7 +150,11 @@ export default function Stores() {
           >
             {categories[1]}
           </FilterButton>
-          <FilterButton onClick={adultFilterHandler} color='error' selected={isAdultVerification}>
+          <FilterButton
+            onClick={adultFilterHandler}
+            color='error'
+            selected={isAdultVerification}
+          >
             성인
           </FilterButton>
         </div>
@@ -166,12 +170,12 @@ export default function Stores() {
         </StyledFilterDiv>
       </StyledMainButtonDiv>
 
-      {/* <StoreGridSide storeDatas={storeDatas} max={4} /> */}
-      <StyledStoreGrid>
+      <StoreGrid storeDatas={stores} max={4} />
+      {/* <StyledStoreGrid>
         {stores.map((store) => (
           <StoreCard key={store._id} store={store} />
         ))}
-      </StyledStoreGrid>
+      </StyledStoreGrid> */}
 
       <StyledPagenationDiv>페이지네이션 들어갈 자리</StyledPagenationDiv>
     </>

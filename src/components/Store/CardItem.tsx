@@ -15,7 +15,7 @@ type CardItemProps = {
   endDate: Date;
   likes: number;
 };
-
+    
 type HandleClick = () => Promise<number> | Promise<void>;
 
 export default function CardItem({

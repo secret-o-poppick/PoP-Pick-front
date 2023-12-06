@@ -33,7 +33,7 @@ export const BUTTON_STYLE: Record<
 };
 
 export const TAG_STYLE: Record<
-  TagStyleType,
+  string,
   {
     backgroundColor: string;
     color: string;

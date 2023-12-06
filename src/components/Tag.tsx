@@ -4,7 +4,7 @@ import { TagStyleType } from '@/utils/index';
 import { MEDIA_LIMIT } from '@/assets/styleVariable';
 
 interface TagProps {
-  color: TagStyleType;
+  color: string;
   title: string;
 }
 
@@ -16,7 +16,7 @@ export const StoreTag = ({ color, title }: TagProps) => {
   return <StyledStoreTagDiv color={color}>{title}</StyledStoreTagDiv>;
 };
 
-const StyledHeaderTagDiv = styled.div<{ color: TagStyleType }>`
+const StyledHeaderTagDiv = styled.div<{ color: string }>`
   width: 9em;
   height: 2em;
   font-weight: 600;
@@ -39,7 +39,7 @@ const StyledHeaderTagDiv = styled.div<{ color: TagStyleType }>`
   }
 `;
 
-const StyledStoreTagDiv = styled.div<{ color: TagStyleType }>`
+const StyledStoreTagDiv = styled.div<{ color: string }>`
   width: 3.5em;
   height: 2em;
   font-weight: 600;
@@ -57,7 +57,6 @@ const StyledStoreTagDiv = styled.div<{ color: TagStyleType }>`
   color: ${({ color }) => TAG_STYLE[color].color};
   background-color: ${({ color }) => TAG_STYLE[color].backgroundColor};
 
-  position: absolute;
   margin: 5px;
 
   @media (max-width: ${MEDIA_LIMIT}) {

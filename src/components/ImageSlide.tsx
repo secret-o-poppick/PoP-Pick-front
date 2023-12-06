@@ -1,13 +1,13 @@
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
-import styled from "styled-components";
-import { useRef, useCallback } from "react";
+import styled from 'styled-components';
+import { useRef, useCallback } from 'react';
 
-import { MEDIA_LIMIT } from "@/assets/styleVariable";
-import { HeaderTag } from "@/components/Tag";
+import { MEDIA_LIMIT } from '@/assets/styleVariable';
+import { HeaderTag } from '@/components/Tag';
 
 interface SliderSettings {
   dots: boolean;
@@ -35,7 +35,7 @@ export default function ImageSlide({ images }: ImageProps) {
     arrow: false,
     autoplay: true,
     autoplaySpeed: 5000,
-    centerPadding: "0px",
+    centerPadding: '0px',
   };
 
   const slickRef = useRef<any>(null);
@@ -71,14 +71,11 @@ const StyledSliderContainer = styled.div`
   height: 320px;
   margin: auto;
   position: relative;
-
+  button {
+    display: none !important;
+  }
   & > .slick-slider {
     height: 100%;
-
-    .slick-prev,
-    .slick-next {
-      display: none;
-    }
   }
 
   & .imageContainer {

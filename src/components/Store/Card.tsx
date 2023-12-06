@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import CardImage from '@/components/Store/CardImage';
 import CardItem from '@/components/Store/CardItem';
 import CardTag from '@/components/Store/CardTag';
+import { formatDate } from '@/utils';
 
 interface StoreCardProps {
   store: StoreType;

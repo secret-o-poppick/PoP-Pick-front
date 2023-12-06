@@ -30,7 +30,6 @@ export default function StoreDetail() {
 
     const response = await axios.get(url);
     setData(response.data);
-    console.log(response.data);
   };
   useEffect(() => {
     getData();
@@ -45,16 +44,13 @@ export default function StoreDetail() {
   let map: any;
 
   const toCurrentLocation = () => {
-    const moveLatLon = new kakao.maps.LatLng(
-      data?.address.x ?? 23,
-      data?.address.y ?? 123
-    );
+    const moveLatLon = new kakao.maps.LatLng(data?.address.y, data?.address.x);
     map.setCenter(moveLatLon);
   };
 
   useEffect(() => {
     if (!data) return;
-    const LatLng = new kakao.maps.LatLng(data.address.x, data.address.y);
+    const LatLng = new kakao.maps.LatLng(data.address.y, data.address.x);
 
     const container = document.getElementById('map_detail');
     const options = {
@@ -77,6 +73,9 @@ export default function StoreDetail() {
             <div className='contentWrapper'>
               <div>
                 <h1>{data.title}</h1>
+                <div className='date'>
+                  {formatDate(data.startDate)} ~ {formatDate(data.endDate)}
+                </div>
                 <div className='tagsAndBtnsWrapper'>
                   <div className='tagsWrapper'>
                     <StoreTag color={'popup'} title={data.categoryId.name} />
@@ -107,9 +106,6 @@ export default function StoreDetail() {
                       )}
                     </button>
                   </div>
-                </div>
-                <div className='date'>
-                  {formatDate(data.startDate)} ~ {formatDate(data.endDate)}
                 </div>
                 <div className='infosAndSubWrapper'>
                   <div className='infosWrapper'>
@@ -164,6 +160,7 @@ const StyledDetail = styled.div`
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  overflow: hidden;
   & > div {
     width: 100%;
     height: 100%;
@@ -213,6 +210,7 @@ const StyledDetail = styled.div`
     align-items: center;
     .tagsWrapper {
       display: flex;
+      gap: 5px;
     }
     .btnsWrapper {
       display: flex;
@@ -283,7 +281,6 @@ const StyledDetail = styled.div`
       word-break: keep-all;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
 
       &::-webkit-scrollbar {
         display: none;
@@ -300,7 +297,6 @@ const StyledDetail = styled.div`
     height: 50%;
     border-radius: 10px;
     position: relative;
-    border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 0 10px lightgray;
     background-color: gray;
@@ -362,7 +358,7 @@ const StyledDetail = styled.div`
       width: 100%;
       padding: 0;
       & > div:first-child {
-        padding-top: 0;
+        padding-top: 1em;
       }
     }
     h1,
@@ -387,6 +383,7 @@ const StyledDetail = styled.div`
       }
     }
     .mapWrapper {
+      border-radius: 0;
       .loadingMap {
         width: 100%;
         height: 100%;
@@ -401,7 +398,6 @@ const StyledDetail = styled.div`
       #map_detail {
         height: 30vh;
         border-radius: 0;
-        margin-bottom: 2em;
       }
     }
   }
