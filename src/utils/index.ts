@@ -3,7 +3,7 @@ export type PopPickStyleType = "default" | "primary" | "error" | "notice";
 export type TagStyleType = "header" | StoreType;
 export type StoreType = "popup" | "exhibit" | "adult";
 
-export const formatDate = (inputDate: string) => {
+export const formatDate = (inputDate: Date) => {
   const date = new Date(inputDate);
 
   const year = date.getFullYear();

@@ -2,11 +2,15 @@ import styled from 'styled-components';
 import { MEDIA_LIMIT } from '@/assets/styleVariable';
 import { useEffect, useRef } from 'react';
 import { storeInfo } from '@/data/coordinate';
+import axios from 'axios';
+import { useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { StoreTag } from '@/components/Tag';
 
 // icons
 import logo from '@/assets/logo.svg';
-import { FaRegHeart } from 'react-icons/fa';
-import { FaRegBookmark } from 'react-icons/fa';
+import { FaRegHeart, FaHeart, FaRegBookmark, FaBookmark } from 'react-icons/fa';
+import {} from 'react-icons/fa';
 import { IoIosPin } from 'react-icons/io';
 import { AiOutlineDollarCircle } from 'react-icons/ai';
 import { IoIosGlobe } from 'react-icons/io';
@@ -14,31 +18,43 @@ import ImageSlide from '@/components/ImageSlide';
 import { images } from '@/data/sliderImage';
 import { MdLocationPin } from 'react-icons/md';
 
+import { REACT_APP_BACKEND_HOST } from '@/assets/config';
+import { formatDate } from '@/utils';
+import { StoreType } from '@/types';
+
 export default function StoreDetail() {
-  const data = storeInfo;
-  const tags = [];
-  if (data.adultVerification) {
-    tags.push('성인');
-  }
-  if (data.type === 'popup') {
-    tags.push('팝업');
-  }
+  const params = useParams();
+  const [data, setData] = useState<StoreType | null>(null);
+  const getData = async () => {
+    const url = `http://localhost:3310/api/stores/${params.storeId}`;
+
+    const response = await axios.get(url);
+    setData(response.data);
+    console.log(response.data);
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+
+  //likes & bookmark
+  const [isLike, setIsLike] = useState(false);
+  const [isBookmark, setIsBookmark] = useState(false);
 
   // kakao map
   const { kakao } = window as any;
-
   let map: any;
 
   const toCurrentLocation = () => {
     const moveLatLon = new kakao.maps.LatLng(
-      data.coordinate.x,
-      data.coordinate.y
+      data?.address.x ?? 23,
+      data?.address.y ?? 123
     );
     map.setCenter(moveLatLon);
   };
 
   useEffect(() => {
-    const LatLng = new kakao.maps.LatLng(data.coordinate.x, data.coordinate.y);
+    if (!data) return;
+    const LatLng = new kakao.maps.LatLng(data.address.x, data.address.y);
 
     const container = document.getElementById('map_detail');
     const options = {
@@ -47,73 +63,96 @@ export default function StoreDetail() {
     };
     map = new kakao.maps.Map(container, options);
     const marker = new kakao.maps.Marker({ position: LatLng, map: map });
-  }, []);
+  }, [data]);
   // kakao map
 
   return (
     <>
-      <StyledDetail>
-        <div>
-          <div className='imgWrapper'>
-            <ImageSlide images={images} />
-          </div>
-          <div className='contentWrapper'>
-            <div>
-              <h1>{data.title}</h1>
-              <div className='tagsAndBtnsWrapper'>
-                <div className='tagsWrapper'>
-                  {tags.map((tag, index) => (
-                    <div key={index}>{tag}</div>
-                  ))}
-                </div>
-                <div className='btnsWrapper'>
-                  <div className='btns'>
-                    <FaRegHeart />
-                    <div>{data.likes}</div>
-                  </div>
-                  <div className='btns'>
-                    <FaRegBookmark />
-                  </div>
-                </div>
-              </div>
-              <div className='date'>{data.date}</div>
-              <div className='infosAndSubWrapper'>
-                <div className='infosWrapper'>
-                  <div>
-                    <div>
-                      <IoIosPin />
-                    </div>
-                    <div>
-                      {data.city} {data.distirct}
-                    </div>
-                  </div>
-                  <div>
-                    <div>
-                      <AiOutlineDollarCircle />
-                    </div>
-                    <div>{data.price}</div>
-                  </div>
-                  <div>
-                    <div>
-                      <IoIosGlobe />
-                    </div>
-                    <div>{data.sns}</div>
-                  </div>
-                </div>
-                <p>{data.subscribe}</p>
-              </div>
+      {data && (
+        <StyledDetail>
+          <div>
+            <div className='imgWrapper'>
+              <ImageSlide images={data.images.map((imgArr) => imgArr.url)} />
             </div>
-            <div className='mapWrapper'>
-              <div className='loadingMap'>지도를 불러오는중</div>
-              <div id='map_detail'></div>
+            <div className='contentWrapper'>
+              <div>
+                <h1>{data.title}</h1>
+                <div className='tagsAndBtnsWrapper'>
+                  <div className='tagsWrapper'>
+                    <StoreTag color={'popup'} title={data.categoryId.name} />
+                    {data.adultVerification ? (
+                      <StoreTag color={'adult'} title={'성인'} />
+                    ) : null}
+                  </div>
+                  <div className='btnsWrapper'>
+                    <div>{data.views} views</div>
+                    <div>{data.likes} likes</div>
 
-              <div className='currentLocBtn' onClick={toCurrentLocation}>
-                <MdLocationPin />
+                    <button
+                      onClick={() => {
+                        setIsLike((cur) => !cur);
+                      }}
+                    >
+                      {isLike ? <FaHeart fill='red' /> : <FaRegHeart />}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsBookmark((cur) => !cur);
+                      }}
+                    >
+                      {isBookmark ? (
+                        <FaBookmark fill='blue' />
+                      ) : (
+                        <FaRegBookmark />
+                      )}
+                    </button>
+                  </div>
+                </div>
+                <div className='date'>
+                  {formatDate(data.startDate)} ~ {formatDate(data.endDate)}
+                </div>
+                <div className='infosAndSubWrapper'>
+                  <div className='infosWrapper'>
+                    <div>
+                      <div>
+                        <IoIosPin />
+                      </div>
+                      <div>{data.address.detail1}</div>
+                    </div>
+                    <div>
+                      <div>
+                        <AiOutlineDollarCircle />
+                      </div>
+                      <div>{data.fee.toLocaleString()} 원</div>
+                    </div>
+                    <div>
+                      <div>
+                        <IoIosGlobe />
+                      </div>
+                      <div>
+                        <Link to={data.socialLink}>{data.socialLink}</Link>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='extra'>
+                    <p>{data.desc}</p>
+                    <p>{data.etc}</p>
+                    <p>{data.event}</p>
+                  </div>
+                </div>
+              </div>
+              <div className='mapWrapper'>
+                <div className='loadingMap'>지도를 불러오는중</div>
+                <div id='map_detail'></div>
+
+                <div className='currentLocBtn' onClick={toCurrentLocation}>
+                  <MdLocationPin />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </StyledDetail>
+        </StyledDetail>
+      )}
     </>
   );
 }
@@ -141,8 +180,7 @@ const StyledDetail = styled.div`
     img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
-      background-color: lightgray;
+      object-fit: cover;
     }
   }
   .contentWrapper {
@@ -153,7 +191,7 @@ const StyledDetail = styled.div`
     padding: 3em;
     box-sizing: border-box;
     & > div:first-child {
-      height: 60%;
+      height: 50%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -172,38 +210,34 @@ const StyledDetail = styled.div`
     height: 2em;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     .tagsWrapper {
       display: flex;
-      & > div {
-        width: 50px;
-        margin-right: 10px;
-        box-shadow: 0 0 5px lightgray;
-        border-radius: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #eb5a43;
-        color: white;
-      }
     }
     .btnsWrapper {
       display: flex;
-      width: 15%;
       gap: 10px;
       justify-content: flex-end;
-      .btns > div {
-        width: 100%;
+      align-items: center;
+      div {
         font-size: 10px;
-        text-align: center;
       }
-      .btns > svg {
-        width: 100%;
-        height: 60%;
+      button {
+        padding: 0;
+        border: none;
+        background-color: transparent;
+      }
+      svg {
+        width: 20px;
+        height: 20px;
+        &:hover {
+          fill: lightgray;
+        }
       }
     }
   }
   .infosAndSubWrapper {
-    height: 50%;
+    height: 60%;
     display: flex;
     gap: 0 20px;
 
@@ -220,6 +254,7 @@ const StyledDetail = styled.div`
       background-color: #eee;
       border-radius: 10px;
       & > div {
+        width: 100%;
         display: flex;
         align-items: center;
         div:first-child,
@@ -228,26 +263,41 @@ const StyledDetail = styled.div`
           width: 30px;
           height: 30px;
         }
+        div:last-child {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          a {
+            color: black;
+          }
+        }
       }
     }
 
-    p {
+    .extra {
       width: 50%;
       height: 100%;
-      padding: 1em;
       box-shadow: 0 0 5px lightgray inset;
       border-radius: 10px;
       overflow: auto;
       word-break: keep-all;
       display: flex;
-      box-sizing: border-box;
+      flex-direction: column;
+      justify-content: space-between;
+
       &::-webkit-scrollbar {
         display: none;
+      }
+      p {
+        width: 100%;
+        box-shadow: 0 0px 2px lightgray;
+        padding: 1em;
+        box-sizing: border-box;
       }
     }
   }
   .mapWrapper {
-    height: 40%;
+    height: 50%;
     border-radius: 10px;
     position: relative;
     border-radius: 10px;
@@ -328,7 +378,7 @@ const StyledDetail = styled.div`
         margin: 1em 0;
         border-radius: 0;
       }
-      p {
+      .extra {
         width: 100%;
         border-radius: 0;
         border-left: none;
