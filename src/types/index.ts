@@ -140,3 +140,12 @@ export type newStoreDataType = {
   detail2: string;
   zipCode: string | undefined;
 };
+
+export type CitiesType = {
+  _id: string;
+  name: string;
+  code: number;
+  createdAt: Date;
+  updateAt: Date;
+  children?: CitiesType[];
+};

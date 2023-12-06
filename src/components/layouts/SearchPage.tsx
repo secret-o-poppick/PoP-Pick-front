@@ -15,7 +15,8 @@ import { FaLongArrowAltRight } from 'react-icons/fa';
 import { MdLocationPin } from 'react-icons/md';
 import { FaRegCalendarCheck } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
-import Button from '@/components/Button'
+import Button from '@/components/Button';
+import { CitiesType } from '@/types';
 
 interface SearchPageProps {
   setSearchOpened: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,21 +24,18 @@ interface SearchPageProps {
   searchType: string;
   locationBtnHandler: () => void;
   dateBtnHandler: () => void;
-  selectedCity: string;
   setSelectedCity: (cityId: string) => void;
+  selectedCity: string;
   selectedDistrict: string;
   setSelectedDistrict: (districtId: string) => void;
   onDateChange: (newRange: DateRange | undefined) => void;
-  searchButtonHandler: () => void
-}
-
-interface CitiesType {
-  _id: string;
-  name: string;
-  code: number;
-  createdAt: Date;
-  updateAt: Date;
-  children?: CitiesType[];
+  searchButtonHandler: () => void;
+  selectedCityName: string;
+  selectedDistrictName: string;
+  cities: CitiesType[];
+  districts: CitiesType[];
+  setCities: React.Dispatch<React.SetStateAction<CitiesType[]>>;
+  setDistricts: React.Dispatch<React.SetStateAction<CitiesType[]>>;
 }
 
 export default function SearchPage({
@@ -46,20 +44,20 @@ export default function SearchPage({
   searchType,
   locationBtnHandler,
   dateBtnHandler,
-  selectedCity,
   setSelectedCity,
-  selectedDistrict,
   setSelectedDistrict,
   onDateChange,
   searchButtonHandler,
+  selectedCityName,
+  selectedDistrictName,
+  cities,
+  districts,
+  setCities,
+  setDistricts,
 }: SearchPageProps) {
-  const [cities, setCities] = useState<CitiesType[]>([]);
-  const [districts, setDistricts] = useState<CitiesType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedCityItem, setSelectedCityItem] = useState<string | null>(null);
   const [selectedDistrictItem, setSelectedDistrictItem] = useState<string | null>(null);
-  const selectedCityName = cities.find(city => city._id === selectedCity)?.name || '';
-  const selectedDistrictName = districts.find(district => district._id === selectedDistrict)?.name || '';
 
   const today = new Date();
   const defaultSelected: DateRange = {
@@ -67,6 +65,7 @@ export default function SearchPage({
     to: addDays(today, 0),
   };
   const [range, setRange] = useState<DateRange | undefined>(defaultSelected);
+  const isDateRangeSelected = !!range?.from && !!range?.to;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -140,8 +139,9 @@ export default function SearchPage({
                 {loading ? (
                   <li>Loading...</li>
                 ) : (
-                  cities.map((city) => (
+                  cities.map((city, index) => (
                     <li
+                      key={index}
                       onClick={() => {
                         selectCityHandler(city._id);
                         setSelectedCityItem(city._id);
@@ -163,6 +163,7 @@ export default function SearchPage({
                       onClick={() => {
                         selectDistrictHandler(district._id);
                         setSelectedDistrictItem(district._id);
+                        setTimeout(() => dateBtnHandler(), 500)
                       }}
                       className={selectedDistrictItem === district._id ? 'selected' : ''}
 
@@ -175,7 +176,7 @@ export default function SearchPage({
             </div>
           </StyledLocation>
         ) : searchType === 'date' ? (
-          <StyledDate className='searchTap'>
+          <StyledDate className='searchTap' $rangeToExists={isDateRangeSelected}>
             <StyledDayPicker
               mode='range'
               defaultMonth={today}
@@ -186,7 +187,10 @@ export default function SearchPage({
               }}
               locale={ko}
             />
-            <div className='dateRangeWrapper'>
+            <div
+              className={`dateRangeWrapper ${isDateRangeSelected ? 'scale-up' : ''}`}
+              onClick={isDateRangeSelected ? searchButtonHandler : undefined}
+            >
               <div className='dateRange'>
                 {range?.from ? format(range.from, 'PPP', { locale: ko }) : null}
               </div>
@@ -223,8 +227,8 @@ export default function SearchPage({
                 </button>
               </div>
               <div className='commitBtns'>
-                <Button color='default' onClick={resetButtonHandler}>초기화</Button>
-                <Button color='primary' onClick={searchButtonHandler}>검색</Button>
+                <Button onClick={resetButtonHandler}>초기화</Button>
+                <Button onClick={searchButtonHandler}>검색</Button>
               </div>
             </div>
           </StyledString>
@@ -328,13 +332,13 @@ const StyledLocation = styled.div`
       justify-content: center;
       border-right: 1px solid #ccc;
       border-bottom: 1px solid #ccc;
+      cursor: pointer;
 
       &:hover {
-        background-color: #b8d8ff;
+        background-color: #fff2d4;
       }
       &.selected {
-        background-color: #1778F2;
-        color: #fff;
+        background-color: #F5C553;
       }
     }
 
@@ -366,14 +370,14 @@ const StyledLocation = styled.div`
         background-color: transparent;
         margin: 0;
         padding: 0;
+        cursor: pointer;
 
         &:hover {
-          background-color: #b8d8ff;
+          background-color: #fff2d4;
         }
-              &.selected {
-        background-color: #1778F2;
-        color: #fff;
-      }
+        &.selected {
+        background-color: #F5C553;
+        }
       }
     }
   }
@@ -384,7 +388,9 @@ const StyledLocation = styled.div`
   }
 `;
 
-const StyledDate = styled.div`
+const StyledDate = styled.div<{ $rangeToExists?: boolean }>`
+  height: 60%;
+  height: 60%;
   height: 60%;
   display: flex;
   flex-direction: column;
@@ -396,9 +402,28 @@ const StyledDate = styled.div`
 
   .dateRangeWrapper {
     width: 35%;
+    height: 1em;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-top: 1em;
+    border-radius: 20px;
+    border: 2px solid ${(props) => (props.$rangeToExists ? '#ffcb52' : 'lightgray')};
+    background-color:${(props) => (props.$rangeToExists ? '#ffcb52' : 'transparent')};
+    color:'#000';
+    cursor: pointer;
+    padding: 1em;
+    transform: scale(100%);
+    transition: transform 0.3s ease;
+
+    &.scale-up {
+      transform: scale(103%);
+    }
+
+    .dateRange{
+      width:50%;
+      text-align: center;
+    }
   }
 `;
 
@@ -408,7 +433,7 @@ const StyledDayPicker = styled(DayPicker)`
   border-radius: 10px;
 
   .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
-    background-color: #1778f2;
+    background-color: #fff2d4;
   }
 
   .rdp-day {
@@ -427,7 +452,7 @@ const StyledDayPicker = styled(DayPicker)`
     color: black;
 
     &:hover {
-      background-color: #ff5c40;
+      background-color: #EB5B42;
     }
   }
 `;
@@ -494,7 +519,18 @@ const StyledString = styled.div`
       width: 50%;
     font-weight: bold;
     font-size: 9pt;
-      transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease;
+    color:#000;
+    }
+    & Button:first-child{
+      background-color: transparent;
+      box-shadow: 0 0 0 2px #F5C553 inset; 
+    }
+    & Button:last-child{
+      background-color: #F5C553;
+    }
+    & Button:last-child:hover{
+      background-color: #ffb70f;
     }
   }
 

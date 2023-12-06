@@ -21,6 +21,7 @@ import { MEDIA_LIMIT } from '@/assets/styleVariable';
 import LoginModal from '../LoginModal';
 import { useAuth } from '@/context/AuthContext';
 import Avatar from '../Avatar';
+import { CitiesType } from '@/types'
 
 export default function Header() {
   const { isLoggedIn, logout, user } = useAuth();
@@ -34,6 +35,11 @@ export default function Header() {
   const [selectedDistrict, setSelectedDistrict] = useState<string>('');
   const [dateFrom, setDateFrom] = useState<string | undefined>('');
   const [dateTo, setDateTo] = useState<string | undefined>('');
+  const [cities, setCities] = useState<CitiesType[]>([]);
+  const [districts, setDistricts] = useState<CitiesType[]>([]);
+  const selectedCityName = cities.find(city => city._id === selectedCity)?.name || '';
+  const selectedDistrictName = districts.find(district => district._id === selectedDistrict)?.name || '';
+
 
   const navigate = useNavigate()
 
@@ -92,10 +98,10 @@ export default function Header() {
     }
 
     // 위치
-    if (selectedCity) {
-      searchParams.set('locationId', selectedCity);
-    } else if (selectedDistrict) {
+    if (selectedDistrict) {
       searchParams.set('locationId', selectedDistrict);
+    } else if (selectedCity) {
+      searchParams.set('locationId', selectedCity);
     } else {
       searchParams.delete('locationId');
     }
@@ -145,12 +151,18 @@ export default function Header() {
         searchType={searchType}
         locationBtnHandler={locationBtnHandler}
         dateBtnHandler={dateBtnHandler}
-        selectedCity={selectedCity}
         setSelectedCity={handleCitySelect}
+        selectedCity={selectedCity}
         selectedDistrict={selectedDistrict}
         setSelectedDistrict={handleDistrictSelect}
         onDateChange={setDateRange}
         searchButtonHandler={searchButtonHandler}
+        selectedCityName={selectedCityName}
+        selectedDistrictName={selectedDistrictName}
+        cities={cities}
+        districts={districts}
+        setCities={setCities}
+        setDistricts={setDistricts}
       />
 
       <StyledHeader>
@@ -169,12 +181,12 @@ export default function Header() {
               value={searchInput}
             />
             <button className='optBtns' onClick={locationBtnHandler}>
-              <MdLocationPin />
-              <div>위치</div>
+              <div>
+                {(selectedCityName || selectedDistrictName) ? `${selectedCityName} ${selectedDistrictName}` : <div><MdLocationPin />위치</div>}
+              </div>
             </button>
             <button className='optBtns' onClick={dateBtnHandler}>
-              <FaRegCalendarCheck />
-              <div>기간</div>
+              <div>{(dateFrom || dateTo) ? `${dateFrom} ${dateTo}` : <div><FaRegCalendarCheck />기간</div>}</div>
             </button>
           </div>
           <button className='searchBtn' onClick={searchButtonHandler}><FaSearch /></button>
@@ -276,7 +288,8 @@ const StyledSearch = styled.div`
     }
   }
   input {
-    width: 60%;
+    display: flex;
+    flex: 1;
     height: 100%;
     padding: 0 1.5em;
     border: none;
@@ -291,18 +304,25 @@ const StyledSearch = styled.div`
     }
   }
   .optBtns {
-    width: 20%;
+    width: 23%;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
     border-radius: 10000px;
     white-space: nowrap;
+    font-size: 0.77em;
     &:hover {
       background-color: lightgray;
+    }
+
+    &>div>div{
+      display: flex;
+      align-items: center;
     }
     svg {
       width: 1.2em;
       height: 1.2em;
+      margin-right:0.5em;
     }
     
   }

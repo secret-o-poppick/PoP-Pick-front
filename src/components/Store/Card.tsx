@@ -13,7 +13,6 @@ interface StoreCardProps {
 export default function StoreCard({ store }: StoreCardProps) {
   const { _id, title, startDate, endDate, categoryId, images, likes } = store;
 
-  console.log(store);
   return (
     <CardLink to={`/stores/${_id}`}>
       <Container>
