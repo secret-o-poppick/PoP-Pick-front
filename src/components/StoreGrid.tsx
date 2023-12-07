@@ -1,15 +1,22 @@
-import styled, { css } from "styled-components";
-import StoreCard from "./StoreCard";
-import { MEDIA_LIMIT, MEDIA_MAX_LIMIT } from "@/assets/styleVariable";
-import { StoreData } from "@/types";
+import styled, { css } from 'styled-components';
+import StoreCard from './StoreCard';
+import { MEDIA_LIMIT, MEDIA_MAX_LIMIT } from '@/assets/styleVariable';
+import { StoreType } from '@/types';
 
 // max : 전체화면 페이지는 4로, 절반만 쓰는 페이지는 3으로 해주세요
-export default function StoreGrid({ storeDatas, max }: any) {
+export default function StoreGrid({
+  storeDatas,
+  max,
+}: {
+  storeDatas: StoreType[];
+  max: number;
+}) {
   const maxper = `${100 / max}%`;
+
   return (
     <StyledStoreGrid $max={max} $maxper={maxper}>
       <div>
-        {storeDatas.map((data: StoreData, index: number) => {
+        {storeDatas.map((data, index) => {
           return <StoreCard storeData={data} key={index} />;
         })}
       </div>
@@ -25,7 +32,6 @@ const StyledStoreGrid = styled.div<{
   display: flex;
   align-items: center;
   justify-content: center;
-  /* padding: 1em; */
   box-sizing: border-box;
   & > div:first-child {
     width: 100%;

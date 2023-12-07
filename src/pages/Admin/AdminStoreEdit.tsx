@@ -20,8 +20,8 @@ import {
   StoreCreateStep5Context,
 } from '@/context/StoreContext';
 
-import { adminStoreCreate } from './AdminStoreAPI';
-import { getLoactionCategories } from '@/components/LocationCatgoryAPI';
+import { adminStoreCreate } from '../../api/AdminStoreAPI';
+import { fetchGetLocationCategories } from '../../api/locationCategory';
 
 const AdminStoreEdit = () => {
   const [page, setPage] = useState<number>(1);
@@ -218,7 +218,7 @@ const AdminStoreEdit = () => {
   );
 
   useEffect(() => {
-    getLoactionCategories().then((res) => setLocationCategory(res));
+    fetchGetLocationCategories().then((res) => setLocationCategory(res));
   }, []);
 
   return (

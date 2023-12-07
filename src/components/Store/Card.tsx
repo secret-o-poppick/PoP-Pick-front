@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import CardImage from '@/components/Store/CardImage';
 import CardItem from '@/components/Store/CardItem';
 import CardTag from '@/components/Store/CardTag';
+import { formatDate } from '@/utils';
 
 interface StoreCardProps {
   store: StoreType;
@@ -12,37 +13,30 @@ interface StoreCardProps {
 
 export default function StoreCard({ store }: StoreCardProps) {
   const { _id, title, startDate, endDate, categoryId, images, likes } = store;
-
+  console.log(store);
   return (
-    <CardLink to={`/stores/${_id}`}>
-      <Container>
+    <Container>
+      <CardLink to={`/stores/${_id}`}>
         <CardImage image={images[0].url} />
-
-        <CardTagWrapper>
-          <CardTag
-            color={categoryId.name === '팝업' ? 'popup' : 'exhibit'}
-            title={categoryId.name}
-          />
-          {store.adultVerification && <CardTag color='adult' title='성인' />}
-        </CardTagWrapper>
-
-        <CardItem
-          title={title}
-          startDate={startDate}
-          endDate={endDate}
-          likes={likes}
+      </CardLink>
+      <CardTagWrapper>
+        <CardTag
+          color={categoryId.name === '팝업' ? 'popup' : 'exhibit'}
+          title={categoryId.name}
         />
-      </Container>
-    </CardLink>
+        {store.adultVerification && <CardTag color='adult' title='성인' />}
+      </CardTagWrapper>
+
+      <CardItem
+        _id={_id}
+        title={title}
+        startDate={startDate}
+        endDate={endDate}
+        likes={likes}
+      />
+    </Container>
   );
 }
-
-const CardLink = styled(Link)`
-  display: inline-block;
-  box-sizing: border-box;
-  text-decoration: none;
-  color: #000;
-`;
 
 const Container = styled.div`
   width: 100%;
@@ -55,6 +49,20 @@ const Container = styled.div`
 
   @media (max-width: ${MEDIA_LIMIT}) {
     flex-direction: row;
+  }
+`;
+
+const CardLink = styled(Link)`
+  display: inline-block;
+  text-decoration: none;
+  color: #000;
+  position: relative;
+  width: 100%;
+  height: 300px;
+
+  @media (max-width: ${MEDIA_LIMIT}) {
+    width: auto;
+    height: 100%;
   }
 `;
 

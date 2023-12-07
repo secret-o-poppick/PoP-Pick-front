@@ -1,51 +1,46 @@
-import { formatDate } from "@/utils";
-import { StoreTag } from "./Tag";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { formatDate } from '@/utils';
+import { StoreTag } from './Tag';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 //icons
-import { FaRegHeart, FaRegBookmark } from "react-icons/fa";
-import { MEDIA_LIMIT } from "@/assets/styleVariable";
+import { FaRegHeart, FaRegBookmark } from 'react-icons/fa';
+import { MEDIA_LIMIT } from '@/assets/styleVariable';
 
-export default function StoreCard({ storeData }: any) {
-  const {
-    storeId,
-    index,
-    title,
-    tag,
-    adultVerification,
-    image,
-    startDate,
-    endDate,
-    location,
-    likes,
-  } = storeData;
+import { StoreType } from '@/types';
+
+export default function StoreCard({ storeData }: { storeData: StoreType }) {
   return (
-    <StyledCard key={index}>
+    <StyledCard>
       <div className='tags'>
         <div>
-          <StoreTag color={tag === '팝업' ? 'popup' : 'exhibit'} title={tag} />
-          {adultVerification && <div className='tagMargin'><StoreTag color='adult' title='성인' />  </div>}
+          <StoreTag
+            // color={storeData.categoryId.type}
+            color={'popup'}
+            title={storeData.categoryId.name}
+          />
+          {storeData.adultVerification && (
+            <StoreTag color='adult' title='성인' />
+          )}
         </div>
-
       </div>
 
-      <Link className='imgLink' to={`/stores/${storeId}`}>
-        <img src={image} />
+      <Link className='imgLink' to={`/stores/${storeData._id}`}>
+        <img src={storeData.images.find((img) => img.isMain)?.url} />
       </Link>
 
       <div className='contents'>
-        <Link to={`/stores/${storeId}`}>
-          <h3>{title}</h3>
+        <Link to={`/stores/${storeData._id}`}>
+          <h3>{storeData.title}</h3>
         </Link>
         <p>
-          {startDate} ~ {endDate}
+          {formatDate(storeData.startDate)} ~ {formatDate(storeData.endDate)}
         </p>
-        <p>{location}</p>
+        <p>{storeData.address.detail1}</p>
         <div className='btnsWrapper'>
           <div className='btns'>
             <FaRegHeart />
-            <div>{likes}</div>
+            <div>{storeData.likes}</div>
           </div>
           <div className='btns'>
             <FaRegBookmark />
@@ -69,11 +64,10 @@ const StyledCard = styled.div`
     & > div {
       display: flex;
       justify-content: flex-end;
-      gap: 10px;
       width: 100%;
       margin: 0 1em;
     }
-    .tagMargin{
+    .tagMargin {
       margin-right: 140px;
     }
   }
@@ -145,9 +139,9 @@ const StyledCard = styled.div`
       & > div {
         margin: 0;
       }
-      .tagMargin{
-      margin-right: 105px;
-    }
+      .tagMargin {
+        margin-right: 105px;
+      }
     }
     .imgLink {
       width: 50%;
