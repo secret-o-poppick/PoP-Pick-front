@@ -14,8 +14,9 @@ interface AddressData {
   zonecode: string;
 }
 
-
-const PostCodeModal: React.FC<ModalPostCodeProps & { setAddressData: (data: AddressData) => void }> = ({ onClose, setAddressData }) => {
+const PostCodeModal: React.FC<
+  ModalPostCodeProps & { setAddressData: (data: AddressData) => void }
+> = ({ onClose, setAddressData }) => {
   const handlePostCode = (data: AddressData) => {
     let fullAddress = data.address;
     let extraAddress = '';
@@ -25,14 +26,12 @@ const PostCodeModal: React.FC<ModalPostCodeProps & { setAddressData: (data: Addr
         extraAddress += data.bname;
       }
       if (data.buildingName !== '') {
-        extraAddress += extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName;
+        extraAddress +=
+          extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName;
       }
       fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
     }
 
-    console.log(data);
-    console.log(fullAddress);
-    console.log(data.zonecode);
     setAddressData(data);
     onClose();
   };
@@ -42,7 +41,7 @@ const PostCodeModal: React.FC<ModalPostCodeProps & { setAddressData: (data: Addr
       <StyledPostCodeWrapper>
         <div id='space'></div>
         <StyledPostCode onComplete={handlePostCode} />
-        <StyledCloseButton type="button" onClick={() => onClose()}>
+        <StyledCloseButton type='button' onClick={() => onClose()}>
           닫기
         </StyledCloseButton>
       </StyledPostCodeWrapper>
@@ -69,11 +68,11 @@ const StyledPostCodeWrapper = styled.div`
   background-color: white;
   position: relative;
 
-  & #space{
+  & #space {
     height: 33.49px;
     width: 100%;
     border-bottom: 1px solid #444;
-    background-color:transparent;
+    background-color: transparent;
   }
 `;
 
@@ -91,7 +90,7 @@ const StyledCloseButton = styled.button`
   background-color: #fff;
   font-size: 0.8em;
   line-height: 95%;
-  border:1px solid #333;
+  border: 1px solid #333;
   border-bottom: none;
 `;
 

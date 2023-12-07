@@ -12,13 +12,6 @@ export const AUTH_FILTER_OPTIONS: SelectBoxOption[] = [
   { value: '관리자', label: '관리자만 보기' },
 ];
 
-export const AUTH_LOCATION_CATEGORY_OPTIONS1: SelectBoxOption[] = [
-  { value: '서울특별시', label: '서울특별시' },
-  { value: '경기도', label: '경기도' },
-  { value: '충청도', label: '충청도' },
-  { value: '강원도', label: '강원도' },
-];
-
 export const AUTH_LOCATION_CATEGORY_OPTIONS2: SelectBoxOption[] = [
   { value: '구로구', label: '구로구' },
   { value: '구리시', label: '구리시' },

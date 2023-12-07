@@ -16,7 +16,7 @@ export default function StoreCard({ store }: StoreCardProps) {
   return (
     <CardLink to={`/stores/${_id}`}>
       <Container>
-        <CardImage image={images[0]} />
+        <CardImage image={images[0].url} />
 
         <CardTagWrapper>
           <CardTag

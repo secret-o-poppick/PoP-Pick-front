@@ -33,6 +33,7 @@ export type StoreCreateStepProps = {
     input: string
   ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
   nextStep: () => void;
+  locationCategory?: LocCategoryType[];
 };
 
 export type AddressInputProps = {
@@ -131,8 +132,8 @@ export type CardImageProps = {
 
 export type CardItemProps = {
   title: string;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
   likes: number;
 };
 
@@ -145,6 +146,7 @@ export type newStoreDataType = {
   adultVerification: boolean;
   startDate: Date | undefined;
   endDate: Date | undefined;
+  locationId: string[];
   fee: string;
   event: string;
   socialLink: string;
@@ -162,4 +164,13 @@ export type CitiesType = {
   createdAt: Date;
   updateAt: Date;
   children?: CitiesType[];
+};
+
+export type LocCategoryType = {
+  _id: string;
+  createdAt: Date;
+  name: string;
+  updatedAt: Date;
+  code: number;
+  children?: LocCategoryType[];
 };

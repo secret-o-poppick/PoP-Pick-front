@@ -1,5 +1,4 @@
 import { newStoreDataType } from '@/types/index';
-// const { kakao } = window as any;
 import axios from 'axios';
 
 export const adminStoreCreate = async (data: newStoreDataType) => {
@@ -9,6 +8,7 @@ export const adminStoreCreate = async (data: newStoreDataType) => {
   const category = data.category;
   const mainImageNumber = data.mainImageNumber;
   const adultVerification = data.adultVerification;
+  const locationId = data.locationId;
   const startDate = data.startDate;
   const endDate = data.endDate;
   const fee = data.fee;
@@ -24,15 +24,24 @@ export const adminStoreCreate = async (data: newStoreDataType) => {
     formData.append('file', image.object);
   });
 
-  //   const geocoder = new kakao.maps.services.Geocoder();
+  const { kakao } = window as any;
+  const geocoder = new kakao.maps.services.Geocoder();
 
-  //   const lat = geocoder.addressSearch(detail1, (result: any, status: any) => {
-  //     if (status === kakao.maps.services.Status.OK) {
-  //       return result;
-  //     }
-  //   });
+  const arr: number[] = [];
 
-  //   console.log(lat);
+  geocoder.addressSearch(detail1, (result: any, status: any) => {
+    if (status === kakao.maps.services.Status.OK) {
+      console.log(result[0]);
+
+      const x = Number(result[0].x);
+      const y = Number(result[0].y);
+
+      arr.push(x);
+      arr.push(y);
+
+      return result;
+    }
+  });
 
   const json = JSON.stringify({
     name,
@@ -40,6 +49,7 @@ export const adminStoreCreate = async (data: newStoreDataType) => {
     category,
     mainImageNumber,
     adultVerification,
+    locationId,
     startDate,
     endDate,
     fee,
@@ -47,6 +57,8 @@ export const adminStoreCreate = async (data: newStoreDataType) => {
     socialLink,
     desc,
     etc,
+    x: arr[0],
+    y: arr[1],
     detail1,
     detail2,
     zipCode,
