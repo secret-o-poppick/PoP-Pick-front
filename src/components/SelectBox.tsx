@@ -25,6 +25,7 @@ export default function SelectBox({
         defaultValue={defaultValue}
         $full={full}
       >
+        <SelectOption>지역을 선택해 주세요</SelectOption>
         {options.map((option, index) => (
           <SelectOption key={index} value={option.value}>
             {option.label}

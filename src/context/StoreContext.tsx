@@ -24,6 +24,8 @@ interface StoreCreateStep3ContextType {
   setRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
   isDetailVisible: boolean;
   handleClick: () => void;
+  locCategories: string[];
+  setlocCategories: React.Dispatch<React.SetStateAction<string[]>>;
   addressData: AddressData | null;
   setAddressData: React.Dispatch<React.SetStateAction<AddressData | null>>;
   detailAddress: string;
@@ -116,8 +118,8 @@ const defaultSelected: DateRange = {
 
 export const StoreCreateStep3Provider = ({ children }: StoreProviderProps) => {
   const [range, setRange] = useState<DateRange | undefined>(defaultSelected);
-
   const [isDetailVisible, setIsDetailVisible] = useState(false);
+  const [locCategories, setlocCategories] = useState<string[]>([]);
 
   const handleClick = () => {
     setIsDetailVisible(!isDetailVisible);
@@ -132,6 +134,8 @@ export const StoreCreateStep3Provider = ({ children }: StoreProviderProps) => {
         range,
         setRange,
         handleClick,
+        locCategories,
+        setlocCategories,
         isDetailVisible,
         addressData,
         setAddressData,

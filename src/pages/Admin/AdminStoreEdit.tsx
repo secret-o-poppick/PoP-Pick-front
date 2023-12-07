@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import StoreCreateStep1 from '@/components/StoreCreateStep1';
@@ -9,7 +9,7 @@ import StoreCreateStep5 from '@/components/StoreCreateStep5';
 import StepProgressBar from '@/components/StepProgressBar';
 import AdminTitle from '@/components/AdminTitle';
 import Button from '@/components/Button';
-import { IFileTypes, AddressData, newStoreDataType } from '@/types/index';
+import { IFileTypes, AddressData, LocCategoryType } from '@/types/index';
 import { DateRange } from 'react-day-picker';
 import { addDays } from 'date-fns';
 
@@ -20,13 +20,15 @@ import {
   StoreCreateStep5Context,
 } from '@/context/StoreContext';
 
-import { adminStoreCreate } from './AdminStoreAPI';
+import { adminStoreCreate } from '../../api/AdminStoreAPI';
+import { fetchGetLocationCategories } from '../../api/locationCategory';
 
 const AdminStoreEdit = () => {
   const [page, setPage] = useState<number>(1);
   const [uploadedImages, setUploadedImages] = useState<IFileTypes[]>([]);
   const [mainImage, setMainImage] = useState<number>(0);
   const [category, setCategory] = useState('exhibition');
+  const [locCategories, setlocCategories] = useState<string[]>([]);
   const [eventName, setEventName] = useState('');
   const [brand, setBrand] = useState('');
   const navigate = useNavigate();
@@ -112,6 +114,8 @@ const AdminStoreEdit = () => {
             range,
             setRange,
             handleClick,
+            locCategories,
+            setlocCategories,
             isDetailVisible,
             addressData,
             setAddressData,
@@ -120,6 +124,7 @@ const AdminStoreEdit = () => {
           }}
         >
           <StoreCreateStep3
+            locationCategory={locationCategory}
             nextStep={nextStep}
             handleChange={handleInputChange}
           />
@@ -172,7 +177,6 @@ const AdminStoreEdit = () => {
         formData.append('files', image.object);
       });
 
-      console.log('heeeeerrrr', uploadedImages);
       const data = {
         //팝업&전시회 이름
         name: eventName,
@@ -182,9 +186,12 @@ const AdminStoreEdit = () => {
         category,
         //이미지들
         mainImageNumber: mainImage,
+        // 사진
         images: uploadedImages,
         //성인 인증 여부
         adultVerification,
+        // 지역 카테고리
+        locationId: locCategories,
         startDate: range?.from,
         endDate: range?.to,
         fee: cost,
@@ -205,6 +212,14 @@ const AdminStoreEdit = () => {
   const handlePrev = () => {
     setPage((currPage) => currPage - 1);
   };
+
+  const [locationCategory, setLocationCategory] = useState<LocCategoryType[]>(
+    []
+  );
+
+  useEffect(() => {
+    fetchGetLocationCategories().then((res) => setLocationCategory(res));
+  }, []);
 
   return (
     <>
