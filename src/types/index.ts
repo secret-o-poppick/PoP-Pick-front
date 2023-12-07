@@ -1,5 +1,24 @@
 export type AuthOption = '일반' | '등록자' | '관리자';
 
+// 카테고리 타입
+export type Category = {
+  _id: string;
+  name: string;
+  type: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+// 지역 카테고리 타입
+export type LocationCategory = {
+  _id: string;
+  name: string;
+  code: number;
+  children?: LocationCategory[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type SelectBoxOption = {
   value: string;
   label: string;
@@ -157,6 +176,6 @@ export type CitiesType = {
   name: string;
   code: number;
   createdAt: Date;
-  updateAt: Date;
+  updatedAt: Date;
   children?: CitiesType[];
 };
