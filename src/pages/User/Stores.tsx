@@ -6,9 +6,9 @@ import axios from 'axios';
 
 import { MEDIA_LIMIT } from '@/assets/styleVariable';
 import FilterButton from '@/components/FilterButton';
-import StoreCard from '@/components/Store/Card';
 import { StoreType, optionsProp } from '@/types';
 import StoreGrid from '@/components/StoreGrid';
+import { fetchGetCategories } from '@/api/category'
 
 export default function Stores() {
   const selectOptions = [
@@ -34,36 +34,25 @@ export default function Stores() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3310/api/stores${decodeURIComponent(
-            location.search
-          )}`
-        );
-        setStores(response.data);
-      } catch (error) {
-        console.error('Error', error);
-      }
-    };
 
-    // 카테고리 탭
+  // 카테고리 탭
+  useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(
-          'http://localhost:3310/api/categories'
-        );
+        const response = await fetchGetCategories();
         setCategories(
-          response.data.map((category: { name: string }) => category.name)
+          response.map((category: { name: string }) => category.name)
         );
       } catch (error) {
         console.error('Error', error);
       }
     };
+    fetchCategories();
+  }, [])
 
-    // 전시/팝업 데이터 불러오기
-    const fetchTabData = async () => {
+  // 전시/팝업 데이터 불러오기
+  useEffect(() => {
+    const fetchData = async () => {
       try {
         const searchParams = new URLSearchParams(location.search);
 
@@ -88,8 +77,6 @@ export default function Stores() {
     };
 
     fetchData();
-    fetchCategories();
-    fetchTabData();
 
     const searchParams = new URLSearchParams(location.search);
     const selectedCategoryParam = searchParams.get('categoryId');
@@ -150,11 +137,7 @@ export default function Stores() {
           >
             {categories[1]}
           </FilterButton>
-          <FilterButton
-            onClick={adultFilterHandler}
-            color='error'
-            selected={isAdultVerification}
-          >
+          <FilterButton onClick={adultFilterHandler} color='error' selected={isAdultVerification}>
             성인
           </FilterButton>
         </div>
@@ -177,12 +160,12 @@ export default function Stores() {
         ))}
       </StyledStoreGrid> */}
 
-      <StyledPagenationDiv>페이지네이션 들어갈 자리</StyledPagenationDiv>
+      <StyledPaginationDiv>페이지네이션 들어갈 자리</StyledPaginationDiv>
     </>
   );
 }
 
-const StyledPagenationDiv = styled.div`
+const StyledPaginationDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;

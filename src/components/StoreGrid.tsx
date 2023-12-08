@@ -16,8 +16,8 @@ export default function StoreGrid({
   return (
     <StyledStoreGrid $max={max} $maxper={maxper}>
       <div>
-        {storeDatas.map((data, index) => {
-          return <StoreCard storeData={data} key={index} />;
+        {storeDatas.map((data, _id) => {
+          return <StoreCard storeData={data} key={_id} />;
         })}
       </div>
     </StyledStoreGrid>

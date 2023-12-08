@@ -15,8 +15,7 @@ export default function StoreCard({ storeData }: { storeData: StoreType }) {
       <div className='tags'>
         <div>
           <StoreTag
-            // color={storeData.categoryId.type}
-            color={'popup'}
+            color={storeData.categoryId.type}
             title={storeData.categoryId.name}
           />
           {storeData.adultVerification && (
